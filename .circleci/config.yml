@@ -1,0 +1,56 @@
+version: 2
+
+aliases:
+  cache:
+    node_cache: &LEIN_CACHE
+      key: lein-{{ checksum "project.clj" }}
+      paths:
+        - ~/.lein
+        - ~/.m2
+  containers:
+    docker: &DEFAULT
+      - image: jesiio/build-bus:latest
+        environment:
+        JVM_OPTS: -Xmx3200m
+        DEBUG: 1
+  commands:
+    submodule_update: &SUBMODULE_UPDATE
+      run:
+        name: Git Submodule Update
+        command: 'git submodule sync && git submodule update --recursive --init'
+    cancel_redundant: &CANCEL_REDUNDANT
+      run:
+        name: Check & Cancel Redundant Build
+        command: 'cancel-redundant-builds.sh'
+
+jobs:
+  test_clj:
+    docker: *DEFAULT
+    steps:
+      - *CANCEL_REDUNDANT
+      - checkout
+      - *SUBMODULE_UPDATE
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - run: './backpack.sh test'
+      - save_cache:
+          <<: *LEIN_CACHE
+
+  test_cljs:
+    docker: *DEFAULT
+    steps:
+      - *CANCEL_REDUNDANT
+      - checkout
+      - *SUBMODULE_UPDATE
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - run: './backpack.sh test-cljs'
+      - save_cache:
+          <<: *LEIN_CACHE
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - test_clj
+      - test_cljs
