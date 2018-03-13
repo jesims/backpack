@@ -1,5 +1,5 @@
-(defproject io.jesi/backpack "0.0.1"
-  :description "Clojure(Script) cross project utilities"
+(defproject io.jesi/backpack "0.0.1-SNAPSHOT"
+  :description "Clojure(Script) cross-project utilities"
   :license "Unlicensed"
   :url "https://github.com/jesims/backpack"
   :min-lein-version "2.7.0"
