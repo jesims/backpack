@@ -1,0 +1,16 @@
+(ns io.jesi.backpack.specter
+  (:require
+    [io.jesi.backpack.collection :refer [safe-empty?]]
+    [com.rpl.specter :as sp]))
+
+(def map-walker (sp/recursive-path [] m (sp/if-path map? (sp/continue-then-stay sp/MAP-VALS m))))
+
+(defn no-empty-values [m]
+  (not-empty
+    (sp/transform
+      [map-walker sp/ALL]
+      (fn [p]
+        (if (safe-empty? (last p))
+          sp/NONE
+          p))
+      m)))
