@@ -7,7 +7,6 @@
 !.idea/vcs.xml
 .lein-failures
 .nrepl-port
-jesi-specs.iml
 pom.xml
 target
 .lein-repl-history
