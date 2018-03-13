@@ -1,0 +1,13 @@
+.idea/
+!.idea/inspectionProfiles
+!.idea/.name
+!.idea/compiler.xml
+!.idea/encodings.xml
+!.idea/misc.xml
+!.idea/vcs.xml
+.lein-failures
+.nrepl-port
+jesi-specs.iml
+pom.xml
+target
+.lein-repl-history
