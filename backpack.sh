@@ -47,20 +47,20 @@ unit-test-cljs () {
 parse () {
 	case $1 in
 		-h|--help)
-			usage ;;
+			usage;;
 		clean)
-			lein clean ;;
+			lein clean;;
 		release)
 		    s3_release;;
 		snapshot)
 			s3_snapshot;;
 		test)
-			unit-test ;;
+			unit-test;;
 		test-cljs)
-			unit-test-cljs ;;
+			unit-test-cljs;;
 		*)
 			usage
-			exit 1 ;;
+			exit 1;;
 	esac
 }
 
