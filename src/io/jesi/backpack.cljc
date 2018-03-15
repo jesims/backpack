@@ -7,7 +7,8 @@
     [io.jesi.backpack.string]
     #?(:cljs [io.jesi.backpack.clojurescript]))
   #?(:clj
-           (:require [potemkin :refer [import-vars]])
+           (:require [potemkin :refer [import-vars]]
+                     [io.jesi.backpack.macros])
      :cljs (:require-macros [io.jesi.backpack.macros :refer [import-vars]])))
 
 (import-vars
@@ -36,7 +37,12 @@
    subs-to
    uuid-str?])
 
-#?(:cljs
+#?(:clj
+   (import-vars
+     [io.jesi.backpack.macros
+      macro?])
+
+   :cljs
    (import-vars
      [io.jesi.backpack.clojurescript
       clj->jskw]))

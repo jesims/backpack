@@ -2,6 +2,7 @@
   (:require
     [clojure.string :as string]))
 
+;TODO: Case conversion (camel->kebab and back) and preserve namespaces
 (declare clj->jskw)
 
 (defn- key->jskw [k]
@@ -15,7 +16,7 @@
       (pr-str k))))
 
 (defn clj->jskw
-  "Note: Altered from cljs.core to encode keywords
+  "Note: Altered from cljs.core to encode NAMESPACED keywords
   Recursively transforms ClojureScript values to JavaScript.
   sets/vectors/lists become Arrays, Keywords and Symbol become Strings,
   Maps become Objects. Arbitrary keys are encoded to by key->js."
@@ -35,3 +36,15 @@
                       (.push arr x))
                     arr)
         :else x))))
+
+(defn js->cljkw
+  [x]
+  (js->clj x :keywordize-keys true))
+
+(defn clj->json-str
+  [x]
+  (.stringify js/JSON (clj->js x)))
+
+(defn json-str->clj
+  [x]
+  (js->cljkw (.parse js/JSON x)))

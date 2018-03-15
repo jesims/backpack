@@ -39,8 +39,7 @@
                                      :target         :nodejs}}}}
   :doo {:build "test" :alias {:default [:node]}}
   :aliases {"test-cljs" ["doo" "once"]}
-  :release-tasks [["vcs" "assert-committed"]
-                  ["deploy"]]
+  :release-tasks [["deploy"]]
   :repositories {"releases"  {:url           "s3p://artifacts.jesi.io/releases/"
                               :no-auth       true
                               :sign-releases false}

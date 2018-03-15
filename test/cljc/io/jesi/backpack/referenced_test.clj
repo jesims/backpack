@@ -6,7 +6,8 @@
     [clojure.tools.namespace.find :as ns-find]
     [io.jesi.backpack :as bp]))
 
-(def excluded-ns #{'io.jesi.backpack.random 'io.jesi.backpack.macros})
+(def excluded-ns #{'io.jesi.backpack.random
+                   'io.jesi.backpack.macros})               ; Excluded because clojurescript won't need macros (also ns-publics returns defmacro)
 
 (deftest core-test
   (let [models-ns (->> "src/io/jesi/backpack/"
