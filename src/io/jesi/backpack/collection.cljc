@@ -41,3 +41,6 @@
 
 (defn contains-any? [map & keys]
   (some? (some #(contains? map %) keys)))
+
+(defn dissoc-all [map & keys]
+  (postwalk #(if (map? %) (apply dissoc % keys) %) map))

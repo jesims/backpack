@@ -15,6 +15,7 @@
   [io.jesi.backpack.collection
    assoc-when
    contains-any?
+   dissoc-all
    distinct-by
    filter-empty
    filter-values

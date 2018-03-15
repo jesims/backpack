@@ -146,3 +146,12 @@
       (is (contains-any? :a :b))
       (is (contains-any? :a :d))
       (is (not (contains-any? :d :e))))))
+
+(deftest dissoc-all-test
+  (testing "Removes multiple keys"
+    (let [m {:a 1 :b 2 :c 3}]
+      (is (= {:a 1} (bp/dissoc-all m :b :c)))
+      (is (= {:a 1} (bp/dissoc-all m :b :c :d)))))
+
+  (testing "Removed nested keys"
+    (is (= {:b {}} (bp/dissoc-all {:a 1 :b {:a 2}} :a)))))
