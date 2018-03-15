@@ -34,5 +34,6 @@
   `(-> ~f var meta :ns str))
 
 ;TODO combine, macro? is also defined in io.jesi.spec.util-test
-(defn macro? [sym]
-  (:macro (meta (find-var sym))))
+#?(:clj
+   (defn macro? [sym]
+     (:macro (meta (find-var sym)))))
