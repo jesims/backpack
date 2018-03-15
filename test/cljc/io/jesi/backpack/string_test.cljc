@@ -9,3 +9,21 @@
     (is (not (bp/uuid-str? "1234")))
     (is (not (bp/uuid-str? 1234)))
     (is (not (bp/uuid-str? nil)))))
+
+(deftest subs-inc-test
+  (let [input "The decapitated head of a dead snake can still bite, even hours after death"]
+
+    (testing "returns the nil if the sub-string isn't found"
+      (is (nil? (bp/subs-inc "." input))))
+
+    (testing "returns the substring including the match"
+      (is (= "The decapitated" (bp/subs-inc " decapitated" input))))))
+
+(deftest subs-to-test
+  (let [input "What humans do over the next 50 years will determine the fate of all life on the planet"]
+
+    (testing "returns the whole string if match is not found"
+      (is (= input (bp/subs-to "." input))))
+
+    (testing "returns the substring up to match"
+      (is (= "What" (bp/subs-to " humans" input))))))

@@ -92,3 +92,12 @@
     (testing "supports multiple key value pairs"
       (is (= {:k 1 :l 2} (bp/assoc-when {} :k 1 :l 2)))
       (is (= {:l 2} (bp/assoc-when {} :k nil :l 2))))))
+
+(deftest select-non-nil-keys-test
+  (testing "select-non-nil-keys: "
+    (testing "doesn't return keys that don't exist"
+      (is (= {:a 1} (bp/select-non-nil-keys {:a 1} [:a :b :c]))))
+    (testing "doesn't return keys with nil values"
+      (is (= {:a 1} (bp/select-non-nil-keys {:a 1 :b nil} [:a :b :c]))))
+    (testing "preserves true and false values values"
+      (is (= {:a true :b false} (bp/select-non-nil-keys {:a true :b false} [:a :b :c]))))))

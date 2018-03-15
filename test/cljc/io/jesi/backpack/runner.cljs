@@ -1,6 +1,7 @@
 (ns io.jesi.backpack.runner
   (:require
     [doo.runner :refer-macros [doo-tests]]
+    [io.jesi.backpack.clojurescript-test]
     [io.jesi.backpack.collection-test]
     [io.jesi.backpack.fn-test]
     [io.jesi.backpack.number-test]
@@ -11,6 +12,7 @@
 (enable-console-print!)
 
 (doo-tests
+  'io.jesi.backpack.clojurescript-test
   'io.jesi.backpack.collection-test
   'io.jesi.backpack.fn-test
   'io.jesi.backpack.number-test

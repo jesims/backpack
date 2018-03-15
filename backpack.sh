@@ -38,10 +38,20 @@ unit-test () {
 	abort_on_error "Clojure tests failed"
 }
 
+unit-test-cljs-refresh () {
+    echo_message "The truth is our natural world is changing. And we are totally dependent on that world."
+    lein test-refresh
+}
+
 unit-test-cljs () {
 	echo_message "In the clojure kingdom, the rule is, transform or be transformed."
 	lein test-cljs
 	abort_on_error "ClojureScript tests failed"
+}
+
+unit-test-cljs-refresh () {
+    echo_message "In a few special places, these clojure changes create some of the greatest transformation spectacles on earth"
+    lein doo
 }
 
 parse () {
@@ -55,9 +65,19 @@ parse () {
 		snapshot)
 			s3_snapshot;;
 		test)
-			unit-test;;
+			case $2 in
+				-r)
+					unit-test-refresh;;
+				*)
+					unit-test;;
+			esac ;;
 		test-cljs)
-			unit-test-cljs;;
+			case $2 in
+				-r)
+			        unit-test-cljs-refresh;;
+				*)
+			        unit-test-cljs;;
+			esac ;;
 		*)
 			usage
 			exit 1;;

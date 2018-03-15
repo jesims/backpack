@@ -32,3 +32,9 @@
      (if kvs
        (recur ret (first kvs) (second kvs) (nnext kvs))
        ret))))
+
+(defn select-non-nil-keys [m keys]
+  (->>
+    (select-keys m keys)
+    (remove (comp nil? val))
+    (into {})))
