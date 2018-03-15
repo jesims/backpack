@@ -22,7 +22,8 @@
                              [lein-ancient "0.6.14"]
                              [lein-doo "0.1.8"]]
               :dependencies [[circleci/circleci.test "0.4.1"]
-                             [pjstadig/humane-test-output "0.8.3"]]
+                             [pjstadig/humane-test-output "0.8.3"]
+                             [potemkin "0.4.4"]]
               :injections   [(require 'pjstadig.humane-test-output)
                              (pjstadig.humane-test-output/activate!)]}}
   :cljsbuild {:builds

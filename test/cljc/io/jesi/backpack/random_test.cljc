@@ -1,8 +1,8 @@
 (ns io.jesi.backpack.random-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.string :as su]))
+    [io.jesi.backpack :as bp]
+    [io.jesi.backpack.random :as rnd]))
 
 (defn- assert-random [fn]
   (let [actuals (take 1000 (repeatedly fn))]
@@ -16,7 +16,7 @@
 (deftest uuid-str-test
   (testing "UUID strings are always random"
     (let [actuals (assert-random #(rnd/uuid-str))
-          non-uuid-strs (filter (comp not su/uuid-str?) actuals)]
+          non-uuid-strs (filter (comp not bp/uuid-str?) actuals)]
       (is (nil? (seq non-uuid-strs))))))
 
 (deftest string-test
