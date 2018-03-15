@@ -85,7 +85,7 @@ workflows:
             - test_cljs
           filters:
             branches:
-              only: /^(master|develop)$/
+              ignore: /^(master|develop)$/
       - release:
           requires:
             - test_clj
