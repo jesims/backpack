@@ -27,3 +27,13 @@
 
     (testing "returns the substring up to match"
       (is (= "What" (bp/subs-to " humans" input))))))
+
+(deftest true-string?-test
+  (testing "returns true for a true string"
+    (is (true? (bp/true-string? "true"))))
+
+  (testing "returns false for any other value"
+    (is (false? (bp/true-string? "false")))
+    (is (false? (bp/true-string? "f")))
+    (is (false? (bp/true-string? "")))
+    (is (false? (bp/true-string? nil)))))

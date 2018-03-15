@@ -23,18 +23,23 @@
 
   [io.jesi.backpack.fn
    apply-when
-   partial-right]
+   map-if
+   partial-right
+   pass
+   pass-if]
 
   [io.jesi.backpack.number
    infinity]
 
   [io.jesi.backpack.specter
    map-walker
+   map-key-walker
    no-empty-values]
 
   [io.jesi.backpack.string
    subs-inc
    subs-to
+   true-string?
    uuid-str?])
 
 #?(:clj

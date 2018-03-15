@@ -20,3 +20,7 @@
     (if (nil? index)
       nil
       (subs s 0 (+ index (count match))))))
+
+(defn true-string?
+  [s]
+  (= s "true"))

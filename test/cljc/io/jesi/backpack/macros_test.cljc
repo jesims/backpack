@@ -3,7 +3,7 @@
     [clojure.string :as string]
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros #?(:clj :refer :cljs :refer-macros) [catch->nil]]))
+    [io.jesi.backpack.macros #?(:clj :refer :cljs :refer-macros) [catch->nil fn1]]))
 
 (defn- throw-ex []
   (throw (ex-info "Error" {})))
@@ -24,3 +24,10 @@
 
   (testing "returns nil if the body throws an exception"
     (is (nil? (catch->nil (throw-ex))))))
+
+(deftest fn1-test
+  (testing "fn1 returns a function"
+    (is (fn? (fn1))))
+
+  (testing "fn1 returns an arity 1 function"
+    (is (true? ((fn1 true) false)))))

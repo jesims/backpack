@@ -29,3 +29,23 @@
 
       (testing "invokes f when it's truthy"
         (is (= quote (bp/apply-when identity quote)))))))
+
+(deftest pass-test
+  (testing "pass returns a function"
+    (is (fn? (bp/pass +))))
+
+  (testing "pass returns the original parameter"
+    (is (= 1 ((bp/pass +) 1)))))
+
+(deftest pass-if-test
+  (testing "pass-if returns a function"
+    (is (fn? (bp/pass-if nil? +))))
+
+  (testing "pass-if returns the original parameter if the predicate is true"
+    (let [inc-odd (bp/pass-if even? inc)]
+      (is (= 2 (inc-odd 1)))
+      (is (= 2 (inc-odd 2))))))
+
+(deftest map-if-test
+  (testing "map-if only maps if predicate is true"
+    (is (= [2 2 4] (bp/map-if odd? inc [1 2 3])))))

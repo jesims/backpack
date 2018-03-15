@@ -37,3 +37,12 @@
 #?(:clj
    (defn macro? [sym]
      (:macro (meta (find-var sym)))))
+
+(defmacro fn1 [& exprs]
+  `(fn [_#] ~@exprs))
+
+(defmacro fn2 [& exprs]
+  `(fn [_# _#] ~@exprs))
+
+(defmacro fn3 [& exprs]
+  `(fn [_# _# _#] ~@exprs))

@@ -8,3 +8,16 @@
   "Invokes f when it's truthy"
   [f v]
   (when f (f v)))
+
+(defn pass [f]
+  (fn [x]
+    (f x)
+    x))
+
+(defn pass-if [pred f]
+  #(if (pred %)
+     %
+     (f %)))
+
+(defn map-if [pred f col]
+  (map #(if (pred %) (f %) %) col))
