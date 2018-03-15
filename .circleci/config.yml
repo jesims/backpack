@@ -48,6 +48,30 @@ jobs:
       - save_cache:
           <<: *LEIN_CACHE
 
+  snapshot:
+    docker: *DEFAULT
+    steps:
+      - *CANCEL_REDUNDANT
+      - checkout
+      - *SUBMODULE_UPDATE
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - run: './backpack.sh snapshot'
+      - save_cache:
+          <<: *LEIN_CACHE
+
+  release:
+    docker: *DEFAULT
+    steps:
+      - *CANCEL_REDUNDANT
+      - checkout
+      - *SUBMODULE_UPDATE
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - run: './backpack.sh release'
+      - save_cache:
+          <<: *LEIN_CACHE
+
 #TODO: Automatic snapshots and releases
 workflows:
   version: 2
@@ -55,3 +79,17 @@ workflows:
     jobs:
       - test_clj
       - test_cljs
+      - snapshot:
+          requires:
+            - test_clj
+            - test_cljs
+          filters:
+            branches:
+              only: /^(master|develop)$/
+      - release:
+          requires:
+            - test_clj
+            - test_cljs
+          filters:
+            branches:
+              only: master
