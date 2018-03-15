@@ -3,10 +3,12 @@
   :license "Unlicensed"
   :url "https://github.com/jesims/backpack"
   :min-lein-version "2.7.0"
-  :dependencies [[org.clojure/clojure "1.9.0"]
-                 [org.clojure/clojurescript "1.9.946"]
+  :dependencies [[com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [com.rpl/specter "1.1.0"]
-                 [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
+                 [org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojurescript "1.9.946"]
+                 [org.clojure/tools.namespace "0.2.11"]
+                 [potemkin "0.4.4"]]
   :exclusions [org.clojure/clojure
                org.clojure/clojurescript]
   :plugins [[lein-cljsbuild "1.1.7"]
@@ -22,8 +24,7 @@
                              [lein-ancient "0.6.14"]
                              [lein-doo "0.1.8"]]
               :dependencies [[circleci/circleci.test "0.4.1"]
-                             [pjstadig/humane-test-output "0.8.3"]
-                             [potemkin "0.4.4"]]
+                             [pjstadig/humane-test-output "0.8.3"]]
               :injections   [(require 'pjstadig.humane-test-output)
                              (pjstadig.humane-test-output/activate!)]}}
   :cljsbuild {:builds
