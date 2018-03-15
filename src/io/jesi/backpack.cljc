@@ -14,6 +14,7 @@
 (import-vars
   [io.jesi.backpack.collection
    assoc-when
+   contains-any?
    distinct-by
    filter-empty
    filter-values

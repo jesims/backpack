@@ -101,3 +101,48 @@
       (is (= {:a 1} (bp/select-non-nil-keys {:a 1 :b nil} [:a :b :c]))))
     (testing "preserves true and false values values"
       (is (= {:a true :b false} (bp/select-non-nil-keys {:a true :b false} [:a :b :c]))))))
+
+(deftest contains-any?-test
+  (let [m {:a 1 :b 2 :c 3}
+        contains? (partial contains? m)
+        contains-any? (partial bp/contains-any? m)]
+
+    (testing "Same as contains for one key"
+      (let [key :a]
+        (is (= (contains? key) (contains-any? key))))
+      (let [key :b]
+        (is (= (contains? key) (contains-any? key))))
+      (let [key :c]
+        (is (= (contains? key) (contains-any? key))))
+      (let [key :d]
+        (is (= (contains? key) (contains-any? key))))
+      (let [key "d"]
+        (is (= (contains? key) (contains-any? key)))))
+
+    (testing "Supports multiple keys"
+      (is (contains-any? :a))
+      (is (contains-any? :a :b))
+      (is (contains-any? :a :d))
+      (is (not (contains-any? :d :e)))))
+
+  (testing "Same as contains for one key"
+    (let [m {:a 1 :b 2 :c 3}
+          contains? (partial contains? m)
+          contains-any? (partial bp/contains-any? m)]
+      (let [key :a]
+        (is (= (contains? key) (contains-any? key))))
+      (let [key :b]
+        (is (= (contains? key) (contains-any? key))))
+      (let [key :c]
+        (is (= (contains? key) (contains-any? key))))
+      (let [key :d]
+        (is (= (contains? key) (contains-any? key))))
+      (let [key "d"]
+        (is (= (contains? key) (contains-any? key))))))
+
+  (testing "Supports multiple keys"
+    (let [contains-any? (partial bp/contains-any? {:a 1 :b 2 :c 3})]
+      (is (contains-any? :a))
+      (is (contains-any? :a :b))
+      (is (contains-any? :a :d))
+      (is (not (contains-any? :d :e))))))

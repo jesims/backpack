@@ -38,3 +38,6 @@
     (select-keys m keys)
     (remove (comp nil? val))
     (into {})))
+
+(defn contains-any? [map & keys]
+  (some? (some #(contains? map %) keys)))
