@@ -1,4 +1,6 @@
-(ns io.jesi.backpack.collection)
+(ns io.jesi.backpack.collection
+  (:require
+    [clojure.walk :refer [postwalk]]))
 
 (defn distinct-by [key entities]
   (apply distinct? (map key entities)))

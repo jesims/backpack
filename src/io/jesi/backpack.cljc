@@ -8,6 +8,7 @@
     #?(:cljs [io.jesi.backpack.clojurescript]))
   #?(:clj
            (:require [potemkin :refer [import-vars]]
+                     [io.jesi.backpack.clojure]
                      [io.jesi.backpack.macros])
      :cljs (:require-macros [io.jesi.backpack.macros :refer [import-vars]])))
 
@@ -46,6 +47,9 @@
 
 #?(:clj
    (import-vars
+     [io.jesi.backpack.clojure
+      ->uri]
+
      [io.jesi.backpack.macros
       macro?])
 
