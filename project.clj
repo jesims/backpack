@@ -1,4 +1,4 @@
-(defproject io.jesi/backpack "0.0.1-SNAPSHOT"
+(defproject io.jesi/backpack "0.0.1"
   :description "Clojure(Script) cross-project utilities"
   :license "Unlicensed"
   :url "https://github.com/jesims/backpack"
@@ -20,9 +20,9 @@
                  :with-repl    true
                  :changes-only true}
   :profiles {:dev
-             {:plugins      [
-                             [lein-ancient "0.6.14"]
-                             [lein-doo "0.1.8"]]
+             {:plugins      [[lein-ancient "0.6.14"]
+                             [lein-doo "0.1.8"]
+                             [lein-set-version "0.4.1"]]
               :dependencies [[circleci/circleci.test "0.4.1"]
                              [pjstadig/humane-test-output "0.8.3"]]
               :injections   [(require 'pjstadig.humane-test-output)

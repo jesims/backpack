@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-GIT_BASE="$( git rev-parse --show-toplevel )"
-source ${GIT_BASE}/build-scripts/project.sh
+cd $(realpath $(dirname $0))
+source build-scripts/project.sh &&
+source build-scripts/s3-wagon-util.sh
 if [[ $? -ne 0 ]]; then
 	exit 1
-fi
-source build-scripts/s3-wagon-util.sh
-if [[ $? -ne 0 ]];then
-    echo_error 'Could not source all files'
 fi
 
 usage () {
@@ -39,8 +36,8 @@ unit-test () {
 }
 
 unit-test-cljs-refresh () {
-    echo_message "The truth is our natural world is changing. And we are totally dependent on that world."
-    lein test-refresh
+	echo_message "The truth is our natural world is changing. And we are totally dependent on that world."
+	lein test-refresh
 }
 
 unit-test-cljs () {
@@ -50,8 +47,8 @@ unit-test-cljs () {
 }
 
 unit-test-cljs-refresh () {
-    echo_message "In a few special places, these clojure changes create some of the greatest transformation spectacles on earth"
-    lein doo
+	echo_message "In a few special places, these clojure changes create some of the greatest transformation spectacles on earth"
+	lein doo
 }
 
 parse () {
@@ -61,7 +58,7 @@ parse () {
 		clean)
 			lein clean;;
 		release)
-		    s3_release;;
+			s3_release;;
 		snapshot)
 			s3_snapshot;;
 		test)
@@ -74,9 +71,9 @@ parse () {
 		test-cljs)
 			case $2 in
 				-r)
-			        unit-test-cljs-refresh;;
+					unit-test-cljs-refresh;;
 				*)
-			        unit-test-cljs;;
+					unit-test-cljs;;
 			esac ;;
 		*)
 			usage
