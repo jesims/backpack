@@ -7,10 +7,10 @@
        [cljs-uuid-utils.core :as UUID]))
   #?(:clj
      (:gen-class
-       :name io.jesi.backpack.random
+       :name "io.jesi.backpack.Random"
        :prefix ""
-       :methods [#^{:static true} [string [int] String]
-                 #^{:static true} [string [] String]])))
+       :methods [#^:static [string [int] String]
+                 #^:static [string [] String]])))
 
 (defn uuid []
   #?(:clj  (UUID/randomUUID)

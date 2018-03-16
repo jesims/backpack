@@ -41,11 +41,12 @@
                                      :parallel-build true
                                      :target         :nodejs}}}}
   :doo {:build "test" :alias {:default [:node]}}
-  :aliases {"test-cljs" ["doo" "once"]}
   :release-tasks [["deploy"]]
   :repositories {"releases"  {:url           "s3p://artifacts.jesi.io/releases/"
                               :no-auth       true
                               :sign-releases false}
                  "snapshots" {:url           "s3p://artifacts.jesi.io/snapshots/"
                               :no-auth       true
-                              :sign-releases false}})
+                              :sign-releases false}}
+  :aliases {"test-cljs" ["doo" "once"]
+            "jar"       "uberjar"})
