@@ -4,7 +4,13 @@
      (:import java.util.UUID)
      :cljs
      (:require
-       [cljs-uuid-utils.core :as UUID])))
+       [cljs-uuid-utils.core :as UUID]))
+  #?(:clj
+     (:gen-class
+       :name io.jesi.backpack.random
+       :prefix ""
+       :methods [#^{:static true} [string [int] String]
+                 #^{:static true} [string [] String]])))
 
 (defn uuid []
   #?(:clj  (UUID/randomUUID)
