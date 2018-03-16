@@ -57,3 +57,16 @@
   "Filters out all nil key values from a map"
   [map]
   (into {} (filter (comp some? val) map)))
+
+(defn translate-keys
+  "Updates map with the keys from kmap"
+  [kmap map]
+  (let [new-entries (flatten (mapv
+                               (fn [[new-key key]]
+                                 (if (contains? map key)
+                                   [new-key (key map)]
+                                   []))
+                               kmap))]
+    (if (seq new-entries)
+      (apply assoc map new-entries)
+      map)))

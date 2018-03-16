@@ -25,7 +25,8 @@
    first-non-nil
    in?
    safe-empty?
-   select-non-nil-keys]
+   select-non-nil-keys
+   translate-keys]
 
   [io.jesi.backpack.fn
    apply-when

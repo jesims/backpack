@@ -165,7 +165,7 @@
           m {:animal "Lion"
              :fact   "In the wild, usually makes no more than twenty kills a year."
              :name   nil
-             :id    id}]
+             :id     id}]
       (is (= id (bp/first-non-nil m :id :animal :this)))
       (is (= "Lion" (bp/first-non-nil m :name :missing :animal :id))))))
 
@@ -177,3 +177,42 @@
            :diet        ["plants"]
            :environment []}]
     (is (= (dissoc m :age) (bp/filter-nil-keys m)))))
+
+(deftest translate-keys-test
+  (testing "Is a function"
+    (is (fn? bp/translate-keys)))
+
+  (testing "Does not modify when kmap is"
+    (let [m {:a 1}]
+
+      (testing "empty"
+        (is (= m (bp/translate-keys {} m))))
+
+      (testing "nil"
+        (is (= m (bp/translate-keys nil m))))))
+
+  (testing "Returns nil if specified map is nil"
+    (is (= nil (bp/translate-keys {:a :b} nil))))
+
+  (testing "Returns a empty map if specified map is empty"
+    (is (= {} (bp/translate-keys {:a :b} {}))))
+
+  (testing "Converts map keys"
+    (is (= {:a 1 :b 2 :new-a 1 :new-b 2}
+           (bp/translate-keys {:new-a :a, :new-b :b} {:a 1 :b 2}))))
+
+  (testing "Retains existing entries"
+    (is (= {:a 1 :b 2 :c nil :d 2}
+           (bp/translate-keys {:b :d} {:a 1 :c nil :d 2}))))
+
+  (testing "Replaces existing entries"
+    (is (= {:a 1 :b 1}
+           (bp/translate-keys {:b :a} {:a 1 :b 2}))))
+
+  (testing "Does not add the new key if the key does not exist"
+    (is (= {:a 1 :b 2}
+           (bp/translate-keys {:c :d} {:a 1 :b 2}))))
+
+  (testing "Can set multiple keys from a single key"
+    (is (= {:a 1 :b 1 :c 1}
+           (bp/translate-keys {:a :c, :b :c} {:c 1})))))
