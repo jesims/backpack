@@ -162,8 +162,18 @@
 
   (testing "Returns first non-nil value"
     (let [id (rnd/uuid)
-          m {:this  nil
-             :id    id
-             :other "thing"}]
-      (is (= id (bp/first-non-nil m :this :id :other)))
-      (is (= "thing" (bp/first-non-nil m :this :other :id))))))
+          m {:animal "Lion"
+             :fact   "In the wild, usually makes no more than twenty kills a year."
+             :name   nil
+             :id    id}]
+      (is (= id (bp/first-non-nil m :id :animal :this)))
+      (is (= "Lion" (bp/first-non-nil m :name :missing :animal :id))))))
+
+(deftest filter-nil-keys-test
+  (let [m {:id          (rnd/uuid)
+           :animal      "Gorillas"
+           :fact        "Can catch human colds and other illnesses."
+           :age         nil
+           :diet        ["plants"]
+           :environment []}]
+    (is (= (dissoc m :age) (bp/filter-nil-keys m)))))

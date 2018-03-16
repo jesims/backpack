@@ -20,6 +20,7 @@
    dissoc-all
    distinct-by
    filter-empty
+   filter-nil-keys
    filter-values
    first-non-nil
    in?

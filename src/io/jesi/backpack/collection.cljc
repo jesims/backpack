@@ -52,3 +52,8 @@
        (map m)
        (filter (comp not nil?))
        first))
+
+(defn filter-nil-keys
+  "Filters out all nil key values from a map"
+  [map]
+  (into {} (filter (comp some? val) map)))
