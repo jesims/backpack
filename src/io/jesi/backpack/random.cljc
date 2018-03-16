@@ -9,8 +9,8 @@
      (:gen-class
        :name "io.jesi.backpack.Random"
        :prefix ""
-       :methods [#^:static [string [int] String]
-                 #^:static [string [] String]])))
+       :methods [#^{:static true} [string [int] String]
+                 #^{:static true} [string [] String]])))
 
 (defn uuid []
   #?(:clj  (UUID/randomUUID)
