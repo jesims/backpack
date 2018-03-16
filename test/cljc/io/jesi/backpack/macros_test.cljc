@@ -4,7 +4,10 @@
     [clojure.string :as string]
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros #?(:clj :refer :cljs :refer-macros) [catch->nil fn1 when-let]]))
+    [io.jesi.backpack.macros #?(:clj :refer :cljs :refer-macros) [try*
+                                                                  catch->nil
+                                                                  fn1
+                                                                  when-let]]))
 
 (defn- throw-ex []
   (throw (ex-info "Error" {})))
@@ -67,3 +70,34 @@
                y nil
                z nil]
       (is (true? false)))))
+
+(deftest defkw-test
+  (testing "expands to def a namespaced keyword with the same name"
+    (is (= '(def crocodile ::crocodile)
+           (macroexpand-1 '(io.jesi.backpack.macros/defkw ::crocodile))))))
+
+(defn- throw-for [x]
+  (try*
+    (condp = x
+      0 (throw (Exception. "Exception"))
+      1 (throw (RuntimeException. "Runtime"))
+      2 (throw (SecurityException. "Security"))
+      3 (throw (ArithmeticException. "Arithmetic"))
+      "Not Caught")
+    (catch ArithmeticException _ "ArithmeticException")
+    (catch-any [RuntimeException SecurityException] _ "Multi")
+    (catch Exception _ "Exception")))
+
+(deftest try*-test
+  (testing "Doesn't catch if none thrown"
+    (is (= "Not Caught" (throw-for -1))))
+
+  (testing "allows catching multiple exception types"
+    (is (= "Multi" (throw-for 1)))
+    (is (= "Multi" (throw-for 2))))
+
+  (testing "allows catching multiple types and single exceptions"
+    (is (= "ArithmeticException" (throw-for 3))))
+
+  (testing "allows catching single exceptions"
+    (is (= "Exception" (throw-for 0)))))

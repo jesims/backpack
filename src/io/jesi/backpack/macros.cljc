@@ -54,3 +54,20 @@
      `(clojure.core/when-let [~(first bindings) ~(second bindings)]
         (when-let ~(drop 2 bindings) ~@body))
      `(do ~@body))))
+
+(defmacro defkw [kw]
+  `(def ~(symbol (name kw)) ~kw))
+
+; Source https://gist.github.com/Gonzih/5814945
+(defmacro try*
+  [& body]
+  (letfn [(catch-any? [form]
+            (and (seq form)
+                 (= (first form) 'catch-any)))
+          (expand [[_catch* classes & catch-tail]]
+            (map #(list* 'catch % catch-tail) classes))
+          (transform [form]
+            (if (catch-any? form)
+              (expand form)
+              [form]))]
+    (cons 'try (mapcat transform body))))
