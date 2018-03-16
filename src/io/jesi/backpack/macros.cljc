@@ -1,4 +1,5 @@
-(ns io.jesi.backpack.macros)
+(ns io.jesi.backpack.macros
+  (:refer-clojure :exclude [when-let]))
 
 ;Refer https://github.com/cmr-exchange/cmr-client/blob/70ca65d0103282906eec57aacfb9e4a98d9eebb3/src/cljc/cmr/client/common/util.cljc
 (defmacro import-def
@@ -46,3 +47,10 @@
 
 (defmacro fn3 [& exprs]
   `(fn [_# _# _#] ~@exprs))
+
+(defmacro when-let
+  ([bindings & body]
+   (if (seq bindings)
+     `(clojure.core/when-let [~(first bindings) ~(second bindings)]
+        (when-let ~(drop 2 bindings) ~@body))
+     `(do ~@body))))
