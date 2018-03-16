@@ -36,7 +36,7 @@ unit-test () {
 	abort_on_error "Clojure tests failed"
 }
 
-unit-test-cljs-refresh () {
+unit-test-refresh () {
 	echo_message "The truth is our natural world is changing. And we are totally dependent on that world."
 	lein test-refresh
 }

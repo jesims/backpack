@@ -21,9 +21,11 @@
                  :with-repl    true
                  :changes-only true}
   :profiles {:uberjar {:aot :all}
-             :dev     {:plugins      [[lein-ancient "0.6.14"]
+             :dev     {:plugins      [[com.jakemccrary/lein-test-refresh "0.22.0"]
+                                      [lein-ancient "0.6.14"]
                                       [lein-doo "0.1.8"]
-                                      [lein-set-version "0.4.1"]]
+                                      [lein-set-version "0.4.1"]
+                                      [venantius/ultra "0.5.2"]]
                        :dependencies [[circleci/circleci.test "0.4.1"]
                                       [pjstadig/humane-test-output "0.8.3"]]
                        :injections   [(require 'pjstadig.humane-test-output)
