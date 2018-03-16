@@ -5,6 +5,7 @@
   :min-lein-version "2.7.0"
   :dependencies [[com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [com.rpl/specter "1.1.0"]
+                 [medley "1.0.0"]
                  [org.clojure/clojure "1.9.0"]
                  [org.clojure/clojurescript "1.9.946"]
                  [org.clojure/tools.namespace "0.2.11"]
