@@ -2,6 +2,7 @@
   (:require
     [io.jesi.backpack.collection]
     [io.jesi.backpack.fn]
+    [io.jesi.backpack.miscellaneous]
     [io.jesi.backpack.number]
     [io.jesi.backpack.specter]
     [io.jesi.backpack.string]
@@ -31,6 +32,10 @@
    partial-right
    pass
    pass-if]
+
+  [io.jesi.backpack.miscellaneous
+   ->uuid
+   ->uuid-or-not]
 
   [io.jesi.backpack.number
    infinity]

@@ -4,6 +4,7 @@
     [io.jesi.backpack.clojurescript-test]
     [io.jesi.backpack.collection-test]
     [io.jesi.backpack.fn-test]
+    [io.jesi.backpack.miscellaneous]
     [io.jesi.backpack.random-test]
     [io.jesi.backpack.specter-test]
     [io.jesi.backpack.string-test]))
@@ -14,6 +15,7 @@
   'io.jesi.backpack.clojurescript-test
   'io.jesi.backpack.collection-test
   'io.jesi.backpack.fn-test
+  'io.jesi.backpack.miscellaneous
   'io.jesi.backpack.random-test
   'io.jesi.backpack.specter-test
   'io.jesi.backpack.string-test)
