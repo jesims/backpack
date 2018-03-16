@@ -7,7 +7,7 @@
                  [com.rpl/specter "1.1.0"]
                  [medley "1.0.0"]
                  [org.clojure/clojure "1.9.0"]
-                 [org.clojure/clojurescript "1.9.946"]
+                 [org.clojure/clojurescript "1.10.145"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [potemkin "0.4.4"]]
   :exclusions [org.clojure/clojure
