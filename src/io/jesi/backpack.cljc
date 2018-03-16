@@ -55,6 +55,7 @@
 #?(:clj
    (import-vars
      [io.jesi.backpack.clojure
+      kw-type
       ->uri]
 
      [io.jesi.backpack.macros

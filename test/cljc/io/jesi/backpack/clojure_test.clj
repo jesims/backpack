@@ -17,3 +17,13 @@
   (testing "Returns nil if the URI is invalid"
     (is (nil? (bp/->uri 123)))
     (is (nil? (bp/->uri true)))))
+
+(deftype TestType [val])
+(def def-kw-type (partial bp/kw-type ->TestType))
+(def-kw-type ::tested)
+(def-kw-type ::and-worked)
+
+(deftest kw-type-test
+  (testing "Registers keyword as type"
+    (is (instance? TestType tested))
+    (is (instance? TestType and-worked))))
