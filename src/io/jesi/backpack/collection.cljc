@@ -46,3 +46,9 @@
 
 (defn dissoc-all [map & keys]
   (postwalk #(if (map? %) (apply dissoc % keys) %) map))
+
+(defn first-non-nil [m & keys]
+  (->> keys
+       (map m)
+       (filter (comp not nil?))
+       first))

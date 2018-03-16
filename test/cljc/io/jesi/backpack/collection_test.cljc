@@ -155,3 +155,15 @@
 
   (testing "Removed nested keys"
     (is (= {:b {}} (bp/dissoc-all {:a 1 :b {:a 2}} :a)))))
+
+(deftest first-non-nil-test
+  (testing "Returns nil if all keys are nil"
+    (is (nil? (bp/first-non-nil {} :these :do :not :exist))))
+
+  (testing "Returns first non-nil value"
+    (let [id (rnd/uuid)
+          m {:this  nil
+             :id    id
+             :other "thing"}]
+      (is (= id (bp/first-non-nil m :this :id :other)))
+      (is (= "thing" (bp/first-non-nil m :this :other :id))))))

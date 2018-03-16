@@ -20,6 +20,7 @@
    distinct-by
    filter-empty
    filter-values
+   first-non-nil
    in?
    safe-empty?
    select-non-nil-keys]
