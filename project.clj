@@ -20,6 +20,7 @@
   :test-refresh {:quiet        true
                  :with-repl    true
                  :changes-only true}
+  :aot [io.jesi.backpack.random]
   :profiles {:uberjar {:aot :all}
              :dev     {:plugins      [[com.jakemccrary/lein-test-refresh "0.22.0"]
                                       [lein-ancient "0.6.14"]
@@ -48,5 +49,4 @@
                  "snapshots" {:url           "s3p://artifacts.jesi.io/snapshots/"
                               :no-auth       true
                               :sign-releases false}}
-  :aliases {"test-cljs" ["doo" "once"]
-            "jar"       "uberjar"})
+  :aliases {"test-cljs" ["doo" "once"]})

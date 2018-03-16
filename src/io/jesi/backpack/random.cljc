@@ -7,7 +7,7 @@
        [cljs-uuid-utils.core :as UUID]))
   #?(:clj
      (:gen-class
-       :name "io.jesi.backpack.Random"
+       :name io.jesi.backpack.Random
        :prefix ""
        :methods [#^{:static true} [string [int] String]
                  #^{:static true} [string [] String]])))
