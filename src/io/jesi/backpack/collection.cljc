@@ -23,17 +23,6 @@
 (def filter-empty (partial filter-values #(if (or (coll? %) (string? %))
                                             (seq %)
                                             (some? %))))
-(defn assoc-when
-  "assoc if the given v is not nil"
-  ([m k v]
-   (if (nil? v)
-     m
-     (assoc m k v)))
-  ([m k v & kvs]
-   (let [ret (assoc-when m k v)]
-     (if kvs
-       (recur ret (first kvs) (second kvs) (nnext kvs))
-       ret))))
 
 (defn select-non-nil-keys [m keys]
   (->>

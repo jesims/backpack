@@ -83,16 +83,6 @@
           actual (bp/filter-empty original)]
       (is (= expected actual)))))
 
-(deftest assoc-when-test
-  (testing "assoc-when: "
-    (testing "assoc when the value is not nil"
-      (is (= {:k 1} (bp/assoc-when {} :k 1)))
-      (is (= {} (bp/assoc-when {} :k nil))))
-
-    (testing "supports multiple key value pairs"
-      (is (= {:k 1 :l 2} (bp/assoc-when {} :k 1 :l 2)))
-      (is (= {:l 2} (bp/assoc-when {} :k nil :l 2))))))
-
 (deftest select-non-nil-keys-test
   (testing "select-non-nil-keys: "
     (testing "doesn't return keys that don't exist"
