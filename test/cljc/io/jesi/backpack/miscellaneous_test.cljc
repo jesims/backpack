@@ -4,7 +4,13 @@
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]))
 
-(deftest ->uuid-test)
+(deftest ->uuid-test
+  (testing "Converts the first parameter to a UUID object, or returns ::s/invalid"
+    (is (uuid? (bp/->uuid "2c80c3ca-535c-4706-bea2-afd2a2bf374d")))
+    (is (uuid? (bp/->uuid (rnd/uuid))))
+    (is (nil? (bp/->uuid "1234")))
+    (is (nil? (bp/->uuid 1234)))
+    (is (nil? (bp/->uuid nil)))))
 
 (deftest ->uuid-or-not-test
   (testing "leaves UUIDs as is"
