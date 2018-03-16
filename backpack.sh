@@ -11,7 +11,7 @@ usage () {
 ${txtbld}SYNOPSIS${txtrst}
 	${script_name} clean
 	${script_name} release
-	${script_name} snapshot
+	${script_name} snapshot [-l]
 	${script_name} test
 	${script_name} test-cljs
 
@@ -21,7 +21,7 @@ ${txtbld}DESCRIPTION${txtrst}
 	${txtbld}release${txtrst}
 		releases the library onto s3 repository
 	${txtbld}snapshot${txtrst}
-		releases the library onto s3 as a snapshot
+		releases the library onto as a snapshot
 	${txtbld}test${txtrst}
 		runs the CLJ unit tests
 	${txtbld}test-cljs${txtrst}
@@ -60,7 +60,12 @@ parse () {
 		release)
 			s3_release;;
 		snapshot)
-			s3_snapshot;;
+			case $2 in
+				-l)
+					snapshot_local;;
+				*)
+					s3_snapshot;;
+			esac;;
 		test)
 			case $2 in
 				-r)
