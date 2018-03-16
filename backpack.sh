@@ -61,7 +61,7 @@ parse () {
 			s3_release;;
 		snapshot)
 			case $2 in
-				-l)
+				-l|-local)
 					snapshot_local;;
 				*)
 					s3_snapshot;;
