@@ -21,7 +21,8 @@ ${txtbld}DESCRIPTION${txtrst}
 	${txtbld}release${txtrst}
 		releases the library onto s3 repository
 	${txtbld}snapshot${txtrst}
-		releases the library onto as a snapshot
+		releases the library onto s3 as a snapshot
+			${txtbld}-l${txtrst}  snapshot to local repository
 	${txtbld}test${txtrst}
 		runs the CLJ unit tests
 	${txtbld}test-cljs${txtrst}
