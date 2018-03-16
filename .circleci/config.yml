@@ -72,7 +72,6 @@ jobs:
       - save_cache:
           <<: *LEIN_CACHE
 
-#TODO: Automatic snapshots and releases
 workflows:
   version: 2
   build:
