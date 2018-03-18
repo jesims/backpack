@@ -18,8 +18,14 @@
 
 (defn uuid-str [] (str (uuid)))
 
+(def ^:private range-of-chars
+  (->> [8 9 10 13]
+       (concat (range 32 256))
+       (map char)
+       (apply str)))
+
 (defn string
   "Generates a random string of size (default 24)"
   ([] (string 24))
   ([size]
-   (apply str (take size (repeatedly #(char (+ (rand 26) 97)))))))
+   (apply str (take size (repeatedly #(rand-nth range-of-chars))))))
