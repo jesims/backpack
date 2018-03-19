@@ -47,7 +47,7 @@ All utilities should be written to support both Clojure and ClojureScript with u
 
 ## Theme: Animal Safari
 
-All string quotes within test functions should be interesting animal facts; with bonus for David Attenborough quotes.
+All string quotes within test functions should be interesting animal facts; with bonus points for David Attenborough quotes.
 
 # Other Projects
 

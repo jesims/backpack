@@ -19,10 +19,7 @@
   [pred map]
   (into {} (filter (comp pred val) map)))
 
-;TODO make predicate point-free
-(def filter-empty (partial filter-values #(if (or (coll? %) (string? %))
-                                            (seq %)
-                                            (some? %))))
+(def filter-empty (partial filter-values (comp not safe-empty?)))
 
 (defn select-non-nil-keys [m keys]
   (->>
@@ -31,7 +28,7 @@
     (into {})))
 
 (defn contains-any? [map & keys]
-  (some? (some #(contains? map %) keys)))
+  (some? (some (partial contains? map) keys)))
 
 (defn dissoc-all [map & keys]
   (postwalk #(if (map? %) (apply dissoc % keys) %) map))
