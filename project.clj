@@ -3,33 +3,18 @@
   :license "Unlicensed"
   :url "https://github.com/jesims/backpack"
   :min-lein-version "2.7.0"
-  :dependencies [[com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
-                 [com.rpl/specter "1.1.0"]
+  :plugins [[lein-parent "0.3.4"]
+            [lein-cljsbuild "1.1.7"]]
+  :parent-project {:path    "build-scripts/parent-clj/project.clj"
+                   :inherit [:plugins :repositories :managed-dependencies :dependencies :exclusions [:profiles :dev] :test-refresh]}
+  :dependencies [[org.clojure/clojurescript]
+                 [com.rpl/specter]
+                 [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.0.0"]
-                 [org.clojure/clojure "1.9.0"]
-                 [org.clojure/clojurescript "1.10.145"]
-                 [org.clojure/tools.namespace "0.2.11"]
-                 [potemkin "0.4.4"]]
-  :exclusions [org.clojure/clojure
-               org.clojure/clojurescript]
-  :plugins [[lein-cljsbuild "1.1.7"]
-            [s3-wagon-private "1.3.1"]]
-  :source-paths ["src"]
+                 [org.clojure/tools.namespace "0.2.11"]]
   :test-paths ["test/cljc"]
   :clean-targets ^{:protect false} ["target"]
-  :test-refresh {:quiet        true
-                 :with-repl    true
-                 :changes-only true}
   :aot [io.jesi.backpack.random]
-  :profiles {:dev {:plugins      [[com.jakemccrary/lein-test-refresh "0.22.0"]
-                                  [lein-ancient "0.6.14"]
-                                  [lein-doo "0.1.8"]
-                                  [lein-set-version "0.4.1"]
-                                  [venantius/ultra "0.5.2"]]
-                   :dependencies [[circleci/circleci.test "0.4.1"]
-                                  [pjstadig/humane-test-output "0.8.3"]]
-                   :injections   [(require 'pjstadig.humane-test-output)
-                                  (pjstadig.humane-test-output/activate!)]}}
   :cljsbuild {:builds
               {:test {:source-paths ["src" "test/cljc"]
                       :compiler     {:main           io.jesi.backpack.runner
@@ -42,10 +27,4 @@
                                      :target         :nodejs}}}}
   :doo {:build "test" :alias {:default [:node]}}
   :release-tasks [["deploy"]]
-  :repositories {"releases"  {:url           "s3p://artifacts.jesi.io/releases/"
-                              :no-auth       true
-                              :sign-releases false}
-                 "snapshots" {:url           "s3p://artifacts.jesi.io/snapshots/"
-                              :no-auth       true
-                              :sign-releases false}}
   :aliases {"test-cljs" ["doo" "once"]})
