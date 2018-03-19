@@ -2,7 +2,6 @@
   :description "Clojure(Script) cross-project utilities"
   :license "Unlicensed"
   :url "https://github.com/jesims/backpack"
-  :min-lein-version "2.7.0"
   :plugins [[lein-parent "0.3.4"]
             [lein-cljsbuild "1.1.7"]]
   :parent-project {:path    "build-scripts/parent-clj/project.clj"
