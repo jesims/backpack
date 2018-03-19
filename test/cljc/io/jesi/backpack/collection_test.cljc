@@ -146,9 +146,9 @@
   (testing "Removed nested keys"
     (is (= {:b {}} (bp/dissoc-all {:a 1 :b {:a 2}} :a)))))
 
-(deftest first-non-nil-test
+(deftest first-some-test
   (testing "Returns nil if all keys are nil"
-    (is (nil? (bp/first-non-nil {} :these :do :not :exist))))
+    (is (nil? (bp/first-some {} :these :do :not :exist))))
 
   (testing "Returns first non-nil value"
     (let [id (rnd/uuid)
@@ -156,8 +156,18 @@
              :fact   "In the wild, usually makes no more than twenty kills a year."
              :name   nil
              :id     id}]
-      (is (= id (bp/first-non-nil m :id :animal :this)))
-      (is (= "Lion" (bp/first-non-nil m :name :missing :animal :id))))))
+      (is (= id (bp/first-some m :id :animal :this)))
+      (is (= "Lion" (bp/first-some m :name :missing :animal :id)))))
+
+  (testing "Allows using functions"
+    (let [fn1 #(:id %)
+          fn2 (constantly false)
+          fn3 (constantly "Fact yo self!")
+          fn4 (constantly "Oh My!")
+          m {:animal "Lion"
+             :fact   "The female lion does ninety percent of the hunting."}]
+      (is (= false (bp/first-some m fn1 fn2 fn3 fn4)))
+      (is (= "Oh My!" (bp/first-some m fn4 fn3 fn2 fn1))))))
 
 (deftest filter-nil-keys-test
   (let [m {:id          (rnd/uuid)

@@ -36,11 +36,8 @@
 (defn dissoc-all [map & keys]
   (postwalk #(if (map? %) (apply dissoc % keys) %) map))
 
-(defn first-non-nil [m & keys]
-  (->> keys
-       (map m)
-       (filter (comp not nil?))
-       first))
+(defn first-some [m & ks]
+  (first (filter some? (map #(% m) ks))))
 
 (defn filter-nil-keys
   "Filters out all nil key values from a map"
