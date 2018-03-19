@@ -1,4 +1,5 @@
 (ns io.jesi.backpack.macros
+  #?(:cljs (:require-macros io.jesi.backpack.macros))
   (:refer-clojure :exclude [when-let]))
 
 ;Refer https://github.com/cmr-exchange/cmr-client/blob/70ca65d0103282906eec57aacfb9e4a98d9eebb3/src/cljc/cmr/client/common/util.cljc
