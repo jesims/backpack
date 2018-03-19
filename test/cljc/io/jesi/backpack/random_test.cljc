@@ -9,6 +9,10 @@
     (is (= (count actuals) (count (set actuals))))
     actuals))
 
+(defn- assert-random-size [size fn]
+  (let [actual (fn size)]
+    (is (= size (count actual)))))
+
 (deftest uuid-test
   (testing "UUID's are always random"
     (assert-random #(rnd/uuid))))
@@ -24,6 +28,11 @@
     (assert-random #(rnd/string)))
 
   (testing "Can create a random string of size"
-    (let [size (rand-int 2000)
-          actual (rnd/string size)]
-      (is (= size (count actual))))))
+    (assert-random-size 2000 rnd/string)))
+
+(deftest alpha-numeric-test
+  (testing "Strings are always random"
+    (assert-random #(rnd/alpha-numeric)))
+
+  (testing "Can create a random string of size"
+    (assert-random-size 2000 rnd/alpha-numeric)))
