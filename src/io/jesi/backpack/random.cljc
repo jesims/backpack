@@ -10,7 +10,9 @@
        :name io.jesi.backpack.Random
        :prefix ""
        :methods [#^{:static true} [string [int] String]
-                 #^{:static true} [string [] String]])))
+                 #^{:static true} [string [] String]
+                 #^{:static true} [alpha-numeric [int] String]
+                 #^{:static true} [alpha-numeric [] String]])))
 
 (defn uuid []
   #?(:clj  (UUID/randomUUID)
