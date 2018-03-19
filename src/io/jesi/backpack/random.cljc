@@ -11,8 +11,8 @@
        :prefix ""
        :methods [#^{:static true} [string [int] String]
                  #^{:static true} [string [] String]
-                 #^{:static true} [alpha-numeric [int] String]
-                 #^{:static true} [alpha-numeric [] String]])))
+                 #^{:static true} [alphaNumeric [int] String]
+                 #^{:static true} [alphaNumeric [] String]])))
 
 (defn uuid []
   #?(:clj  (UUID/randomUUID)
@@ -51,3 +51,11 @@
   ([] (alpha-numeric 24))
   ([size]
    (gen-str basic-chars size)))
+
+(defn alphaNumeric
+  "Generates a random string alpha-numeric characters [A-Za-z0-9] (24 character length default)
+
+  Note: Needed for gen-class java method (as hyphenated names are not permitted)
+  "
+  ([] (alpha-numeric 24))
+  ([size] (alpha-numeric size)))
