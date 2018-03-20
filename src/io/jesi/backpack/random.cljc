@@ -31,9 +31,10 @@
        (map char)
        (apply str)))
 
+;Refer: https://en.wikipedia.org/wiki/List_of_Unicode_characters and https://clojure.org/reference/reader#_character
 (def ^:private extended-chars
-  (->> [8 9 10 13]
-       (concat (range 32 256))
+  (->> [\newline \space \tab \formfeed \backspace \return]
+       (concat (range 33 127) (range 160 173) (range 174 256))
        (map char)
        (apply str)))
 
