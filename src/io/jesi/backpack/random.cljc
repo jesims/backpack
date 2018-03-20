@@ -24,7 +24,7 @@
 
 (def ^:private basic-chars
   (->> (concat
-         (range 65 91)                                      ; A-Z
+         (range 65 91)                                      ;A-Z
          (range 97 123)                                     ;a-z
          (range 48 58))                                     ;0-9
        (map char)
