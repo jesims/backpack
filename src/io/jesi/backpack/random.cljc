@@ -1,8 +1,8 @@
 (ns io.jesi.backpack.random
   (:refer-clojure :exclude [uuid])
-  #?(:clj
-     (:require [clojure.set :as set])
-     :cljs
+  (:require
+    [clojure.set :as set])
+  #?(:cljs
      (:require
        [cljs-uuid-utils.core :as UUID]))
   #?(:clj
