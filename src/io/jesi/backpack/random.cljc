@@ -34,8 +34,8 @@
 (def ^:private extended-chars
   (->>
     (concat
-      (range 0 32)                                          ;Exclude c0 control characters
-      (range 128 160)                                       ;Exclude c1 control characters
+      (range 0 33)                                          ;Exclude c0 control characters
+      (range 127 160)                                       ;Exclude c1 control characters
       [173])                                                ;Exclude soft hyphen #shy
     set
     (set/difference (set (range 256)))
