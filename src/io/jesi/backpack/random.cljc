@@ -1,10 +1,10 @@
 (ns io.jesi.backpack.random
   (:refer-clojure :exclude [uuid])
+  (:require
+    [clojure.set :as set]
+    #?(:cljs [cljs-uuid-utils.core :as UUID]))
   #?(:clj
-     (:import java.util.UUID)
-     :cljs
-     (:require
-       [cljs-uuid-utils.core :as UUID]))
+     (:import (java.util UUID)))
   #?(:clj
      (:gen-class
        :name io.jesi.backpack.Random
@@ -21,21 +21,25 @@
 (defn uuid-str [] (str (uuid)))
 
 (def ^:private basic-chars
-  (->> [;A-Z
-        (range 65 91)
-        ;a-z
-        (range 97 123)
-        ;0-9
-        (range 48 58)]
-       flatten
+  (->> (concat
+         (range 65 91)                                      ;A-Z
+         (range 97 123)                                     ;a-z
+         (range 48 58))                                     ;0-9
        (map char)
        (apply str)))
 
+;Refer: https://en.wikipedia.org/wiki/List_of_Unicode_characters and https://clojure.org/reference/reader#_character
 (def ^:private extended-chars
-  (->> [8 9 10 13]
-       (concat (range 32 256))
-       (map char)
-       (apply str)))
+  (->>
+    (concat
+      (range 0 33)                                          ;Exclude c0 control characters
+      (range 127 160)                                       ;Exclude c1 control characters
+      [173])                                                ;Exclude soft hyphen #shy
+    set
+    (set/difference (set (range 256)))
+    (set/union #{\newline \space \tab \formfeed \backspace \return})
+    (map char)
+    (apply str)))
 
 (defn- gen-str [chars size]
   (apply str (take size (repeatedly #(rand-nth chars)))))
