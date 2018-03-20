@@ -1,7 +1,7 @@
 (ns io.jesi.backpack.random
   (:refer-clojure :exclude [uuid])
   #?(:clj
-     (:import java.util.UUID)
+     (:require [clojure.set :as set]) (:import java.util.UUID)
      :cljs
      (:require
        [cljs-uuid-utils.core :as UUID]))
@@ -12,7 +12,9 @@
        :methods [#^{:static true} [string [int] String]
                  #^{:static true} [string [] String]
                  #^{:static true} [alphaNumeric [int] String]
-                 #^{:static true} [alphaNumeric [] String]])))
+                 #^{:static true} [alphaNumeric [] String]]))
+  #?(:clj
+     (:import (java.util UUID))))
 
 (defn uuid []
   #?(:clj  (UUID/randomUUID)
@@ -21,22 +23,25 @@
 (defn uuid-str [] (str (uuid)))
 
 (def ^:private basic-chars
-  (->> [;A-Z
-        (range 65 91)
-        ;a-z
-        (range 97 123)
-        ;0-9
-        (range 48 58)]
-       flatten
+  (->> (concat
+         (range 65 91)                                      ; A-Z
+         (range 97 123)                                     ;a-z
+         (range 48 58))                                     ;0-9
        (map char)
        (apply str)))
 
 ;Refer: https://en.wikipedia.org/wiki/List_of_Unicode_characters and https://clojure.org/reference/reader#_character
 (def ^:private extended-chars
-  (->> [\newline \space \tab \formfeed \backspace \return]
-       (concat (range 33 127) (range 160 173) (range 174 256))
-       (map char)
-       (apply str)))
+  (->>
+    (concat
+      (range 0 32)                                          ;Exclude c0 control characters
+      (range 128 160)                                       ;Exclude c1 control characters
+      [173])                                                ;Exclude soft hyphen #shy
+    set
+    (set/difference (set (range 256)))
+    (set/union #{\newline \space \tab \formfeed \backspace \return})
+    (map char)
+    (apply str)))
 
 (defn- gen-str [chars size]
   (apply str (take size (repeatedly #(rand-nth chars)))))
