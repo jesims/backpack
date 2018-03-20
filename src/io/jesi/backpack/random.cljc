@@ -1,10 +1,12 @@
 (ns io.jesi.backpack.random
   (:refer-clojure :exclude [uuid])
   #?(:clj
-     (:require [clojure.set :as set]) (:import java.util.UUID)
+     (:require [clojure.set :as set])
      :cljs
      (:require
        [cljs-uuid-utils.core :as UUID]))
+  #?(:clj
+     (:import (java.util UUID)))
   #?(:clj
      (:gen-class
        :name io.jesi.backpack.Random
@@ -12,9 +14,7 @@
        :methods [#^{:static true} [string [int] String]
                  #^{:static true} [string [] String]
                  #^{:static true} [alphaNumeric [int] String]
-                 #^{:static true} [alphaNumeric [] String]]))
-  #?(:clj
-     (:import (java.util UUID))))
+                 #^{:static true} [alphaNumeric [] String]])))
 
 (defn uuid []
   #?(:clj  (UUID/randomUUID)
