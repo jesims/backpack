@@ -2,7 +2,8 @@
   (:require
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.random :as rnd]))
+    [io.jesi.backpack.random :as rnd]
+    [clojure.string :as string]))
 
 (defn- assert-random [fn]
   (let [actuals (take 1000 (repeatedly fn))]
@@ -36,3 +37,13 @@
 
   (testing "Can create a random string of size"
     (assert-random-size 2000 rnd/alpha-numeric)))
+
+(def extended-chars #?(:clj  #'rnd/extended-chars
+                       :cljs rnd/extended-chars))
+
+(deftest extended-chars-test
+  (testing "Can be converted to upper/lower still equal"
+    (is (= (string/lower-case (string/upper-case extended-chars))
+           (string/lower-case extended-chars)))
+    (is (= (string/upper-case (string/lower-case extended-chars))
+           (string/upper-case extended-chars)))))

@@ -12,7 +12,8 @@
        :methods [#^{:static true} [string [int] String]
                  #^{:static true} [string [] String]
                  #^{:static true} [alphaNumeric [int] String]
-                 #^{:static true} [alphaNumeric [] String]])))
+                 #^{:static true} [alphaNumeric [] String]
+                 #^{:static true} [extendedChars [] String]])))
 
 (defn uuid []
   #?(:clj  (UUID/randomUUID)
@@ -34,11 +35,15 @@
     (concat
       (range 0 33)                                          ;Exclude c0 control characters
       (range 127 160)                                       ;Exclude c1 control characters
-      [173])                                                ;Exclude soft hyphen #shy
+      [173]                                                 ;Exclude soft hyphen #shy
+      ;µ to upper = Μ to lower = μ...WTF MATE
+      ;ß to lower = lss to upper = LSS
+      [181 223 956 924])                                    ; (map int [\µ \ß \μ \Μ ])
     set
     (set/difference (set (range 256)))
     (set/union #{\newline \space \tab \formfeed \backspace \return})
     (map char)
+    sort
     (apply str)))
 
 (defn- gen-str [chars size]
@@ -63,3 +68,8 @@
   "
   ([] (alpha-numeric 24))
   ([size] (alpha-numeric size)))
+
+(defn extendedChars
+  "Returns all characters used in random string generation"
+  []
+  extended-chars)
