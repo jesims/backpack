@@ -12,7 +12,8 @@
        :methods [#^{:static true} [string [int] String]
                  #^{:static true} [string [] String]
                  #^{:static true} [alphaNumeric [int] String]
-                 #^{:static true} [alphaNumeric [] String]])))
+                 #^{:static true} [alphaNumeric [] String]
+                 #^{:static true} [extendedChars [] String]])))
 
 (defn uuid []
   #?(:clj  (UUID/randomUUID)
@@ -63,3 +64,8 @@
   "
   ([] (alpha-numeric 24))
   ([size] (alpha-numeric size)))
+
+(defn extendedChars
+  "Returns all characters used in random string generation"
+  []
+  extended-chars)
