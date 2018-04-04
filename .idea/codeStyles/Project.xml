@@ -1,0 +1,9 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <ClojureCodeStyleSettings>{
+  :cljs.core/= 1000
+  :clojure.core/-&gt;&gt; 1000
+  :cursive.formatting/default-only-indent true
+}</ClojureCodeStyleSettings>
+  </code_scheme>
+</component>
