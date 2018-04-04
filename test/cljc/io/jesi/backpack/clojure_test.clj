@@ -22,8 +22,17 @@
 (def def-kw-type (partial bp/kw-type ->TestType))
 (def-kw-type ::tested)
 (def-kw-type ::and-worked)
+(def-kw-type :LOTS_OF_YELLING)
 
 (deftest kw-type-test
   (testing "Registers keyword as type"
+    ;FIXME fails in test refresh (but not the first time it runs)
     (is (instance? TestType tested))
-    (is (instance? TestType and-worked))))
+    (is (instance? TestType and-worked))
+    (is (instance? TestType lots-of-yelling)))
+
+  (testing "Applies the keyword to the type constructor"
+    (is (= ::tested (.val tested)))
+    (is (= ::and-worked (.val and-worked)))
+    (is (= :LOTS_OF_YELLING (.val lots-of-yelling)))))
+
