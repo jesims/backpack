@@ -59,6 +59,7 @@
 (defmacro defkw [kw]
   `(def ~(symbol (name kw)) ~kw))
 
+;TODO this should not be used by cljs
 ; Source https://gist.github.com/Gonzih/5814945
 (defmacro try*
   [& body]
@@ -72,3 +73,12 @@
               (expand form)
               [form]))]
     (cons 'try (mapcat transform body))))
+
+(defmacro shorthand
+  "returns a map with the keywords from the symbol names"
+  [& symbols]
+  (into (array-map)
+        (map
+          (fn [sym]
+            [(keyword (name sym)) sym])
+          symbols)))
