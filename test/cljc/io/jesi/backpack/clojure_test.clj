@@ -19,12 +19,12 @@
     (is (nil? (bp/->uri true)))))
 
 (deftype TestType [val])
-(def def-kw-type (partial bp/kw-type ->TestType))
-(def-kw-type ::tested)
-(def-kw-type ::and-worked)
-(def-kw-type :LOTS_OF_YELLING)
+(def ^:private def-test-type (partial bp/defkw-type ->TestType))
+(def-test-type ::tested)
+(def-test-type ::and-worked)
+(def-test-type :LOTS_OF_YELLING)
 
-(deftest kw-type-test
+(deftest defkw-type-test
   (testing "Registers keyword as type"
     ;FIXME fails in test refresh (but not the first time it runs)
     (is (instance? TestType tested))
