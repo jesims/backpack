@@ -7,7 +7,8 @@
     [io.jesi.backpack.macros #?(:clj :refer :cljs :refer-macros) [try*
                                                                   catch->nil
                                                                   fn1
-                                                                  when-let]]))
+                                                                  when-let
+                                                                  shorthand]]))
 
 (defn- throw-ex []
   (throw (ex-info "Error" {})))
@@ -88,16 +89,36 @@
     (catch-any [RuntimeException SecurityException] _ "Multi")
     (catch Exception _ "Exception")))
 
-(deftest try*-test
-  (testing "Doesn't catch if none thrown"
-    (is (= "Not Caught" (throw-for -1))))
 
-  (testing "allows catching multiple exception types"
-    (is (= "Multi" (throw-for 1)))
-    (is (= "Multi" (throw-for 2))))
+#?(:clj
+   (deftest try*-test
+     (testing "Doesn't catch if none thrown"
+       (is (= "Not Caught" (throw-for -1))))
 
-  (testing "allows catching multiple types and single exceptions"
-    (is (= "ArithmeticException" (throw-for 3))))
+     (testing "allows catching multiple exception types"
+       (is (= "Multi" (throw-for 1)))
+       (is (= "Multi" (throw-for 2))))
 
-  (testing "allows catching single exceptions"
-    (is (= "Exception" (throw-for 0)))))
+     (testing "allows catching multiple types and single exceptions"
+       (is (= "ArithmeticException" (throw-for 3))))
+
+     (testing "allows catching single exceptions"
+       (is (= "Exception" (throw-for 0))))))
+
+(def ^:private shorthand-test-variable "long name is long")
+
+(deftest shorthand-test
+  #?(:clj
+     (testing "is a macro"
+       (is (:macro (meta #'shorthand)))))
+
+  (testing "creates a map with the keywords from the symbol names"
+    (let [a 1
+          b 2
+          c {:cheese false}]
+      (is (= {:a 1} (shorthand a)))
+      (is (= {:b 2} (shorthand b)))
+      (is (= {:a 1 :b 2} (shorthand a b)))
+      (is (= {:c {:cheese false}} (shorthand c)))
+      (is (= {:c {:cheese false} :a 1 :b 2} (shorthand c a b)))
+      (is (= {:a 1 :shorthand-test-variable "long name is long"} (shorthand a shorthand-test-variable))))))

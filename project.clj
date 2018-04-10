@@ -1,4 +1,4 @@
-(defproject io.jesi/backpack "0.0.3"
+(defproject io.jesi/backpack "0.0.4"
   :description "Clojure(Script) cross-project utilities"
   :license "Unlicensed"
   :url "https://github.com/jesims/backpack"
@@ -11,7 +11,8 @@
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.0.0"]
                  [org.clojure/tools.namespace "0.2.11"]
-                 [potemkin "0.4.4"]]
+                 [potemkin "0.4.4"]
+                 [camel-snake-kebab "0.4.0"]]
   :test-paths ["test/cljc"]
   :clean-targets ^{:protect false} ["target"]
   :aot [io.jesi.backpack.random]
