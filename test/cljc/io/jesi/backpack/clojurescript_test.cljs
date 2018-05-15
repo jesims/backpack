@@ -36,4 +36,3 @@
 
     (testing "end-to-end js->clj->js"
       (is (json= js (-> js bp/js->clj bp/clj->js))))))
-
