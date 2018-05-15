@@ -15,17 +15,25 @@
           actual (->> m bp/clj->jskw js/JSON.stringify)]
       (is (= "{\"some/ns\":{\"map/with\":{\"nested/keys\":\"has a value\"}}}" actual)))))
 
-(deftest js->clj-test
+(defn- json= [& args]
+  (apply = (map js/JSON.stringify args)))
 
-  (testing "converts all keys to kebab-case"
-    (is (= {:a-cat {:a-hat true}}
-           (bp/js->clj (clj->js {:aCat {:aHat true}}))))))
+(let [js (clj->js {:aCat {:aHat true}})
+      clj {:a-cat {:a-hat true}}]
 
-(deftest clj->json-str-test
-  (is false))
+  (deftest js->clj-test
 
-(deftest json-str->clj-test
-  (is false))
+    (testing "converts all keys to kebab-case"
+      (is (= clj (-> js bp/js->clj))))
 
-(deftest clj->js-test
-  (is false))
+    (testing "end-to-end clj->js->clj"
+      (is (= clj (-> clj bp/clj->js bp/js->clj)))))
+
+  (deftest clj->js-test
+
+    (testing "converts all keys to camelCase"
+      (is (json= js (-> clj bp/clj->js))))
+
+    (testing "end-to-end js->clj->js"
+      (is (json= js (-> js bp/js->clj bp/clj->js))))))
+

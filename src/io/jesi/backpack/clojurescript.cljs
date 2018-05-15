@@ -5,7 +5,6 @@
     [camel-snake-kebab.extras :refer [transform-keys]]
     [clojure.string :as string]))
 
-;TODO: Case conversion (camel->kebab and back) and preserve namespaces
 (declare clj->jskw)
 
 (defn- key->jskw [k]
@@ -41,11 +40,12 @@
         :else x))))
 
 (defn js->clj
-  "Converts"
+  "Transforms JavaScript to ClojureScript converting keys to kebab-case keywords"
   [x]
   (transform-keys csk/->kebab-case-keyword (clojure.core/js->clj x :keywordize-keys true)))
 
 (defn clj->js [x]
+  "Transforms ClojureScript to JavaScript converting keys to camelCase"
   (clojure.core/clj->js x :keyword-fn csk/->camelCaseString))
 
 (defn clj->json-str
@@ -54,4 +54,4 @@
 
 (defn json-str->clj
   [x]
-  (js->cljkw (js/JSON.parse x)))
+  (js->clj (js/JSON.parse x)))
