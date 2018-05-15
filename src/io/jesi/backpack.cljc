@@ -1,4 +1,5 @@
 (ns io.jesi.backpack
+  (:refer-clojure :exclude [js->clj])
   (:require
     [io.jesi.backpack.collection]
     [io.jesi.backpack.fn]
@@ -64,4 +65,5 @@
    :cljs
    (import-vars
      [io.jesi.backpack.clojurescript
-      clj->jskw]))
+      clj->jskw
+      js->clj]))

@@ -1,5 +1,8 @@
 (ns io.jesi.backpack.clojurescript
+  (:refer-clojure :exclude [clj->js js->clj])
   (:require
+    [camel-snake-kebab.core :as csk]
+    [camel-snake-kebab.extras :refer [transform-keys]]
     [clojure.string :as string]))
 
 ;TODO: Case conversion (camel->kebab and back) and preserve namespaces
@@ -37,14 +40,18 @@
                     arr)
         :else x))))
 
-(defn js->cljkw
+(defn js->clj
+  "Converts"
   [x]
-  (js->clj x :keywordize-keys true))
+  (transform-keys csk/->kebab-case-keyword (clojure.core/js->clj x :keywordize-keys true)))
+
+(defn clj->js [x]
+  (clojure.core/clj->js x :keyword-fn csk/->camelCaseString))
 
 (defn clj->json-str
   [x]
-  (.stringify js/JSON (clj->js x)))
+  (js/JSON.stringify (clj->js x)))
 
 (defn json-str->clj
   [x]
-  (js->cljkw (.parse js/JSON x)))
+  (js->cljkw (js/JSON.parse x)))
