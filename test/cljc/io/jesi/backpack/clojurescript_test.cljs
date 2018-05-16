@@ -6,8 +6,8 @@
 (defn- json= [& args]
   (apply = (map js/JSON.stringify args)))
 
-(def ^:private jso (clj->js {:aCat {:aHat true}}))
-(def ^:private cljo {:a-cat {:a-hat true}})
+(def ^:private js (clj->js {:aCat {:aHat true}}))
+(def ^:private clj {:a-cat {:a-hat true}})
 
 (defn- nillmap [& keys]
   (zipmap keys (repeat nil)))
@@ -18,12 +18,12 @@
     (is (fn? bp/js->clj)))
 
   (testing "converts all keys to kebab-case"
-    (is (= cljo (-> jso bp/js->clj)))
+    (is (= clj (-> js bp/js->clj)))
     (is (= (nillmap :base-url :helios-url)
            (bp/js->clj (nillmap :baseURL :heliosURL)))))
 
   (testing "end-to-end clj->js->clj"
-    (is (= cljo (-> cljo bp/clj->js bp/js->clj)))))
+    (is (= clj (-> clj bp/clj->js bp/js->clj)))))
 
 (deftest clj->js-test
 
@@ -31,22 +31,30 @@
     (is (fn? bp/clj->js)))
 
   (testing "converts all keys to camelCase"
-    (is (json= jso (-> cljo bp/clj->js))))
+    (is (json= js (-> clj bp/clj->js))))
 
   (testing "end-to-end js->clj->js"
-    (is (json= jso (-> jso bp/js->clj bp/clj->js)))))
+    (is (json= js (-> js bp/js->clj bp/clj->js)))))
 
 (deftest clj->json-test
 
   (testing "is a function"
     (is (fn? bp/clj->json)))
 
-  (testing "converts ClojureScript to JSON string"))
+  (testing "converts ClojureScript to JSON string"
+    (is (= (js/JSON.stringify js)
+           (bp/clj->json js)))
+    (is (= clj
+           (-> clj bp/clj->json bp/json->clj)))))
 
 (deftest json->clj-test
 
   (testing "is a function"
     (is (fn? bp/json->clj)))
 
-  (testing "converts JSON strings to ClojureScript"))
-
+  (testing "converts JSON strings to ClojureScript"
+    (is (= clj
+           (bp/json->clj (js/JSON.stringify (bp/clj->js clj)))))
+    (let [json (js/JSON.stringify js)]
+      (is (= json
+             (-> json bp/json->clj bp/clj->json))))))
