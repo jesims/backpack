@@ -9,13 +9,18 @@
 (def ^:private jso (clj->js {:aCat {:aHat true}}))
 (def ^:private cljo {:a-cat {:a-hat true}})
 
+(defn- nillmap [& keys]
+  (zipmap keys (repeat nil)))
+
 (deftest js->clj-test
 
   (testing "is a function"
     (is (fn? bp/js->clj)))
 
   (testing "converts all keys to kebab-case"
-    (is (= cljo (-> jso bp/js->clj))))
+    (is (= cljo (-> jso bp/js->clj)))
+    (is (= (nillmap :base-url :helios-url)
+           (bp/js->clj (nillmap :baseURL :heliosURL)))))
 
   (testing "end-to-end clj->js->clj"
     (is (= cljo (-> cljo bp/clj->js bp/js->clj)))))
