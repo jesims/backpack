@@ -22,6 +22,10 @@ aliases:
       run:
         name: Check & Cancel Redundant Build
         command: 'cancel-redundant-builds.sh'
+    notify: &NOTIFY
+      run:
+        command: './notify.sh'
+        when: on_fail
 
 jobs:
   test_clj:
@@ -33,6 +37,7 @@ jobs:
       - restore_cache:
           <<: *LEIN_CACHE
       - run: './backpack.sh test'
+      - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
 
@@ -45,6 +50,7 @@ jobs:
       - restore_cache:
           <<: *LEIN_CACHE
       - run: './backpack.sh test-cljs'
+      - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
 
@@ -57,6 +63,7 @@ jobs:
       - restore_cache:
           <<: *LEIN_CACHE
       - run: './backpack.sh snapshot'
+      - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
 
@@ -69,6 +76,7 @@ jobs:
       - restore_cache:
           <<: *LEIN_CACHE
       - run: './backpack.sh release'
+      - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
 
