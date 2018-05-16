@@ -54,7 +54,7 @@
 
   (testing "converts JSON strings to ClojureScript"
     (is (= clj
-           (bp/json->clj (js/JSON.stringify (bp/clj->js clj)))))
+           (-> clj bp/clj->js js/JSON.stringify bp/json->clj)))
     (let [json (js/JSON.stringify js)]
       (is (= json
              (-> json bp/json->clj bp/clj->json))))))
