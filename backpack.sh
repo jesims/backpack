@@ -32,7 +32,7 @@ EOF
 
 unit-test () {
 	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
-	lein trampoline test
+	lein test
 	abort_on_error 'Clojure tests failed'
 }
 
