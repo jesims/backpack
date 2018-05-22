@@ -12,8 +12,8 @@ ${txtbld}SYNOPSIS${txtrst}
 	${script_name} clean
 	${script_name} release
 	${script_name} snapshot [-l]
-	${script_name} test
-	${script_name} test-cljs
+	${script_name} test [-r]
+	${script_name} test-cljs [-r]
 
 ${txtbld}DESCRIPTION${txtrst}
 	${txtbld}clean${txtrst}
@@ -31,24 +31,24 @@ EOF
 }
 
 unit-test () {
-	echo_message "In the animal kingdom, the rule is, eat or be eaten."
-	lein trampoline test
-	abort_on_error "Clojure tests failed"
+	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
+	lein test
+	abort_on_error 'Clojure tests failed'
 }
 
 unit-test-refresh () {
-	echo_message "The truth is our natural world is changing. And we are totally dependent on that world."
-	lein test-refresh
+	echo_message 'The truth is our natural world is changing. And we are totally dependent on that world.'
+	lein auto test $@
 }
 
 unit-test-cljs () {
-	echo_message "In the clojure kingdom, the rule is, transform or be transformed."
+	echo_message 'In the clojure kingdom, the rule is, transform or be transformed.'
 	lein test-cljs
-	abort_on_error "ClojureScript tests failed"
+	abort_on_error 'ClojureScript tests failed'
 }
 
 unit-test-cljs-refresh () {
-	echo_message "In a few special places, these clojure changes create some of the greatest transformation spectacles on earth"
+	echo_message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
 	lein doo
 }
 
@@ -70,7 +70,7 @@ parse () {
 		test)
 			case $2 in
 				-r)
-					unit-test-refresh;;
+					unit-test-refresh ${@:3};;
 				*)
 					unit-test;;
 			esac ;;
