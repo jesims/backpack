@@ -63,7 +63,8 @@
          (bp/->kebab-case "baseUrl")))
 
   (is (= "base-url-v2"
-         (bp/->kebab-case :baseURLv2)))
+         (bp/->kebab-case :baseURLv2)
+         (bp/->kebab-case :BaseUrlV2)))
 
   (is (= "something-had-spaces"
          (bp/->kebab-case "something had spaces")))

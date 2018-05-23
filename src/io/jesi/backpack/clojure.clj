@@ -11,8 +11,6 @@
     :else nil))
 
 (defn defkw-type [type kw & args]
-  (prn kw)
-  (prn (symbol (->kebab-case (name kw))))
   (intern *ns*
           (symbol (->kebab-case (name kw)))
           (apply type (concat [kw] args))))
