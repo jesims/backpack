@@ -50,6 +50,10 @@
    no-empty-values]
 
   [io.jesi.backpack.string
+   ->kebab-case
+   ->kebab-case-key
+   ->camelCase
+   ->camelCase-key
    subs-inc
    subs-to
    true-string?

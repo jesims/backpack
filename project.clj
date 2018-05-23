@@ -8,11 +8,11 @@
                    :inherit [:plugins :repositories :managed-dependencies :dependencies :exclusions [:profiles :dev] :test-refresh]}
   :dependencies [[org.clojure/clojurescript]
                  [com.rpl/specter]
+                 [camel-snake-kebab "0.4.0"]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.0.0"]
                  [org.clojure/tools.namespace "0.2.11"]
-                 [potemkin "0.4.4"]
-                 [camel-snake-kebab "0.4.0"]]
+                 [potemkin "0.4.4"]]
   :test-paths ["test/cljc"]
   :clean-targets ^{:protect false} ["target"]
   :aot [io.jesi.backpack.random]

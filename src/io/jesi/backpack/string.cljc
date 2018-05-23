@@ -24,3 +24,21 @@
 (defn true-string?
   [s]
   (= s "true"))
+
+(defn ->camelCase [s]
+  (when s
+    (let [[head & tail] (string/split (name s) #"-|(?=[A-Z])")]
+      (string/join (cons (string/lower-case head) (map string/capitalize tail))))))
+
+(defn ->kebab-case [s]
+  (some-> s
+          name
+          (string/split #"(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|\s")
+          (->> (string/join "-"))
+          (string/lower-case)))
+
+(defn ->kebab-case-key [s]
+  (some-> s ->kebab-case keyword))
+
+(defn ->camelCase-key [s]
+  (some-> s ->camelCase keyword))

@@ -37,3 +37,36 @@
     (is (false? (bp/true-string? "f")))
     (is (false? (bp/true-string? "")))
     (is (false? (bp/true-string? nil)))))
+
+(deftest ->camelCase-test
+  (is (= "v2"
+         (bp/->camelCase :v2)
+         (bp/->camelCase "v2")))
+
+  (is (= "baseUrl"
+         (bp/->camelCase :base-url)
+         (bp/->camelCase "base-url")))
+
+  (is (= "_actions"
+         (bp/->camelCase :_actions)
+         (bp/->camelCase "_actions"))))
+
+(deftest ->kebab-case-test
+  (is (= "v2"
+         (bp/->kebab-case :v2)
+         (bp/->kebab-case "v2")))
+
+  (is (= "base-url"
+         (bp/->kebab-case :baseUrl)
+         (bp/->kebab-case :baseURL)
+         (bp/->kebab-case "baseUrl")))
+
+  (is (= "something-had-spaces"
+         (bp/->kebab-case "something had spaces")))
+
+  (is (= "something-had--multiple-spaces"
+         (bp/->kebab-case "something had  multiple spaces")))
+
+  (is (= "_actions"
+         (bp/->kebab-case :_actions)
+         (bp/->kebab-case "_actions"))))

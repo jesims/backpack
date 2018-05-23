@@ -6,10 +6,14 @@
 (defn- json= [& args]
   (apply = (map js/JSON.stringify args)))
 
-(def ^:private defaults {:v2       "is better than v1"
-                         :_actions [{:name "Next" :type "GET"}]})
-(def ^:private js (clj->js (merge defaults {:aCat {:aHat true}})))
-(def ^:private clj (merge defaults {:a-cat {:a-hat true}}))
+(def ^:private js (clj->js {:baseUrl  "https://"
+                            :v2       "is better than v1"
+                            :_actions [{:name "Next" :type "GET"}]
+                            :aCat     {:aHat true}}))
+(def ^:private clj {:base-url  "https://"
+                    :v2        "is better than v1"
+                    :_actions  [{:name "Next" :type "GET"}]
+                    :a-cat     {:a-hat true}})
 
 (defn- nillmap [& keys]
   (zipmap keys (repeat nil)))
