@@ -1,6 +1,6 @@
 (ns io.jesi.backpack.collection
   (:require
-    [clojure.walk :refer [postwalk]]))
+    [io.jesi.backpack.walk :refer [postwalk]]))
 
 (defn distinct-by [key entities]
   (apply distinct? (map key entities)))
@@ -11,9 +11,9 @@
 
 (defn safe-empty? [x]
   (or (nil? x)
-    (if (seqable? x)
-      (empty? x)
-      false)))
+      (if (seqable? x)
+        (empty? x)
+        false)))
 
 (defn filter-values
   [pred map]
