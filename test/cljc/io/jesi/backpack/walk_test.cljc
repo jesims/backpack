@@ -2,7 +2,7 @@
   (:require
     [clojure.test :refer [deftest is testing]]
     [clojure.walk :as cljw]
-    [io.jesi.backpack.walk :as bp]))
+    [io.jesi.backpack :as bp]))
 
 (def ^:private col {:a [{:b ""}]})
 
@@ -36,7 +36,9 @@
       (let [capture (atom [])]
         (bp/prewalk #(do (swap! capture conj %) %) col)
         (is (= [col [:a [{:b ""}]] :a [{:b ""}] {:b ""} [:b ""] :b ""]
-               @capture)))))
+               @capture))
+
+        (bp/prewalk [[1 2] [3 4 [5 6]] [7 8]]))))
 
   #?(:clj
      (testing "behaves the same as clojure.walk"
