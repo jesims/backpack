@@ -1,6 +1,6 @@
 (ns io.jesi.backpack.collection
   (:require
-    [io.jesi.backpack.walk :refer [postwalk]]))
+    [io.jesi.backpack.traverse :refer [postwalk]]))
 
 (defn distinct-by [key entities]
   (apply distinct? (map key entities)))

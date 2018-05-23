@@ -7,7 +7,7 @@
     [io.jesi.backpack.number]
     [io.jesi.backpack.specter]
     [io.jesi.backpack.string]
-    [io.jesi.backpack.walk]
+    [io.jesi.backpack.traverse]
     [io.jesi.backpack.macros :refer [import-vars]]
     #?(:cljs [io.jesi.backpack.clojurescript]))
   #?(:clj
@@ -57,8 +57,8 @@
    true-string?
    uuid-str?]
 
-  [io.jesi.backpack.walk
-   walkz
+  [io.jesi.backpack.traverse
+   walk
    prewalk
    postwalk
    prewalk-demo

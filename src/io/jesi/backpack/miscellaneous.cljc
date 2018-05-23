@@ -2,7 +2,7 @@
   (:require
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
-     (:import java.util.UUID)))
+     (:import (java.util UUID))))
 
 (defn ->uuid [s]
   (cond

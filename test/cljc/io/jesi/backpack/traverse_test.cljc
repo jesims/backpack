@@ -1,4 +1,4 @@
-(ns io.jesi.backpack.walk-test
+(ns io.jesi.backpack.traverse-test
   (:require
     [clojure.test :refer [deftest is testing]]
     [clojure.walk :as cljw]

@@ -24,26 +24,6 @@
     (is (false? (bp/safe-empty? 1234)))
     (is (false? (bp/safe-empty? (rnd/uuid))))))
 
-(deftest safe-empty?-test
-  (testing "returns true when empty coll/string/map"
-    (is (bp/safe-empty? []))
-    (is (bp/safe-empty? '()))
-    (is (bp/safe-empty? ""))
-    (is (bp/safe-empty? {})))
-
-  (testing "returns false when non empty coll/string/map"
-    (is (false? (bp/safe-empty? ["value"])))
-    (is (false? (bp/safe-empty? '("value"))))
-    (is (false? (bp/safe-empty? "value")))
-    (is (false? (bp/safe-empty? {:value true}))))
-
-  (testing "returns true when nil"
-    (is (bp/safe-empty? nil)))
-
-  (testing "returns false when non-nil"
-    (is (false? (bp/safe-empty? 1234)))
-    (is (false? (bp/safe-empty? (rnd/uuid))))))
-
 (deftest distinct-by-test
   (testing "returns true if a collection of maps are distinct by a given keyword"
     (let [generator (fn [level] {:val (rnd/string) :type "animal" :danger-level level})

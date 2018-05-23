@@ -1,3 +1,10 @@
+(def warning-handlers ['(fn [warning-type env extra]
+                          (when (warning-type cljs.analyzer/*cljs-warnings*)
+                            (when-let [msg (cljs.analyzer/error-message warning-type extra)]
+                              (binding [*out* *err*]
+                                (println "ERROR:" (cljs.analyzer/message env msg)))
+                              (System/exit 1))))])
+
 (defproject io.jesi/backpack "0.0.7"
   :description "Clojure(Script) cross-project utilities"
   :license "Unlicensed"
@@ -24,7 +31,8 @@
                                      :pretty-print   true
                                      :process-shim   false
                                      :parallel-build true
-                                     :target         :nodejs}}}}
+                                     :target         :nodejs
+                                     :warning-handlers ~warning-handlers}}}}
   :doo {:build "test" :alias {:default [:node]}}
   :release-tasks [["deploy"]]
   :aliases {"test-cljs" ["doo" "once"]})

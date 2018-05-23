@@ -8,10 +8,11 @@
     [io.jesi.backpack.fn-test]
     [io.jesi.backpack.macros-test]
     [io.jesi.backpack.miscellaneous]
+    [io.jesi.backpack.number-test]
     [io.jesi.backpack.random-test]
     [io.jesi.backpack.specter-test]
     [io.jesi.backpack.string-test]
-    [io.jesi.backpack.walk-test]))
+    [io.jesi.backpack.traverse-test]))
 
 (enable-console-print!)
 
@@ -21,7 +22,9 @@
   'io.jesi.backpack.fn-test
   'io.jesi.backpack.macros-test
   'io.jesi.backpack.miscellaneous
+  'io.jesi.backpack.number-test
   'io.jesi.backpack.random-test
   'io.jesi.backpack.specter-test
   'io.jesi.backpack.string-test
-  'io.jesi.backpack.walk-test)
+  'io.jesi.backpack.traverse-test)
+
