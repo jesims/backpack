@@ -33,7 +33,7 @@
 (defn ->kebab-case [s]
   (some-> s
           name
-          (string/split #"(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|\s")
+          (string/split #"(?<=[A-Z])(?=[A-Z][a-z])|(?<=[^A-Z])(?=[A-Z])|\s|(?<=.)_")
           (->> (string/join "-"))
           (string/lower-case)))
 
