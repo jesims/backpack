@@ -25,7 +25,7 @@
 
     #?(:clj
        (testing "behaves the same as clojure.walk"
-         (is (= (with-out-str (clw/postwalk-demo col))
+         (is (= (with-out-str (cljw/postwalk-demo col))
                 (with-out-str (bp/postwalk-demo col))))))))
 
 (deftest prewalk-test
