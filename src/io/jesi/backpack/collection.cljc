@@ -11,9 +11,9 @@
 
 (defn safe-empty? [x]
   (or (nil? x)
-      (if (seqable? x)
-        (empty? x)
-        false)))
+    (if (seqable? x)
+      (empty? x)
+      false)))
 
 (defn filter-values
   [pred map]
@@ -53,3 +53,20 @@
     (if (seq new-entries)
       (apply assoc map new-entries)
       map)))
+
+(defn remove-empty
+  [x]
+  (let [x (postwalk
+            (fn remove-empty-postwalk [x]
+              (condp #(%1 %2) x
+                safe-empty? nil
+                map-entry? (if (safe-empty? (second x))
+                             nil
+                             x)
+                coll? (into (empty x) (remove safe-empty? x))
+                seq? (remove safe-empty? x)
+                x))
+            x)]
+    (if (seqable? x)
+      (not-empty x)
+      x)))

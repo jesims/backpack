@@ -24,6 +24,7 @@
    filter-values
    first-some
    in?
+   remove-empty
    safe-empty?
    select-non-nil-keys
    translate-keys]
@@ -51,7 +52,13 @@
    subs-inc
    subs-to
    true-string?
-   uuid-str?])
+   uuid-str?]
+
+  [io.jesi.backpack.walk
+   prewalk
+   postwalk
+   prewalk-demo
+   postwalk-demo])
 
 #?(:clj
    (import-vars

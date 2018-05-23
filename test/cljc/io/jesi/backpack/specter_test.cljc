@@ -23,22 +23,3 @@
 
     (testing "walks over maps in other collections"
       (is (= {} (sp/select-one [sp/ALL bp/map-walker] [1 [2] "3" nil {}]))))))
-
-(deftest no-empty-values-test
-  (testing "returns the map without empty values"
-    (is (= {:str "value" :int 123 :vec ["value"]}
-           (bp/no-empty-values {:str       "value"
-                                :empty-str ""
-                                :vec       ["value"]
-                                :empty-vec []
-                                :int       123
-                                :nil       nil}))))
-  (testing "runs on nested maps"
-    (is (= {:map {:str-vec ["string"]}}
-           (bp/no-empty-values {:empty-map {}
-                                :map       {:str-vec ["string"]
-                                            :nil     nil
-                                            :map     {:empty-str ""}}}))))
-  (testing "returns nil when empty"
-    (is (nil? (bp/no-empty-values {:str ""})))))
-
