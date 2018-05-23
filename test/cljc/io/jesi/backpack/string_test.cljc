@@ -76,4 +76,7 @@
          (bp/->kebab-case "_actions")))
 
   (is (= "_lots-of-yelling"
-         (bp/->kebab-case "_LOTS_OF_YELLING"))))
+         (bp/->kebab-case "_LOTS_OF_YELLING")))
+
+  (is (= "lots-of-yelling"
+         (bp/->kebab-case :LOTS_OF_YELLING))))
