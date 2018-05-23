@@ -7,6 +7,7 @@
     [io.jesi.backpack.number]
     [io.jesi.backpack.specter]
     [io.jesi.backpack.string]
+    [io.jesi.backpack.walk]
     #?(:cljs [io.jesi.backpack.clojurescript]))
   #?(:clj
            (:require [potemkin :refer [import-vars]]
