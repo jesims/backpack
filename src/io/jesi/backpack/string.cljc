@@ -37,8 +37,5 @@
           (->> (string/join "-"))
           (string/lower-case)))
 
-(defn ->kebab-case-key [s]
-  (some-> s ->kebab-case keyword))
-
-(defn ->camelCase-key [s]
-  (some-> s ->camelCase keyword))
+(def ->kebab-case-key (comp keyword ->kebab-case))
+(def ->camelCase-key (comp keyword ->camelCase))
