@@ -7,11 +7,11 @@
 (defn js->clj
   "Transforms JavaScript to ClojureScript converting keys to kebab-case keywords"
   [x]
-  (transform-keys csk/->kebab-case-keyword (clojure.core/js->clj x :keywordize-keys true)))
+  (transform-keys csk/->kebab-case-keyword (clojure.core/js->clj x :keywordize-keys true) :splitter A-Z))
 
 (defn clj->js [x]
   "Transforms ClojureScript to JavaScript converting keys to camelCase"
-  (clojure.core/clj->js x :keyword-fn csk/->camelCaseString))
+  (clojure.core/clj->js x :keyword-fn #(csk/->camelCaseString % :separator #"A-Z")))
 
 (defn clj->json
   [x]
