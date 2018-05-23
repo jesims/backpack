@@ -51,5 +51,7 @@ All string quotes within test functions should be interesting animal facts; with
 
 # Other Projects
 
-* https://github.com/weavejester/medley
-* or Search https://crossclj.info/ for function existence
+* [weavejester/medley](https://github.com/weavejester/medley)
+* [clojure/core.incubator](https://github.com/clojure/core.incubator)
+* [ptaoussanis/encore](https://github.com/ptaoussanis/encore)
+* or Search [crossclj.info](https://crossclj.info/)
