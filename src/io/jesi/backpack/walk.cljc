@@ -12,12 +12,12 @@
     (outer form)))
 
 (defn prewalk
-  ""
+  "Like clojure.walk/prewalk, but uses io.jesi.backpack.walk/walk"
   [f form]
   (walk (partial prewalk f) identity (f form)))
 
 (defn postwalk
-  ""
+  "Like clojure.walk/postwalk, but uses io.jesi.backpack.walk/walk"
   [f form]
   (walk (partial postwalk f) f form))
 
