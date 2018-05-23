@@ -1,13 +1,13 @@
 (ns io.jesi.backpack.walk
   #?(:cljs
      (:require
-       [cljs.core :refer [MapEntry]])
+       [cljs.core :refer [->MapEntry]])
      :clj
      (:import clojure.lang.MapEntry)))
 
 (defn- create-map-entry [k v]
   #?(:clj  (MapEntry. k v)
-     :cljs (MapEntry. k v nil)))
+     :cljs (->MapEntry k v nil)))
 
 (defn walk
   "Like clojure.walk/walk, but does not convert MapEntry to vector"

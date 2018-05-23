@@ -1,8 +1,8 @@
 (ns io.jesi.backpack.walk-test
   (:require
     [clojure.test :refer [deftest is testing]]
-    [io.jesi.backpack.walk :as bp]
-    [clojure.walk :as clj-walk]))
+    [clojure.walk :as cljw]
+    [io.jesi.backpack.walk :as bp]))
 
 (def ^:private col {:a [{:b ""}]})
 
@@ -15,12 +15,12 @@
         (let [capture (atom [])]
           (bp/postwalk #(do (swap! capture conj %) %) col)
           (is (= [1 2 [1 2] 3 4 5 6 [5 6] [3 4 [5 6]] 7 8 [7 8] [[1 2] [3 4 [5 6]] [7 8]]]
-                 @capture))))
+                 @capture))))))
 
-      #?(:clj
-         (testing "behaves the same as clojure.walk"
-           (is (= (with-out-str (clj-walk/postwalk-demo col))
-                  (with-out-str (bp/postwalk-demo col)))))))))
+  #?(:clj
+     (testing "behaves the same as clojure.walk"
+       (is (= (with-out-str (cljw/postwalk-demo col))
+              (with-out-str (bp/postwalk-demo col)))))))
 
 (deftest prewalk-test
 
@@ -30,9 +30,9 @@
       (let [capture (atom [])]
         (bp/prewalk #(do (swap! capture conj %) %) col)
         (is (= [col [:a [{:b ""}]] :a [{:b ""}] {:b ""} [:b ""] :b ""]
-               @capture))))
+               @capture)))))
 
-    #?(:clj
-       (testing "behaves the same as clojure.walk"
-         (is (= (with-out-str (clj-walk/prewalk-demo col))
-                (with-out-str (bp/prewalk-demo col))))))))
+  #?(:clj
+     (testing "behaves the same as clojure.walk"
+       (is (= (with-out-str (cljw/prewalk-demo col))
+              (with-out-str (bp/prewalk-demo col)))))))
