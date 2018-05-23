@@ -28,8 +28,8 @@
 
     (testing "walks as expected"
       (let [capture (atom [])]
-        (bp/postwalk #(do (swap! capture conj %) %) col)
-        (is (= [:a :b "" [:b ""] {:b ""} [{:b ""}] [:a [{:b ""}]] col]
+        (bp/prewalk #(do (swap! capture conj %) %) col)
+        (is (= [col [:a [{:b ""}]] :a [{:b ""}] {:b ""} [:b ""] :b ""]
                @capture))))
 
     #?(:clj

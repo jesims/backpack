@@ -6,10 +6,8 @@
      (:import clojure.lang.MapEntry)))
 
 (defn- create-map-entry [k v]
-  #?(:clj
-     (MapEntry. k v)
-     :cljs
-     (MapEntry k v nil)))
+  #?(:clj  (MapEntry. k v)
+     :cljs (MapEntry. k v nil)))
 
 (defn walk
   "Like clojure.walk/walk, but does not convert MapEntry to vector"
