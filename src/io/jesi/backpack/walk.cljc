@@ -1,12 +1,21 @@
 (ns io.jesi.backpack.walk
-  #?(:clj
+  #?(:cljs
+     (:require
+       [cljs.core :refer [MapEntry]])
+     :clj
      (:import clojure.lang.MapEntry)))
+
+(defn- create-map-entry [k v]
+  #?(:clj
+     (MapEntry. k v)
+     :cljs
+     (MapEntry k v nil)))
 
 (defn walk
   "Like clojure.walk/walk, but does not convert MapEntry to vector"
   [inner outer form]
   (condp #(%1 %2) form
-    map-entry? (outer (MapEntry. (inner (first form)) (inner (second form))))
+    map-entry? (outer (create-map-entry (inner (first form)) (inner (second form))))
     coll? (outer (into (empty form) (map inner form)))
     seq? (outer (doall (map inner form)))
     (outer form)))
