@@ -30,6 +30,10 @@ ${txtbld}DESCRIPTION${txtrst}
 EOF
 }
 
+clean () {
+	lein clean
+}
+
 unit-test () {
 	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
 	lein test
@@ -37,6 +41,7 @@ unit-test () {
 }
 
 unit-test-refresh () {
+	clean
 	echo_message 'The truth is our natural world is changing. And we are totally dependent on that world.'
 	lein auto test $@
 }
@@ -48,6 +53,7 @@ unit-test-cljs () {
 }
 
 unit-test-cljs-refresh () {
+	clean
 	echo_message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
 	lein doo
 }

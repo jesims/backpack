@@ -8,12 +8,10 @@
     [io.jesi.backpack.specter]
     [io.jesi.backpack.string]
     [io.jesi.backpack.walk]
+    [io.jesi.backpack.macros :refer [import-vars]]
     #?(:cljs [io.jesi.backpack.clojurescript]))
   #?(:clj
-           (:require [potemkin :refer [import-vars]]
-                     [io.jesi.backpack.clojure]
-                     [io.jesi.backpack.macros])
-     :cljs (:require-macros [io.jesi.backpack.macros :refer [import-vars]])))
+     (:require [io.jesi.backpack.clojure])))
 
 (import-vars
   [io.jesi.backpack.collection
