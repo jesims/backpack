@@ -60,7 +60,7 @@
    uuid-str?]
 
   [io.jesi.backpack.walk
-   walk
+   walkz
    prewalk
    postwalk
    prewalk-demo

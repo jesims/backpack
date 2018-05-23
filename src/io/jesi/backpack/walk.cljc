@@ -9,7 +9,9 @@
   #?(:clj  (MapEntry. k v)
      :cljs (->MapEntry k v nil)))
 
-(defn walk
+;FIXME cljs creates io.jesi.backpack.walk/walk so can't call the function walk
+
+(defn walkz
   "Like clojure.walk/walk, but does not convert MapEntry to vector"
   [inner outer form]
   (condp #(%1 %2) form
@@ -21,12 +23,12 @@
 (defn prewalk
   "Like clojure.walk/prewalk, but uses io.jesi.backpack.walk/walk"
   [f form]
-  (walk (partial prewalk f) identity (f form)))
+  (walkz (partial prewalk f) identity (f form)))
 
 (defn postwalk
   "Like clojure.walk/postwalk, but uses io.jesi.backpack.walk/walk"
   [f form]
-  (walk (partial postwalk f) f form))
+  (walkz (partial postwalk f) f form))
 
 (defn- demo-fn [x]
   (print "Walked: ") (prn x) x)
