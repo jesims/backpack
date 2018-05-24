@@ -14,4 +14,3 @@
   (intern *ns*
           (symbol (->kebab-case (name kw)))
           (apply type (concat [kw] args))))
-

@@ -36,4 +36,3 @@
     (is (= ::and-worked (.val and-worked)))
     (is (= :LOTS_OF_YELLING (.val lots-of-yelling)))
     (is (.loud? lots-of-yelling))))
-

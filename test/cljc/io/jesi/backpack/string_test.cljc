@@ -51,7 +51,6 @@
          (bp/->camelCase :_actions)
          (bp/->camelCase "_actions"))))
 
-
 (deftest ->kebab-case-test
   (is (= "v2"
          (bp/->kebab-case :v2)
