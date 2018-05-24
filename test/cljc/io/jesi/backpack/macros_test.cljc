@@ -39,37 +39,37 @@
 (deftest when-let-test
   (testing "Acts as standard when-let"
     (when-let [x true]
-              (is (true? x))))
+      (is (true? x))))
 
   (testing "Allows binding multiple forms"
     (when-let [x "Almost half the pigs"
                y "in the world are kept"
                z "by farmers in China."]
-              (is (= "Almost half the pigs" x))
-              (is (= "in the world are kept" y))
-              (is (= "by farmers in China." z))))
+      (is (= "Almost half the pigs" x))
+      (is (= "in the world are kept" y))
+      (is (= "by farmers in China." z))))
 
   (testing "doesn't evaluate when false values"
     (when-let [x true
                y false
                z true]
-              (is (true? false))))
+      (is (true? false))))
 
   (testing "Won't evaluate block if any assign fails"
     (when-let [x true
                y nil
                z true]
-              (is (true? false)))
+      (is (true? false)))
 
     (when-let [x true
                y nil
                z nil]
-              (is (true? false)))
+      (is (true? false)))
 
     (when-let [x nil
                y nil
                z nil]
-              (is (true? false)))))
+      (is (true? false)))))
 
 (deftest defkw-test
   (testing "expands to def a namespaced keyword with the same name"
