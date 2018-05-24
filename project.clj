@@ -23,15 +23,16 @@
   :aot [io.jesi.backpack.random]
   :cljsbuild {:builds
               {:test {:source-paths ["src" "test/cljc"]
-                      :compiler     {:main           io.jesi.backpack.runner
-                                     :output-dir     "target/test"
-                                     :output-to      "target/test/test.js"
-                                     :optimizations  :none
-                                     :pretty-print   true
-                                     :process-shim   false
-                                     :parallel-build true
-                                     :target         :nodejs
+                      :compiler     {:main             io.jesi.backpack.runner
+                                     :output-dir       "target/test"
+                                     :output-to        "target/test/test.js"
+                                     :optimizations    :none
+                                     :pretty-print     true
+                                     :process-shim     false
+                                     :parallel-build   true
+                                     :target           :nodejs
                                      :warning-handlers ~warning-handlers}}}}
-  :doo {:build "test" :alias {:default [:node]}}
+  :doo {:build "test"
+        :alias {:default [:node]}}
   :release-tasks [["deploy"]]
   :aliases {"test-cljs" ["doo" "once"]})
