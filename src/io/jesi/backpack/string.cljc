@@ -33,9 +33,11 @@
 (defn ->kebab-case [s]
   (some-> s
           name
-          (string/split #"(?<=[A-Z]{2,})(?=[a-z])|(?<=[^_-])(?<=[^A-Z])(?=[A-Z])|\s|(?<=.)_")
-          (->> (string/join "-"))
-          (string/lower-case)))
+          (string/replace #"([A-Z]{2,})([a-z])" "$1 $2")
+          (string/replace #"([a-z])([A-Z])" "$1 $2")
+          (string/replace #"_" "-")
+          (string/replace #"\s" "-")
+          string/lower-case))
 
 (def ->kebab-case-key (comp keyword ->kebab-case))
 

@@ -71,11 +71,11 @@
   (is (= "something-had--multiple-spaces"
          (bp/->kebab-case "something had  multiple spaces")))
 
-  (is (= "_actions"
+  (is (= "-actions"
          (bp/->kebab-case :_actions)
          (bp/->kebab-case "_actions")))
 
-  (is (= "_lots-of-yelling"
+  (is (= "-lots-of-yelling"
          (bp/->kebab-case "_LOTS_OF_YELLING")))
 
   (is (= "lots-of-yelling"

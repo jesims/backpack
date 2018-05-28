@@ -13,7 +13,7 @@ ${txtbld}SYNOPSIS${txtrst}
 	${script_name} release
 	${script_name} snapshot [-l]
 	${script_name} test [-r]
-	${script_name} test-cljs [-r]
+	${script_name} test-cljs [-r|-n]
 
 ${txtbld}DESCRIPTION${txtrst}
 	${txtbld}clean${txtrst}
@@ -28,6 +28,10 @@ ${txtbld}DESCRIPTION${txtrst}
 	${txtbld}test-cljs${txtrst}
 		runs the CLJS unit tests
 EOF
+}
+
+deps () {
+	lein deps && npm install
 }
 
 clean () {
@@ -46,16 +50,35 @@ unit-test-refresh () {
 	lein auto test $@
 }
 
+unit-test-node () {
+	npx shadow-cljs compile node \
+	&& node target/node/test.js
+	abort_on_error 'node tests failed'
+}
+
+unit-test-karma () {
+	npx shadow-cljs compile karma \
+	&& npx karma start --single-run
+	abort_on_error 'kamra tests failed'
+}
+
 unit-test-cljs () {
 	echo_message 'In the clojure kingdom, the rule is, transform or be transformed.'
-	lein test-cljs
-	abort_on_error 'ClojureScript tests failed'
+	unit-test-karma
+}
+
+stop () {
+	npx shadow-cljs stop &>/dev/null
+	pkill -f 'karma ' &>/dev/null
 }
 
 unit-test-cljs-refresh () {
-	clean
 	echo_message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
-	lein doo
+	npx shadow-cljs compile karma
+	abort_on_error
+	trap stop EXIT
+	npx karma start --no-single-run &
+	npx shadow-cljs watch karma
 }
 
 parse () {
@@ -63,7 +86,9 @@ parse () {
 		-h|--help)
 			usage;;
 		clean)
-			lein clean;;
+			clean;;
+		deps)
+			deps;;
 		release)
 			s3_release;;
 		snapshot)
@@ -73,6 +98,8 @@ parse () {
 				*)
 					s3_snapshot;;
 			esac;;
+		stop)
+			stop;;
 		test)
 			case $2 in
 				-r)
@@ -84,6 +111,8 @@ parse () {
 			case $2 in
 				-r)
 					unit-test-cljs-refresh;;
+				-n)
+					unit-test-node;;
 				*)
 					unit-test-cljs;;
 			esac ;;

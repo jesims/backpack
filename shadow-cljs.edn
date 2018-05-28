@@ -1,0 +1,6 @@
+{:lein   true
+ :builds {:node  {:target    :node-test
+                  :output-to "target/node/test.js"}
+          :karma {:target          :karma
+                  :output-to       "target/karma/test.js"
+                  :closure-defines {goog.DEBUG false}}}}
