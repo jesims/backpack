@@ -91,6 +91,7 @@ jobs:
       - *SUBMODULE_UPDATE
       - restore_cache:
           <<: *LEIN_CACHE
+      - restore_cache:
           <<: *NODE_CACHE
       - run: './backpack.sh snapshot'
       - *NOTIFY
