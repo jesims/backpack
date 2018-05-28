@@ -1,0 +1,17 @@
+{
+  "name": "backpack",
+  "version": "1.0.0",
+  "description": "Clojure(Script) cross-project utilities",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jesims/backpack.git"
+  },
+  "homepage": "https://github.com/jesims/backpack#readme",
+  "devDependencies": {
+    "karma": "^2.0.2",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cljs-test": "^0.1.0",
+    "shadow-cljs": "^2.3.28",
+    "standard": "^11.0.1"
+  }
+}
