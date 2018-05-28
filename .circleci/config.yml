@@ -40,11 +40,13 @@ jobs:
       - *SUBMODULE_UPDATE
       - restore_cache:
           <<: *LEIN_CACHE
+      - restore_cache:
           <<: *NODE_CACHE
       - run: './backpack.sh deps'
       - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
+      - save_cache:
           <<: *NODE_CACHE
 
   test_clj:
@@ -55,11 +57,13 @@ jobs:
       - *SUBMODULE_UPDATE
       - restore_cache:
           <<: *LEIN_CACHE
+      - restore_cache:
           <<: *NODE_CACHE
       - run: './backpack.sh test'
       - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
+      - save_cache:
           <<: *NODE_CACHE
 
   test_cljs:
@@ -70,11 +74,13 @@ jobs:
       - *SUBMODULE_UPDATE
       - restore_cache:
           <<: *LEIN_CACHE
+      - restore_cache:
           <<: *NODE_CACHE
       - run: './backpack.sh test-cljs'
       - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
+      - save_cache:
           <<: *NODE_CACHE
 
   snapshot:
@@ -90,6 +96,7 @@ jobs:
       - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
+      - save_cache:
           <<: *NODE_CACHE
 
   release:
@@ -100,11 +107,13 @@ jobs:
       - *SUBMODULE_UPDATE
       - restore_cache:
           <<: *LEIN_CACHE
+      - restore_cache:
           <<: *NODE_CACHE
       - run: './backpack.sh release'
       - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
+      - save_cache:
           <<: *NODE_CACHE
 
 workflows:
