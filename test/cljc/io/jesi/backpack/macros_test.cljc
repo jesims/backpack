@@ -4,11 +4,10 @@
     [clojure.string :as string]
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros #?(:clj :refer :cljs :refer-macros) [try*
-                                                                  catch->nil
-                                                                  fn1
-                                                                  when-let
-                                                                  shorthand]]))
+    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand]])
+  #?(:clj
+     (:import (java.lang ArithmeticException
+                         SecurityException))))
 
 (defn- throw-ex []
   (throw (ex-info "Error" {})))
@@ -77,18 +76,18 @@
     (is (= '(def crocodile ::crocodile)
            (macroexpand-1 '(io.jesi.backpack.macros/defkw ::crocodile))))))
 
-(defn- throw-for [x]
-  (try*
-    (condp = x
-      0 (throw (Exception. "Exception"))
-      1 (throw (RuntimeException. "Runtime"))
-      2 (throw (SecurityException. "Security"))
-      3 (throw (ArithmeticException. "Arithmetic"))
-      "Not Caught")
-    (catch ArithmeticException _ "ArithmeticException")
-    (catch-any [RuntimeException SecurityException] _ "Multi")
-    (catch Exception _ "Exception")))
-
+#?(:clj
+   (defn- throw-for [x]
+     (try*
+       (condp = x
+         0 (throw (Exception. "Exception"))
+         1 (throw (RuntimeException. "Runtime"))
+         2 (throw (SecurityException. "Security"))
+         3 (throw (ArithmeticException. "Arithmetic"))
+         "Not Caught")
+       (catch ArithmeticException _ "ArithmeticException")
+       (catch-any [RuntimeException SecurityException] _ "Multi")
+       (catch Exception _ "Exception"))))
 
 #?(:clj
    (deftest try*-test

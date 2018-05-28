@@ -1,6 +1,6 @@
 (ns io.jesi.backpack.clojure
   (:require
-    [camel-snake-kebab.core :as csk])
+    [io.jesi.backpack.string :refer [->kebab-case]])
   (:import
     (java.net MalformedURLException URI)))
 
@@ -12,6 +12,5 @@
 
 (defn defkw-type [type kw & args]
   (intern *ns*
-    (symbol (csk/->kebab-case (name kw)))
-    (apply type (concat [kw] args))))
-
+          (symbol (->kebab-case (name kw)))
+          (apply type (concat [kw] args))))

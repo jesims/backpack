@@ -7,12 +7,11 @@
     [io.jesi.backpack.number]
     [io.jesi.backpack.specter]
     [io.jesi.backpack.string]
+    [io.jesi.backpack.traverse]
+    [io.jesi.backpack.macros :refer [import-vars]]
     #?(:cljs [io.jesi.backpack.clojurescript]))
   #?(:clj
-           (:require [potemkin :refer [import-vars]]
-                     [io.jesi.backpack.clojure]
-                     [io.jesi.backpack.macros])
-     :cljs (:require-macros [io.jesi.backpack.macros :refer [import-vars]])))
+     (:require [io.jesi.backpack.clojure])))
 
 (import-vars
   [io.jesi.backpack.collection
@@ -24,6 +23,7 @@
    filter-values
    first-some
    in?
+   remove-empty
    safe-empty?
    select-non-nil-keys
    translate-keys]
@@ -37,7 +37,8 @@
 
   [io.jesi.backpack.miscellaneous
    ->uuid
-   ->uuid-or-not]
+   ->uuid-or-not
+   assoc-changed!]
 
   [io.jesi.backpack.number
    infinity]
@@ -48,10 +49,21 @@
    no-empty-values]
 
   [io.jesi.backpack.string
+   ->kebab-case
+   ->kebab-case-key
+   ->camelCase
+   ->camelCase-key
    subs-inc
    subs-to
    true-string?
-   uuid-str?])
+   uuid-str?]
+
+  [io.jesi.backpack.traverse
+   walk
+   prewalk
+   postwalk
+   prewalk-demo
+   postwalk-demo])
 
 #?(:clj
    (import-vars

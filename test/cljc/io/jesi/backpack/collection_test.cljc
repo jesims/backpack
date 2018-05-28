@@ -24,26 +24,6 @@
     (is (false? (bp/safe-empty? 1234)))
     (is (false? (bp/safe-empty? (rnd/uuid))))))
 
-(deftest safe-empty?-test
-  (testing "returns true when empty coll/string/map"
-    (is (bp/safe-empty? []))
-    (is (bp/safe-empty? '()))
-    (is (bp/safe-empty? ""))
-    (is (bp/safe-empty? {})))
-
-  (testing "returns false when non empty coll/string/map"
-    (is (false? (bp/safe-empty? ["value"])))
-    (is (false? (bp/safe-empty? '("value"))))
-    (is (false? (bp/safe-empty? "value")))
-    (is (false? (bp/safe-empty? {:value true}))))
-
-  (testing "returns true when nil"
-    (is (bp/safe-empty? nil)))
-
-  (testing "returns false when non-nil"
-    (is (false? (bp/safe-empty? 1234)))
-    (is (false? (bp/safe-empty? (rnd/uuid))))))
-
 (deftest distinct-by-test
   (testing "returns true if a collection of maps are distinct by a given keyword"
     (let [generator (fn [level] {:val (rnd/string) :type "animal" :danger-level level})
@@ -216,3 +196,44 @@
   (testing "Can set multiple keys from a single key"
     (is (= {:a 1 :b 1 :c 1}
            (bp/translate-keys {:a :c, :b :c} {:c 1})))))
+
+(deftest remove-empty-test
+
+  (testing "returns nil for empty values"
+    (is (nil? (bp/remove-empty nil)))
+    (is (nil? (bp/remove-empty "")))
+    (is (nil? (bp/remove-empty {})))
+    (is (nil? (bp/remove-empty '())))
+    (is (nil? (bp/remove-empty #{})))
+    (is (nil? (bp/remove-empty []))))
+
+  (testing "returns simple values"
+    (is (= 1 (bp/remove-empty 1)))
+    (is (= {:a 1} (bp/remove-empty {:a 1})))
+    (is (= " " (bp/remove-empty " "))))
+
+  (testing "removes empty values"
+    (is (= [1]
+           (bp/remove-empty [1 nil "" [] '() #{}])))
+    (is (= {:a 1}
+           (bp/remove-empty {:a 1 :b nil :c "" :d [] :e '() :f #{}}))))
+
+  (testing "returns nil when empty"
+    (is (nil? (bp/remove-empty {:str ""})))
+    (is (nil? (bp/remove-empty [nil]))))
+
+  (testing "returns the collection without empty values"
+    (is (nil? (bp/remove-empty [nil [nil] []])))
+    (is (= {:str "value" :int 123 :vec ["value"]}
+           (bp/remove-empty {:str       "value"
+                             :empty-str ""
+                             :vec       ["value"]
+                             :empty-vec []
+                             :nil-vec   [nil]
+                             :int       123
+                             :nil       nil})))
+    (is (= {:map {:str-vec ["string"]}}
+           (bp/remove-empty {:empty-map {}
+                             :map       {:str-vec ["string"]
+                                         :nil     nil
+                                         :map     [{:empty-str ""}]}})))))
