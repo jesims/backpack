@@ -37,7 +37,8 @@
 
   [io.jesi.backpack.miscellaneous
    ->uuid
-   ->uuid-or-not]
+   ->uuid-or-not
+   assoc-changed!]
 
   [io.jesi.backpack.number
    infinity]

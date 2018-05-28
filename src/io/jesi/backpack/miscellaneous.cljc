@@ -13,3 +13,10 @@
 
 (defn ->uuid-or-not [id]
   (or (->uuid id) id))
+
+(defn assoc-changed!
+  "assoc(-in) the atom when the value has changed"
+  [atom ks value]
+  (let [ks (if (vector? ks) ks [ks])]
+    (when (not= value (get-in @atom ks))
+      (swap! atom assoc-in ks value))))
