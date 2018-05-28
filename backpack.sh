@@ -30,6 +30,10 @@ ${txtbld}DESCRIPTION${txtrst}
 EOF
 }
 
+deps () {
+	lein deps && npm install
+}
+
 clean () {
 	lein clean
 }
@@ -82,7 +86,9 @@ parse () {
 		-h|--help)
 			usage;;
 		clean)
-			lein clean;;
+			clean;;
+		deps)
+			deps;;
 		release)
 			s3_release;;
 		snapshot)
