@@ -13,7 +13,7 @@ ${txtbld}SYNOPSIS${txtrst}
 	${script_name} release
 	${script_name} snapshot [-l]
 	${script_name} test [-r]
-	${script_name} test-cljs [-r]
+	${script_name} test-cljs [-r|-n]
 
 ${txtbld}DESCRIPTION${txtrst}
 	${txtbld}clean${txtrst}
