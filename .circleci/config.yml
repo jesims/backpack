@@ -2,7 +2,7 @@ version: 2
 
 aliases:
   cache:
-    lein: &LEIN_CACHE
+    lein_cache: &LEIN_CACHE
       key: lein-{{ checksum "project.clj" }}
       paths:
         - ~/.lein
