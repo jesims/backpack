@@ -1,7 +1,6 @@
 (ns io.jesi.test.runner
   "Based on shadow.test.browser"
   (:require
-    ;FIXME humane-test-output in browser tests
     [pjstadig.humane-test-output]
     [shadow.dom :as dom]
     [shadow.test :as st]))
