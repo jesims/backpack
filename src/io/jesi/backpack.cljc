@@ -30,6 +30,7 @@
 
   [io.jesi.backpack.fn
    apply-when
+   d#
    map-if
    partial-right
    pass
