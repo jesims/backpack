@@ -11,8 +11,6 @@
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.0.0"]
                  [org.clojure/tools.namespace "0.2.11"]]
-  :source-paths ["src"]
-  :test-paths ["test"]
   :clean-targets ^{:protect false} ["target"]
   :aot [io.jesi.backpack.random]
   :release-tasks [["deploy"]])

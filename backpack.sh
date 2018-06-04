@@ -35,6 +35,7 @@ deps () {
 }
 
 clean () {
+	stop
 	lein clean
 }
 
@@ -73,12 +74,20 @@ stop () {
 }
 
 unit-test-cljs-refresh () {
+	clean
 	echo_message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
 	npx shadow-cljs compile karma
 	abort_on_error
 	trap stop EXIT
 	npx karma start --no-single-run &
 	npx shadow-cljs watch karma
+}
+
+unit-test-browser-refresh () {
+	clean
+	trap stop EXIT
+	npx shadow-cljs watch browser
+	abort_on_error
 }
 
 parse () {
@@ -111,6 +120,8 @@ parse () {
 			case $2 in
 				-r)
 					unit-test-cljs-refresh;;
+				-b)
+					unit-test-browser-refresh;;
 				-n)
 					unit-test-node;;
 				*)
