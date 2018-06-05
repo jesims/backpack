@@ -8,7 +8,7 @@
                     :test-dir        "target/browser/"
                     :closure-defines {goog.DEBUG false}
                     :ns-regexp       "-test$"
-                    :runner-ns       io.jesi.test.runner
+                    :runner-ns       io.jesi.backpack.test.runner
                     :devtools        {:http-port 8091
                                       :hud       false
                                       :http-root "target/browser/"}}}}

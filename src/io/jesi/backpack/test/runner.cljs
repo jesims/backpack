@@ -1,15 +1,25 @@
-(ns io.jesi.test.runner
+(ns io.jesi.backpack.test.runner
   "Based on shadow.test.browser"
   (:require
     [pjstadig.humane-test-output]
     [shadow.dom :as dom]
     [shadow.test :as st]))
 
+(enable-console-print!)
+
 (defonce log-node (dom/by-id "log"))
+
 (when log-node
   (set-print-fn!
     (fn [s]
-      (dom/append log-node (str s "\n")))))
+      (dom/append log-node (str s "\n"))))
+
+  (js/window.addEventListener "error"
+                              (fn [evt]
+                                (let [msg (.-message evt)
+                                      file (.-filename evt)
+                                      line (.-lineno evt)]
+                                  (dom/append log-node (str "ERROR: " msg "(" file ":" line ")\n"))))))
 
 (defn start []
   (st/run-all-tests))
