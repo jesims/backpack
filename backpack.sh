@@ -86,6 +86,7 @@ unit-test-cljs-refresh () {
 unit-test-browser-refresh () {
 	clean
 	trap stop EXIT
+	open http://localhost:8091/
 	npx shadow-cljs watch browser
 	abort_on_error
 }
