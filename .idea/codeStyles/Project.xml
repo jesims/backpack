@@ -8,7 +8,6 @@
         <option name="SMART_TABS" value="true" />
       </value>
     </option>
-    <ClojureCodeStyleSettings />
     <JSCodeStyleSettings>
       <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
