@@ -38,3 +38,5 @@
   #(if (pred %)
      %
      (f %)))
+
+(def noop (constantly nil))

@@ -32,6 +32,7 @@
    apply-when
    d#
    map-if
+   noop
    partial-right
    pass
    pass-if]
