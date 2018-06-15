@@ -1,5 +1,5 @@
 (ns io.jesi.backpack
-  (:refer-clojure :exclude [js->clj clj->js])
+  (:refer-clojure :exclude [js->clj clj->js assoc-in])
   (:require
     [io.jesi.backpack.collection]
     [io.jesi.backpack.fn]
