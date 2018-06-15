@@ -1,4 +1,5 @@
 (ns io.jesi.backpack.collection
+  (:refer-clojure :exclude [assoc-in])
   (:require
     [io.jesi.backpack.traverse :refer [postwalk]]))
 
@@ -70,3 +71,11 @@
     (if (seqable? x)
       (not-empty x)
       x)))
+
+(defn assoc-in [m & kvs]
+  (reduce
+    (fn [m [path v]]
+      ;TODO create assoc-in! and use transient map
+      (clojure.core/assoc-in m path v))
+    m
+    (partition 2 kvs)))

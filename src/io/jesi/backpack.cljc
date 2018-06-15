@@ -15,6 +15,7 @@
 
 (import-vars
   [io.jesi.backpack.collection
+   assoc-in
    contains-any?
    dissoc-all
    distinct-by

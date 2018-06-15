@@ -8,6 +8,10 @@
         <option name="SMART_TABS" value="true" />
       </value>
     </option>
+    <ClojureCodeStyleSettings>{
+  :clojure.core/= 0
+  :cursive.formatting/default-only-indent true
+}</ClojureCodeStyleSettings>
     <JSCodeStyleSettings>
       <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />
       <option name="FORCE_SEMICOLON_STYLE" value="true" />
