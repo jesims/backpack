@@ -1,6 +1,7 @@
 (ns io.jesi.backpack.random
   (:refer-clojure :exclude [uuid])
   (:require
+    [io.jesi.backpack.number :as num]
     [clojure.set :as set]
     #?(:cljs [cljs-uuid-utils.core :as UUID]))
   #?(:clj
@@ -77,8 +78,8 @@
   extended-chars)
 
 (defn lnglat []
-  [(- (rand 360) 180)
-   (- (rand 180) 90)])
+  (mapv (partial num/round-to 6) [(- (rand 360) 180)
+                                  (- (rand 180) 90)]))
 
 (defn wkt-linestring
   ([] (wkt-linestring 2 10000))

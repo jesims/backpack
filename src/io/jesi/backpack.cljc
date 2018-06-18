@@ -44,7 +44,8 @@
    assoc-changed!]
 
   [io.jesi.backpack.number
-   infinity]
+   infinity
+   round-to]
 
   [io.jesi.backpack.specter
    map-walker
