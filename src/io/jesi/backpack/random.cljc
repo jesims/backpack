@@ -81,13 +81,14 @@
   []
   extended-chars)
 
-(defn- tweak [v] (if (< -0.1 v 0.1) (+ 0.2 v) v))
+(defn- remove-exponential-chance [v]
+  (if (< -0.1 v 0.1) (+ 0.2 v) v))
 
 (defn lnglat []
   (let [lng (- (rand 360) 180)
         lat (- (rand 180) 90)]
-    [(tweak lng)
-     (tweak lat)]))
+    [(remove-exponential-chance lng)
+     (remove-exponential-chance lat)]))
 
 ;Todo: Feels hackish
 (defn- fmt [val]
