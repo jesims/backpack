@@ -1,8 +1,8 @@
 (ns io.jesi.backpack.random
   (:refer-clojure :exclude [uuid])
   (:require
-    [io.jesi.backpack.number :as num]
-    [clojure.set :as set])
+    [clojure.set :as set]
+    [clojure.string :as string])
   #?(:cljs
      (:require
        [cljs-uuid-utils.core :as UUID]
@@ -33,8 +33,8 @@
          (range 65 91)                                      ;A-Z
          (range 97 123)                                     ;a-z
          (range 48 58))                                     ;0-9
-    (map char)
-    (apply str)))
+       (map char)
+       (apply str)))
 
 ;Refer: https://en.wikipedia.org/wiki/List_of_Unicode_characters and https://clojure.org/reference/reader#_character
 (def ^:private extended-chars
@@ -86,15 +86,17 @@
    (- (rand 180) 90)])
 
 (defn- fmt [val]
-  (format "%.8f" val))
+  (-> (format "%.8f" val)
+      (string/replace #"0+$" "")                            ; Removes trailing zeros
+      (string/replace #"\.$" ".0")))                        ; Restores end zero if necessary
 
 (defn wkt-linestring
   ([] (wkt-linestring 2 10000))
   ([min max]
    (let [size (+ min (rand-int (- max min)))]
      (->> (repeatedly size lnglat)
-       (map (comp (partial clojure.string/join " ") #(map fmt %)))
-       (clojure.string/join ",")))))
+          (map (comp (partial clojure.string/join " ") #(map fmt %)))
+          (clojure.string/join ",")))))
 
 (defn wktLinestring
   "Generates a random wkt Linestring (with default length between 2 and 10000)"
