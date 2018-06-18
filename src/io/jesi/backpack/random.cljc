@@ -13,7 +13,6 @@
                  #^{:static true} [alphaNumeric [int] String]
                  #^{:static true} [extendedChars [] String]
                  #^{:static true} [string [] String]
-                 #^{:static true} [string [] String]
                  #^{:static true} [string [int] String]
                  #^{:static true} [wktLinestring [] String]
                  #^{:static true} [wktLinestring [int int] String]])))
