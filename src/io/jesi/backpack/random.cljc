@@ -81,9 +81,13 @@
   []
   extended-chars)
 
+(defn- tweak [v] (if (< -0.1 v 0.1) (+ 0.2 v) v))
+
 (defn lnglat []
-  [(- (rand 360) 180)
-   (- (rand 180) 90)])
+  (let [lng (- (rand 360) 180)
+        lat (- (rand 180) 90)]
+    [(tweak lng)
+     (tweak lat)]))
 
 ;Todo: Feels hackish
 (defn- fmt [val]
@@ -94,7 +98,7 @@
 (defn wkt-linestring
   ([] (wkt-linestring 2 10000))
   ([min max]
-   (let [size (+ min (rand-int (- max min)))]
+   (let [size (+ min (rand-int (+ max min)))]
      (->> (repeatedly size lnglat)
           (map (comp (partial clojure.string/join " ") #(mapv fmt %)))
           (clojure.string/join ",")))))
