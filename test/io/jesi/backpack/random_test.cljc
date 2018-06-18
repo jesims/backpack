@@ -47,3 +47,8 @@
            (string/lower-case extended-chars)))
     (is (= (string/upper-case (string/lower-case extended-chars))
            (string/upper-case extended-chars)))))
+
+(deftest wkt-linestring-test
+
+  (testing "Contains no scientific notation"
+    (is (false? (string/includes? (rnd/wkt-linestring) "E")))))

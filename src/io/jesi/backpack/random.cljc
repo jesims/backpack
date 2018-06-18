@@ -2,8 +2,12 @@
   (:refer-clojure :exclude [uuid])
   (:require
     [io.jesi.backpack.number :as num]
-    [clojure.set :as set]
-    #?(:cljs [cljs-uuid-utils.core :as UUID]))
+    [clojure.set :as set])
+  #?(:cljs
+     (:require
+       [cljs-uuid-utils.core :as UUID]
+       [goog.string :refer [format]]
+       [goog.string.format]))
   #?(:clj
      (:import (java.util UUID)))
   #?(:clj
@@ -78,15 +82,18 @@
   extended-chars)
 
 (defn lnglat []
-  (mapv (partial num/round-to 6) [(- (rand 360) 180)
-                                  (- (rand 180) 90)]))
+  [(- (rand 360) 180)
+   (- (rand 180) 90)])
+
+(defn- fmt [val]
+  (format "%.8f" val))
 
 (defn wkt-linestring
   ([] (wkt-linestring 2 10000))
   ([min max]
    (let [size (+ min (rand-int (- max min)))]
      (->> (repeatedly size lnglat)
-       (map (partial clojure.string/join " "))
+       (map (comp (partial clojure.string/join " ") #(map fmt %)))
        (clojure.string/join ",")))))
 
 (defn wktLinestring
