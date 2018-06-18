@@ -88,7 +88,6 @@
 ;Todo: Feels hackish
 (defn- fmt [val]
   (-> (format "%.8f" val)
-      (string/replace #"E-[0-9]{0,}$" "")                   ; Scientific Notation removal
       (string/replace #"0+$" "")                            ; Removes trailing zeros
       (string/replace #"\.$" ".0")))                        ; Restores end zero if necessary
 
@@ -97,7 +96,7 @@
   ([min max]
    (let [size (+ min (rand-int (- max min)))]
      (->> (repeatedly size lnglat)
-          (map (comp (partial clojure.string/join " ") #(map fmt %)))
+          (map (comp (partial clojure.string/join " ") #(mapv fmt %)))
           (clojure.string/join ",")))))
 
 (defn wktLinestring

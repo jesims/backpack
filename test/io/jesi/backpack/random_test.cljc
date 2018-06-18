@@ -49,10 +49,5 @@
            (string/upper-case extended-chars)))))
 
 (deftest wkt-linestring-test
-
   (testing "Contains no scientific notation"
-    (->> (assert-random #(rnd/wkt-linestring 2 500))
-         (map #(string/includes? %"E"))
-         (every? false?)
-         is)))
-    ;(is (false? (string/includes? (rnd/wkt-linestring) "E")))))
+    (assert-random #(rnd/wkt-linestring 2 500))))
