@@ -9,11 +9,14 @@
      (:gen-class
        :name io.jesi.backpack.Random
        :prefix ""
-       :methods [#^{:static true} [string [int] String]
-                 #^{:static true} [string [] String]
+       :methods [#^{:static true} [alphaNumeric [] String]
                  #^{:static true} [alphaNumeric [int] String]
-                 #^{:static true} [alphaNumeric [] String]
-                 #^{:static true} [extendedChars [] String]])))
+                 #^{:static true} [extendedChars [] String]
+                 #^{:static true} [string [] String]
+                 #^{:static true} [string [] String]
+                 #^{:static true} [string [int] String]
+                 #^{:static true} [wktLinestring [] String]
+                 #^{:static true} [wktLinestring [int int] String]])))
 
 (defn uuid []
   #?(:clj  (UUID/randomUUID)
@@ -26,8 +29,8 @@
          (range 65 91)                                      ;A-Z
          (range 97 123)                                     ;a-z
          (range 48 58))                                     ;0-9
-       (map char)
-       (apply str)))
+    (map char)
+    (apply str)))
 
 ;Refer: https://en.wikipedia.org/wiki/List_of_Unicode_characters and https://clojure.org/reference/reader#_character
 (def ^:private extended-chars
@@ -73,3 +76,20 @@
   "Returns all characters used in random string generation"
   []
   extended-chars)
+
+(defn lnglat []
+  [(- (rand 360) 180)
+   (- (rand 180) 90)])
+
+(defn wkt-linestring
+  ([] (wkt-linestring 2 10000))
+  ([min max]
+   (let [size (+ min (rand-int (- max min)))]
+     (->> (repeatedly size lnglat)
+       (map (partial clojure.string/join " "))
+       (map (partial clojure.string/join ","))))))
+
+(defn wktLinestring
+  "Generates a random wkt Linestring (with default length between 2 and 10000)"
+  ([] (wkt-linestring))
+  ([min max] (wkt-linestring min max)))
