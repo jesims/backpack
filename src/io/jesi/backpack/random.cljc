@@ -86,7 +86,7 @@
    (let [size (+ min (rand-int (- max min)))]
      (->> (repeatedly size lnglat)
        (map (partial clojure.string/join " "))
-       (map (partial clojure.string/join ","))))))
+       (clojure.string/join ",")))))
 
 (defn wktLinestring
   "Generates a random wkt Linestring (with default length between 2 and 10000)"
