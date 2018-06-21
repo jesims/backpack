@@ -81,6 +81,7 @@
    :cljs
    (import-vars
      [io.jesi.backpack.clojurescript
+      class->clj
       clj->js
       clj->json
       js->clj
