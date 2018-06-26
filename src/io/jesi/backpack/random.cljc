@@ -36,8 +36,8 @@
          (range 65 91)                                      ;A-Z
          (range 97 123)                                     ;a-z
          (range 48 58))                                     ;0-9
-    (map char)
-    (apply str)))
+       (map char)
+       (apply str)))
 
 ;Refer: https://en.wikipedia.org/wiki/List_of_Unicode_characters and https://clojure.org/reference/reader#_character
 (def ^:private extended-chars
@@ -104,8 +104,8 @@
   ([min max]
    (let [size (+ min (rand-int (+ max min)))]
      (->> (repeatedly size lnglat)
-       (map (comp (partial string/join " ") #(mapv fmt %)))
-       (string/join ",")))))
+          (map (comp (partial string/join " ") #(mapv fmt %)))
+          (string/join ",")))))
 
 (defn wktLinestring
   "Generates a random wkt Linestring (with default length between 2 and 10000)"

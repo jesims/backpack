@@ -32,14 +32,14 @@
   (let [ignored-keys #{"constructor"}
         ignored-vals #{cljs.core.PROTOCOL_SENTINEL}]
     (->> x
-      gobj/getAllPropertyNames
-      (filter (comp not (partial contains? ignored-keys)))
-      (reduce
-        (fn [m k]
-          (let [key (keyword k)
-                val (gobj/get x k)]
-            (if (contains? ignored-vals val)
-              m
-              (assoc! m key val))))
-        (transient {}))
-      persistent!)))
+         gobj/getAllPropertyNames
+         (filter (comp not (partial contains? ignored-keys)))
+         (reduce
+           (fn [m k]
+             (let [key (keyword k)
+                   val (gobj/get x k)]
+               (if (contains? ignored-vals val)
+                 m
+                 (assoc! m key val))))
+           (transient {}))
+         persistent!)))
