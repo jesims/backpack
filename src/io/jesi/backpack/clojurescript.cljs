@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [clj->js js->clj])
   (:require
     [clojure.walk :refer [postwalk]]
+    [goog.object :as gobj]
     [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]]))
 
 ; Came from camel-snake-kebab
@@ -26,3 +27,19 @@
 (defn json->clj
   [x]
   (js->clj (js/JSON.parse x)))
+
+(defn class->clj [x]
+  (let [ignored-keys #{"constructor"}
+        ignored-vals #{cljs.core.PROTOCOL_SENTINEL}]
+    (->> x
+         gobj/getAllPropertyNames
+         (remove ignored-keys)
+         (reduce
+           (fn [m k]
+             (let [key (keyword k)
+                   val (gobj/get x k)]
+               (if (contains? ignored-vals val)
+                 m
+                 (assoc! m key val))))
+           (transient {}))
+         persistent!)))

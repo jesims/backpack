@@ -1,6 +1,14 @@
 {:lein   true
- :builds {:node  {:target    :node-test
-                  :output-to "target/node/test.js"}
-          :karma {:target          :karma
-                  :output-to       "target/karma/test.js"
-                  :closure-defines {goog.DEBUG false}}}}
+ :builds {:node    {:target    :node-test
+                    :output-to "target/node/test.js"}
+          :karma   {:target          :karma
+                    :output-to       "target/karma/test.js"
+                    :closure-defines {goog.DEBUG false}}
+          :browser {:target          :browser-test
+                    :test-dir        "target/browser/"
+                    :closure-defines {goog.DEBUG false}
+                    :ns-regexp       "-test$"
+                    :runner-ns       io.jesi.backpack.test.runner
+                    :devtools        {:http-port 8091
+                                      :hud       false
+                                      :http-root "target/browser/"}}}}

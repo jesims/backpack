@@ -1,7 +1,12 @@
 (ns io.jesi.backpack.fn-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [io.jesi.backpack :as bp]))
+    [io.jesi.backpack :as bp]
+    [io.jesi.backpack.random :as random])
+  #?(:cljs
+     (:require [cljs.core :refer [IDeref]])
+     :clj
+     (:import (clojure.lang IDeref))))
 
 (deftest partial-right-test
   (testing "partial-right"
@@ -49,3 +54,24 @@
 (deftest map-if-test
   (testing "map-if only maps if predicate is true"
     (is (= [2 2 4] (bp/map-if odd? inc [1 2 3])))))
+
+(deftype Derefable [v]
+  IDeref
+  #?(:cljs
+     (-deref [_] v)
+     :clj
+     (deref [_] v)))
+
+(deftest d#-test
+  (let [assert-deref #(let [val (random/string)]
+                        (is (= val (bp/d# (% val)))))]
+
+    (testing "derefs when atom"
+      (assert-deref atom))
+
+    (testing "derefs when derefable"
+      (assert-deref ->Derefable))
+
+    (testing "derefs when not derefable"
+      (assert-deref identity))))
+

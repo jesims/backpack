@@ -1,6 +1,6 @@
 (ns io.jesi.backpack.macros
-  #?(:cljs (:require-macros io.jesi.backpack.macros))
-  (:refer-clojure :exclude [when-let]))
+  (:refer-clojure :exclude [when-let])
+  #?(:cljs (:require-macros io.jesi.backpack.macros)))
 
 (defmacro import-vars
   [& imports]

@@ -1,5 +1,5 @@
 (ns io.jesi.backpack
-  (:refer-clojure :exclude [js->clj clj->js])
+  (:refer-clojure :exclude [js->clj clj->js assoc-in])
   (:require
     [io.jesi.backpack.collection]
     [io.jesi.backpack.fn]
@@ -15,6 +15,7 @@
 
 (import-vars
   [io.jesi.backpack.collection
+   assoc-in
    contains-any?
    dissoc-all
    distinct-by
@@ -30,7 +31,9 @@
 
   [io.jesi.backpack.fn
    apply-when
+   d#
    map-if
+   noop
    partial-right
    pass
    pass-if]
@@ -41,7 +44,8 @@
    assoc-changed!]
 
   [io.jesi.backpack.number
-   infinity]
+   infinity
+   round-to]
 
   [io.jesi.backpack.specter
    map-walker
@@ -77,6 +81,7 @@
    :cljs
    (import-vars
      [io.jesi.backpack.clojurescript
+      class->clj
       clj->js
       clj->json
       js->clj

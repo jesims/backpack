@@ -84,4 +84,24 @@
         (is-not-called?)
         (bp/assoc-changed! a path nil)
         (is-equal? {:this {:value nil}})
+        (is-called-once?))
+
+      (testing "Works with collection values"
+        (reset {:this [1 2]})
+        (is-not-called?)
+        (bp/assoc-changed! a :this [1 2])
+        (is-not-called?))
+
+      (testing "Works with nested collection values"
+        (reset {:this [1 {:a 2}]})
+        (is-not-called?)
+        (bp/assoc-changed! a :this [1 2])
+        (is-equal? {:this [1 2]})
+        (is-called-once?))
+
+      (testing "Works with default empty value"
+        (reset {:this []})
+        (is-not-called?)
+        (bp/assoc-changed! a :this (concat [1] [2]))
+        (is-equal? {:this [1 2]})
         (is-called-once?)))))
