@@ -33,7 +33,7 @@
         ignored-vals #{cljs.core.PROTOCOL_SENTINEL}]
     (->> x
          gobj/getAllPropertyNames
-         (filter (comp not (partial contains? ignored-keys)))
+         (remove (partial contains? ignored-keys))
          (reduce
            (fn [m k]
              (let [key (keyword k)
