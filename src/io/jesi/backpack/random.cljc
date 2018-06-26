@@ -96,8 +96,8 @@
 ;Todo: Feels hackish
 (defn- fmt [val]
   (-> (format "%.8f" val)
-    (string/replace #"0+$" "")                              ; Removes trailing zeros
-    (string/replace #"\.$" ".0")))                          ; Restores end zero if necessary
+      (string/replace #"0+$" "")                            ; Removes trailing zeros
+      (string/replace #"\.$" ".0")))                        ; Restores end zero if necessary
 
 (defn wkt-linestring
   ([] (wkt-linestring 2 10000))

@@ -9,7 +9,9 @@
       </value>
     </option>
     <ClojureCodeStyleSettings>{
+  :cljs.core/-&gt;&gt; 0
   :cljs.core/= 0
+  :clojure.core/-&gt; 0
   :clojure.core/= 0
   :cursive.formatting/default-only-indent true
 }</ClojureCodeStyleSettings>
