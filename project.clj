@@ -7,10 +7,10 @@
                    :inherit [:plugins :repositories :managed-dependencies :dependencies :exclusions [:profiles :dev] :test-refresh]}
   :dependencies [[org.clojure/clojurescript]
                  [com.rpl/specter]
+                 [thheller/shadow-cljs]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.0.0"]
                  [org.clojure/tools.namespace "0.2.11"]
-                 [thheller/shadow-cljs "2.4.1"]
                  [pjstadig/humane-test-output "0.8.3"]]
   :clean-targets ^{:protect false} ["target"]
   :aot [io.jesi.backpack.random]
