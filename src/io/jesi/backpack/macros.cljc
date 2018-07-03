@@ -49,7 +49,7 @@
   [& body]
   (letfn [(catch-any? [form]
             (and (seq form)
-              (= (first form) 'catch-any)))
+                 (= (first form) 'catch-any)))
           (expand [[_catch* classes & catch-tail]]
             (map #(list* 'catch % catch-tail) classes))
           (transform [form]
