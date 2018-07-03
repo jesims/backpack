@@ -6,10 +6,10 @@
   [& imports]
   `(do
      ~@(apply concat
-              (for [[ns & names] imports
-                    name names
-                    :let [src (symbol (str ns) (str name))]]
-                `((def ~name ~src))))))
+         (for [[ns & names] imports
+               name names
+               :let [src (symbol (str ns) (str name))]]
+           `((def ~name ~src))))))
 
 (defmacro catch->nil [& body]
   `(try
@@ -62,7 +62,11 @@
   "returns a map with the keywords from the symbol names"
   [& symbols]
   (into (array-map)
-        (map
-          (fn [sym]
-            [(keyword (name sym)) sym])
-          symbols)))
+    (map
+      (fn [sym]
+        [(keyword (name sym)) sym])
+      symbols)))
+
+(defmacro condf [v & clauses]
+  `(condp apply [~v]
+     ~@clauses))

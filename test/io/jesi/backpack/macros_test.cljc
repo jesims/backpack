@@ -4,7 +4,7 @@
     [clojure.string :as string]
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand]])
+    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand condf]])
   #?(:clj
      (:import (java.lang ArithmeticException
                          SecurityException))))
@@ -121,3 +121,17 @@
       (is (= {:c {:cheese false}} (shorthand c)))
       (is (= {:c {:cheese false} :a 1 :b 2} (shorthand c a b)))
       (is (= {:a 1 :shorthand-test-variable "long name is long"} (shorthand a shorthand-test-variable))))))
+
+(deftest condf-test
+  #?(:clj
+     (testing "is a macro"
+       (is (:macro (meta #'condf)))))
+
+  (testing "takes functions as condp predicates"
+    (let [f #(condf %
+               map? "map"
+               string? "string"
+               nil)]
+      (is (= "map" (f {:a 1})))
+      (is (= "string" (f "hi")))
+      (is (nil? (f 1))))))
