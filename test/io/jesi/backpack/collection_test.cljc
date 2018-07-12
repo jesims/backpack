@@ -257,3 +257,25 @@
            (bp/assoc-in m
              [:a :b] 1
              [:c :d] 2)))))
+
+(deftest trans-reduce-kv-test
+  (testing "Works like reduce-kv, but takes a function that expects a transient"
+    (let [values (sorted-map :a 1 :b 2 :c 3 :d 4 :e 5)
+          reducer (fn [modifier coll _ v]
+                    (modifier coll (+ (count coll) v)))]
+      (is (= [1 3 5 7 9]
+             (reduce-kv (partial reducer conj) [] values)
+             (bp/trans-reduce-kv (partial reducer conj!) [] values))))))
+
+(deftest trans-reduce-test
+  (testing "Works like reduce, but takes a function that expects a transient"
+    (let [values [[1] [2] [3]]]
+      (testing "taking only a function and collection"
+        (is (= [1 [2] [3]]
+               (reduce conj values)
+               (bp/trans-reduce conj! values))))
+
+      (testing "taking a function, initial value and collection"
+        (is (= [[1] [2] [3]]
+               (reduce conj [] values)
+               (bp/trans-reduce conj! [] values)))))))
