@@ -12,9 +12,9 @@
 
 (defn safe-empty? [x]
   (or (nil? x)
-      (if (seqable? x)
-        (empty? x)
-        false)))
+    (if (seqable? x)
+      (empty? x)
+      false)))
 
 (defn filter-values
   [pred map]
@@ -79,3 +79,17 @@
       (clojure.core/assoc-in m path v))
     m
     (partition 2 kvs)))
+
+(defn trans-reduce-kv [f init coll]
+  (->> coll
+       (reduce-kv f (transient init))
+       persistent!))
+
+(defn trans-reduce
+  ([f [c & coll]]
+   (trans-reduce f c coll))
+
+  ([f init coll]
+   (->> coll
+        (reduce f (transient init))
+        persistent!)))

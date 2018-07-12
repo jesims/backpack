@@ -27,6 +27,8 @@
    remove-empty
    safe-empty?
    select-non-nil-keys
+   trans-reduce
+   trans-reduce-kv
    translate-keys]
 
   [io.jesi.backpack.fn
