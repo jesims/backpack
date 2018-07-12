@@ -12,9 +12,9 @@
 
 (defn safe-empty? [x]
   (or (nil? x)
-    (if (seqable? x)
-      (empty? x)
-      false)))
+      (if (seqable? x)
+        (empty? x)
+        false)))
 
 (defn filter-values
   [pred map]

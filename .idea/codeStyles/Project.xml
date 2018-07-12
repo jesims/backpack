@@ -11,6 +11,7 @@
     <ClojureCodeStyleSettings>{
   :cljs.core/-&gt;&gt; 0
   :cljs.core/= 0
+  :cljs.core/or 0
   :clojure.core/= 0
   :clojure.core/and 0
   :cursive.formatting/default-only-indent true
