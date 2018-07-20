@@ -80,3 +80,23 @@
 
   (is (= "lots-of-yelling"
          (bp/->kebab-case :LOTS_OF_YELLING))))
+
+(deftest prefix-test
+
+  (testing "adds string prefix"
+    (is (= "#123" (bp/prefix \# "123")))
+    (is (= "abc123" (bp/prefix "abc" "123"))))
+
+  (testing "doesn't prefix if already prefixed"
+    (is (= "#123" (bp/prefix \# "#123")))
+    (is (= "abc123" (bp/prefix "abc" "abc123")))))
+
+(deftest suffix-test
+
+  (testing "adds string suffix"
+    (is (= "stuff/" (bp/suffix \/ "stuff")))
+    (is (= "stuffed" (bp/suffix "ed" "stuff"))))
+
+  (testing "doesn't suffix if already suffixed"
+    (is (= "stuff/" (bp/suffix \/ "stuff/")))
+    (is (= "stuffed" (bp/suffix "ed" "stuffed")))))

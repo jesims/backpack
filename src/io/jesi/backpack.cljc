@@ -55,12 +55,14 @@
    no-empty-values]
 
   [io.jesi.backpack.string
-   ->kebab-case
-   ->kebab-case-key
    ->camelCase
    ->camelCase-key
+   ->kebab-case
+   ->kebab-case-key
+   prefix
    subs-inc
    subs-to
+   suffix
    true-string?
    uuid-str?]
 

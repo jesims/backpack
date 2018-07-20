@@ -21,8 +21,7 @@
       nil
       (subs s 0 (+ index (count match))))))
 
-(defn true-string?
-  [s]
+(defn true-string? [s]
   (= s "true"))
 
 (defn ->camelCase [s]
@@ -42,3 +41,17 @@
 (def ->kebab-case-key (comp keyword ->kebab-case))
 
 (def ->camelCase-key (comp keyword ->camelCase))
+
+(defn- create-affix [bipred f]
+  (fn [substr s]
+    (let [substr (str substr)
+          s (str s)
+          args [s substr]]
+      (if (apply bipred args)
+        s
+        (apply str (f args))))))
+
+(def prefix (create-affix string/starts-with? reverse))
+
+(def suffix (create-affix string/ends-with? identity))
+
