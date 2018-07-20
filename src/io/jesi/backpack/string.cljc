@@ -44,9 +44,7 @@
 
 (defn- create-affix [bipred f]
   (fn [substr s]
-    (let [substr (str substr)
-          s (str s)
-          args [s substr]]
+    (let [[s :as args] (map str [s substr])]
       (if (apply bipred args)
         s
         (apply str (f args))))))
