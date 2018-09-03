@@ -15,7 +15,7 @@
 (defn js->clj
   "Transforms JavaScript to ClojureScript converting keys to kebab-case keywords"
   [x]
-  (when-let [clj (some-> x (clojure.core/js->clj :keywordize-keys true))]
+  (when-some [clj (some-> x (clojure.core/js->clj :keywordize-keys true))]
     (transform-keys ->kebab-case-key clj)))
 
 (defn clj->js [x]

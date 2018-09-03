@@ -76,12 +76,12 @@
 
   (testing "parses empty and literal values"
     (let [assert-eq (fn [expected s]
-                      (is (= expected) (bp/json->clj s)))]
+                      (is (= expected (bp/json->clj s))))]
       (assert-eq {} "{}")
       (assert-eq [] "[]")
       (assert-eq nil "null")
       (assert-eq true "true")
-      (assert-eq true "false")
+      (assert-eq false "false")
       (assert-eq "" "\"\"")
       (assert-eq 3.14 "3.14")
       (assert-eq 42 "42"))))
