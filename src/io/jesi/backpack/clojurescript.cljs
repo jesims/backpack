@@ -1,10 +1,10 @@
 (ns io.jesi.backpack.clojurescript
   (:refer-clojure :exclude [clj->js js->clj])
   (:require
+    [clojure.string :as string]
     [clojure.walk :refer [postwalk]]
     [goog.object :as gobj]
-    [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]]
-    [clojure.string :as string]))
+    [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]]))
 
 ; Came from camel-snake-kebab
 (defn transform-keys [t coll]
