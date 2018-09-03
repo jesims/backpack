@@ -4,7 +4,7 @@
     [clojure.string :as string]
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand condf]])
+    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand condf defconsts]])
   #?(:clj
      (:import (java.lang ArithmeticException
                          SecurityException))))
@@ -135,3 +135,14 @@
       (is (= "map" (f {:a 1})))
       (is (= "string" (f "hi")))
       (is (nil? (f 1))))))
+
+(deftest defconsts-test
+  (testing "is a macro"
+    (is (true? (bp/macro? `defconsts))))
+
+  (testing "transforms the symbol values with the given function"
+    (defconsts bp/->snake_case
+      'a-snail-can-sleep-for-three-years
+      'slugsHaveFourNoses)
+    (is (= "a_snail_can_sleep_for_three_years" a-snail-can-sleep-for-three-years))
+    (is (= "slugs_have_four_noses" slugsHaveFourNoses))))

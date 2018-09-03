@@ -81,6 +81,26 @@
   (is (= "lots-of-yelling"
          (bp/->kebab-case :LOTS_OF_YELLING))))
 
+(deftest ->snake_case-test
+  (is (= "v2"
+         (bp/->snake_case :v2)
+         (bp/->snake_case "v2")))
+
+  (is (= "base_url"
+         (bp/->snake_case :baseUrl)
+         (bp/->snake_case :baseURL)
+         (bp/->snake_case "baseUrl")))
+
+  (is (= "base_url_v2"
+         (bp/->snake_case :baseURLv2)
+         (bp/->snake_case :BaseUrlV2)))
+
+  (is (= "something_had_spaces"
+         (bp/->snake_case "something had spaces")))
+
+  (is (= "something_had__multiple_spaces"
+         (bp/->snake_case "something had  multiple spaces"))))
+
 (deftest prefix-test
 
   (testing "adds string prefix"
