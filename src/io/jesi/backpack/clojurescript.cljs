@@ -3,7 +3,8 @@
   (:require
     [clojure.walk :refer [postwalk]]
     [goog.object :as gobj]
-    [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]]))
+    [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]]
+    [clojure.string :as string]))
 
 ; Came from camel-snake-kebab
 (defn transform-keys [t coll]
@@ -14,7 +15,8 @@
 (defn js->clj
   "Transforms JavaScript to ClojureScript converting keys to kebab-case keywords"
   [x]
-  (transform-keys ->kebab-case-key (clojure.core/js->clj x :keywordize-keys true)))
+  (when-let [clj (some-> x (clojure.core/js->clj :keywordize-keys true))]
+    (transform-keys ->kebab-case-key clj)))
 
 (defn clj->js [x]
   "Transforms ClojureScript to JavaScript converting keys to camelCase"
@@ -25,8 +27,11 @@
   (js/JSON.stringify (clj->js x)))
 
 (defn json->clj
-  [x]
-  (js->clj (js/JSON.parse x)))
+  [s]
+  (when-not (string/blank? s)
+    (some-> s
+            js/JSON.parse
+            js->clj)))
 
 (defn class->clj [x]
   (let [ignored-keys #{"constructor"}

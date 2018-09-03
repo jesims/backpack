@@ -29,7 +29,10 @@
            (bp/js->clj (nillmap :baseURL :heliosURL)))))
 
   (testing "end-to-end clj->js->clj"
-    (is (= clj (-> clj bp/clj->js bp/js->clj)))))
+    (is (= clj (-> clj bp/clj->js bp/js->clj))))
+
+  (testing "returns nil"
+    (is (nil? (bp/clj->js nil)))))
 
 (deftest clj->js-test
 
@@ -63,7 +66,25 @@
            (-> clj bp/clj->js js/JSON.stringify bp/json->clj)))
     (let [json (js/JSON.stringify js)]
       (is (= json
-             (-> json bp/json->clj bp/clj->json))))))
+             (-> json bp/json->clj bp/clj->json)))))
+
+  (testing "parses nil and blank"
+    (is (nil? (bp/json->clj nil)))
+    (is (nil? (bp/json->clj "")))
+    (is (nil? (bp/json->clj " ")))
+    (is (nil? (bp/json->clj (str \tab \  \newline)))))
+
+  (testing "parses empty and literal values"
+    (let [assert-eq (fn [expected s]
+                      (is (= expected) (bp/json->clj s)))]
+      (assert-eq {} "{}")
+      (assert-eq [] "[]")
+      (assert-eq nil "null")
+      (assert-eq true "true")
+      (assert-eq true "false")
+      (assert-eq "" "\"\"")
+      (assert-eq 3.14 "3.14")
+      (assert-eq 42 "42"))))
 
 (deftype TestClass [f1 f2]
   Object)
