@@ -59,6 +59,8 @@
    ->camelCase-key
    ->kebab-case
    ->kebab-case-key
+   ->snake_case
+   ->snake_case-key
    prefix
    subs-inc
    subs-to

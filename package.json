@@ -2,6 +2,7 @@
   "name": "backpack",
   "version": "1.0.0",
   "description": "Clojure(Script) cross-project utilities",
+  "license": "UNLICENSED",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jesims/backpack.git"

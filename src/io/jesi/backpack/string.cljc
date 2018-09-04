@@ -34,13 +34,20 @@
           name
           (string/replace #"([A-Z]{2,})([a-z])" "$1 $2")
           (string/replace #"([a-z])([A-Z])" "$1 $2")
-          (string/replace #"_" "-")
+          (string/replace \_ \-)
           (string/replace #"\s" "-")
           string/lower-case))
+
+(defn ->snake_case [s]
+  (some-> s
+          ->kebab-case
+          (string/replace \- \_)))
 
 (def ->kebab-case-key (comp keyword ->kebab-case))
 
 (def ->camelCase-key (comp keyword ->camelCase))
+
+(def ->snake_case-key (comp keyword ->snake_case))
 
 (defn- create-affix [bipred f]
   (fn [substr s]

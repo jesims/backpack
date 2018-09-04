@@ -70,3 +70,11 @@
 (defmacro condf [v & clauses]
   `(condp apply [~v]
      ~@clauses))
+
+(defmacro defconsts
+  "Defines a collection of string constant values as individual symbols transforming their values using body-fn."
+  [body-fn & symbols]
+  `(do ~@(for [s symbols
+               :let [name (second s)
+                     body (str name)]]
+           `(def ~name (~body-fn ~body)))))
