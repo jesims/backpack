@@ -146,4 +146,9 @@
       'a-snail-can-sleep-for-three-years
       'slugsHaveFourNoses)
     (is (= "a_snail_can_sleep_for_three_years" a-snail-can-sleep-for-three-years))
-    (is (= "slugs_have_four_noses" slugsHaveFourNoses))))
+    (is (= "slugs_have_four_noses" slugsHaveFourNoses)))
+
+  (testing "allows function composition"
+    (defconsts (comp string/upper-case bp/->snake_case)
+      'a-rhinoceros-horn-is-made-of-hair)
+    (is (= "A_RHINOCEROS_HORN_IS_MADE_OF_HAIR" a-rhinoceros-horn-is-made-of-hair))))
