@@ -137,8 +137,9 @@
       (is (nil? (f 1))))))
 
 (deftest defconsts-test
-  (testing "is a macro"
-    (is (true? (bp/macro? `defconsts))))
+  #?(:clj
+     (testing "is a macro"
+       (is (true? (bp/macro? `defconsts)))))
 
   (testing "transforms the symbol values with the given function"
     (defconsts bp/->snake_case
