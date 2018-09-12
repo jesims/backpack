@@ -74,7 +74,9 @@
 (defmacro defconsts
   "Defines a collection of string constant values as individual symbols transforming their values using body-fn."
   [body-fn & symbols]
-  `(do ~@(for [s symbols
-               :let [name (second s)
-                     body (str name)]]
-           `(def ~name (~body-fn ~body)))))
+  (let [names (map second symbols)]
+    `(do
+       ~@(for [name names
+               :let [body (str name)]]
+           `(def ~name (~body-fn ~body)))
+       (def ~'-all (hash-set ~@names)))))
