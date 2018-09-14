@@ -76,7 +76,7 @@
   (reduce
     (fn [m [path v]]
       ;TODO create assoc-in! and use transient map
-      (let [path (if (keyword? path) [path] path)]
+      (let [path (if (vector? path) path [path])]
         (clojure.core/assoc-in m path v)))
     m
     (partition 2 kvs)))
