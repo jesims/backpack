@@ -22,4 +22,3 @@
                     pprint-str)
         expected (pprint-str expected)]
     (is (= expected actual))))
-

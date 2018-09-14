@@ -7,7 +7,8 @@
     [io.jesi.backpack :as bp]))
 
 (def excluded-ns #{'io.jesi.backpack.random
-                   'io.jesi.backpack.macros})               ; Excluded because clojurescript won't need macros (also ns-publics returns defmacro)
+                   'io.jesi.backpack.macros
+                   'io.jesi.backpack.test.util})            ; Excluded because clojurescript won't need macros (also ns-publics returns defmacro)
 
 (deftest core-test
   (let [models-ns (->> "src/io/jesi/backpack/"
