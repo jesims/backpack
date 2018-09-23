@@ -11,7 +11,8 @@
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.0.0"]
                  [org.clojure/tools.namespace "0.2.11"]
-                 [pjstadig/humane-test-output "0.8.3"]]
+                 [pjstadig/humane-test-output "0.8.3"]
+                 [binaryage/oops "0.6.2"]]
   :clean-targets ^{:protect false} ["target"]
   :aot [io.jesi.backpack.random]
   :release-tasks [["deploy"]])

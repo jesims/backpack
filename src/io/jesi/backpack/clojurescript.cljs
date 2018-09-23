@@ -12,6 +12,11 @@
   (letfn [(transform [[k v]] [(t k) v])]
     (postwalk (fn [x] (if (map? x) (into {} (map transform x)) x)) coll)))
 
+(extend-type UUID
+  IEncodeJS
+  (-clj->js [x]
+    (str x)))
+
 (defn js->clj
   "Transforms JavaScript to ClojureScript converting keys to kebab-case keywords"
   [x]

@@ -1,7 +1,8 @@
 (ns io.jesi.backpack.clojurescript-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [io.jesi.backpack :as bp]))
+    [io.jesi.backpack :as bp]
+    [oops.core :refer [oget]]))
 
 (defn- json= [& args]
   (apply = (map js/JSON.stringify args)))
@@ -43,7 +44,13 @@
     (is (json= js (-> clj bp/clj->js))))
 
   (testing "end-to-end js->clj->js"
-    (is (json= js (-> js bp/js->clj bp/clj->js)))))
+    (is (json= js (-> js bp/js->clj bp/clj->js))))
+
+  (testing "converts UUIDs to strings"
+    (is (string? (-> {:id (random-uuid)}
+                     bp/clj->js
+                     (oget "id"))))
+    (is (string? (bp/clj->js (random-uuid))))))
 
 (deftest clj->json-test
 
