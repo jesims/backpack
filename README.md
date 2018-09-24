@@ -54,4 +54,5 @@ All string quotes within test functions should be interesting animal facts; with
 * [weavejester/medley](https://github.com/weavejester/medley)
 * [clojure/core.incubator](https://github.com/clojure/core.incubator)
 * [ptaoussanis/encore](https://github.com/ptaoussanis/encore)
+* [cloojure/tupelo](https://github.com/cloojure/tupelo)
 * or Search [crossclj.info](https://crossclj.info/)
