@@ -44,6 +44,7 @@
     (println stack)))
 
 (defn start []
+  (js/console.clear)
   (st/run-all-tests))
 
 (defn stop [done]
