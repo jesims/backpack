@@ -1,4 +1,6 @@
-(defproject io.jesi/backpack "0.0.17"
+(def VERSION (.trim (slurp "VERSION")))
+
+(defproject io.jesi/backpack VERSION
   :description "Clojure(Script) cross-project utilities"
   :license "Unlicensed"
   :url "https://github.com/jesims/backpack"
