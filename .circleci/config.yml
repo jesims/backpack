@@ -59,7 +59,7 @@ jobs:
           <<: *LEIN_CACHE
       - restore_cache:
           <<: *NODE_CACHE
-      - run: './backpack.sh test'
+      - run: './backpack.sh unit-test'
       - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
@@ -76,7 +76,7 @@ jobs:
           <<: *LEIN_CACHE
       - restore_cache:
           <<: *NODE_CACHE
-      - run: './backpack.sh test-cljs'
+      - run: './backpack.sh unit-test-cljs'
       - *NOTIFY
       - save_cache:
           <<: *LEIN_CACHE
