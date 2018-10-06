@@ -1,54 +1,101 @@
 #!/usr/bin/env bash
+txtbld=$(tput bold 2>/dev/null)             # Bold
+grn=$(tput setaf 2 2>/dev/null)             # Green
+red=$(tput setaf 1 2>/dev/null)             # Red
+bldgrn=${txtbld}$(tput setaf 2 2>/dev/null) # Bold Green
+bldred=${txtbld}$(tput setaf 1 2>/dev/null) # Bold Red
+txtrst=$(tput sgr0 2>/dev/null)             # Reset
+
 cd $(realpath $(dirname $0))
-source build-scripts/project.sh &&
-source build-scripts/s3-wagon-util.sh
-if [[ $? -ne 0 ]]; then
-	exit 1
-fi
+script_name=$(basename $0)
 
-usage () {
-	cat << EOF
-${txtbld}SYNOPSIS${txtrst}
-	${script_name} clean
-	${script_name} release
-	${script_name} snapshot [-l]
-	${script_name} test [-r]
-	${script_name} test-cljs [-r|-b|-n]
-
-${txtbld}DESCRIPTION${txtrst}
-	${txtbld}clean${txtrst}
-		cleans
-	${txtbld}release${txtrst}
-		releases the library onto s3 repository
-	${txtbld}snapshot${txtrst}
-		releases the library onto s3 as a snapshot
-			${txtbld}-l${txtrst}  snapshot to local repository
-	${txtbld}test${txtrst}
-		runs the CLJ unit tests
-	${txtbld}test-cljs${txtrst}
-		runs the CLJS unit tests
-EOF
+echo_message () {
+	echo "${bldgrn}[$script_name]${txtrst} ${FUNCNAME[1]}: ${grn}$@${txtrst}"
 }
 
+echo_red () {
+	echo "${bldred}[$script_name]${txtrst} ${FUNCNAME[1]}: ${red}$@${txtrst}"
+}
+
+echo_error () {
+	echo_red "ERROR: $@"
+}
+
+abort_on_error () {
+	if [[ $? -ne 0 ]]; then
+		echo_error $@
+		exit 1
+	fi
+}
+
+usage () {
+	doc=$(grep '^##' "$script_name" | sed -e 's/^##//')
+	desc=''
+	synopsis=''
+	while read -r line; do
+		if [[ "$line" == *: ]];then
+			fun=${line::-1}
+			synopsis+="\n\t$script_name $fun"
+			desc+="\n\t$fun"
+		elif [[ "$line" == args:* ]];then
+			args="$( cut -d ':' -f 2- <<< "$line" )"
+			synopsis+="$args"
+		elif [[ "$line" == [* ]];then
+			desc+="\n\t\t\t$line"
+		else
+			desc+="\n\t\t$line"
+		fi
+	done <<< "$doc"
+	echo -e "SYNOPSIS$synopsis\n\nDESCRIPTION$desc"
+}
+
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+## deps:
+## Installs all required dependencies for Clojure and ClojureScript
 deps () {
+	echo_message "Installing dependencies"
 	lein deps && npm install
 }
 
+## clean:
+## Cleans up the compiled and generated sources
 clean () {
 	stop
 	lein clean
+	rm -rf .shadow-cljs/
 }
 
-unit-test () {
+## stop:
+## Stops shadow-cljs and karma
+stop () {
+	npx shadow-cljs stop &>/dev/null
+	pkill -f 'karma ' &>/dev/null
+}
+
+_unit-test () {
+	refresh=$1
+	clean
 	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
-	lein test
+	if ${refresh};then
+		lein auto test ${@:2}
+	else
+		lein test
+	fi
 	abort_on_error 'Clojure tests failed'
 }
 
-unit-test-refresh () {
-	clean
-	echo_message 'The truth is our natural world is changing. And we are totally dependent on that world.'
-	lein auto test $@
+## unit-test:
+## args: [-r]
+## Runs the Clojure unit tests
+## [-r] Watches tests and source files for changes, and subsequently re-evaluates
+unit-test () {
+	case $1 in
+		-r)
+			_unit-test true ${@:2};;
+		*)
+			_unit-test;;
+	esac
 }
 
 unit-test-node () {
@@ -63,14 +110,12 @@ unit-test-karma () {
 	abort_on_error 'kamra tests failed'
 }
 
-unit-test-cljs () {
-	echo_message 'In the clojure kingdom, the rule is, transform or be transformed.'
-	unit-test-karma
-}
-
-stop () {
-	npx shadow-cljs stop &>/dev/null
-	pkill -f 'karma ' &>/dev/null
+unit-test-browser-refresh () {
+	clean
+	trap stop EXIT
+	open http://localhost:8091/
+	npx shadow-cljs watch browser
+	abort_on_error
 }
 
 unit-test-cljs-refresh () {
@@ -82,56 +127,32 @@ unit-test-cljs-refresh () {
 	npx karma start --no-single-run &
 	npx shadow-cljs watch karma
 }
-
-unit-test-browser-refresh () {
-	clean
-	trap stop EXIT
-	open http://localhost:8091/
-	npx shadow-cljs watch browser
-	abort_on_error
-}
-
-parse () {
+## unit-test-cljs:
+## args: [-b|-n|-r]
+## Runs the ClojureScript unit tests
+## [-b] Watches and compiles tests for execution within a browser
+## [-n] Executes the tests targeting Node.js
+## [-r] Watches tests and source files for changes, and subsequently re-evaluates
+unit-test-cljs () {
 	case $1 in
-		-h|--help)
-			usage;;
-		clean)
-			clean;;
-		deps)
-			deps;;
-		release)
-			s3_release;;
-		snapshot)
-			case $2 in
-				-l|-local)
-					snapshot_local;;
-				*)
-					s3_snapshot;;
-			esac;;
-		stop)
-			stop;;
-		test)
-			case $2 in
-				-r)
-					unit-test-refresh ${@:3};;
-				*)
-					unit-test;;
-			esac ;;
-		test-cljs)
-			case $2 in
-				-r)
-					unit-test-cljs-refresh;;
-				-b)
-					unit-test-browser-refresh;;
-				-n)
-					unit-test-node;;
-				*)
-					unit-test-cljs;;
-			esac ;;
+		-r)
+			unit-test-cljs-refresh;;
+		-b)
+			unit-test-browser-refresh;;
+		-n)
+			unit-test-node;;
 		*)
-			usage
-			exit 1;;
+			unit-test-karma;;
 	esac
 }
 
-parse $@
+if [ "$#" -eq 0 ];then
+	usage
+	exit 1
+else
+	if [[ $(grep "^$1\ (" "$script_name") ]];then
+		eval $@
+	else
+		echo_error "Unknown function $1 ($script_name $@)"
+	fi
+fi
