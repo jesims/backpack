@@ -12,7 +12,7 @@
     "karma": "^2.0.4",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cljs-test": "^0.1.0",
-    "shadow-cljs": "^2.4.5",
+    "shadow-cljs": "^2.6.10",
     "standard": "^11.0.1"
   }
 }

@@ -102,6 +102,41 @@ unit-test-cljs () {
 	esac
 }
 
+is-snapshot () {
+	version=$(cat VERSION)
+	[[ "$version" == *SNAPSHOT ]]
+}
+
+## snapshot:
+## Pushes a snapshot to Clojars
+snapshot () {
+	if is-snapshot;then
+		echo_message "SNAPSHOT suffix already defined... Aborting"
+		exit 1
+	else
+		version=$(cat VERSION)
+		snapshot="$version-SNAPSHOT"
+		echo ${snapshot} > VERSION
+		echo_message "Snapshotting $snapshot"
+	#	lein deploy clojars
+		echo "$version" > VERSION
+	fi
+}
+
+## release:
+## Pushes a release to Clojars
+release () {
+	version=$(cat VERSION)
+	if ! is-snapshot;then
+		version=$(cat VERSION)
+		echo_message "Releasing $version"
+	#	lein deploy clojars
+	else
+		echo_message "SNAPSHOT suffix already defined... Aborting"
+		exit 1
+	fi
+}
+
 if [ "$#" -eq 0 ];then
 	usage
 	exit 1
