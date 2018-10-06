@@ -149,10 +149,8 @@ unit-test-cljs () {
 if [ "$#" -eq 0 ];then
 	usage
 	exit 1
+elif [[ $(grep "^$1\ (" "$script_name") ]];then
+	eval $@
 else
-	if [[ $(grep "^$1\ (" "$script_name") ]];then
-		eval $@
-	else
-		echo_error "Unknown function $1 ($script_name $@)"
-	fi
+	echo_error "Unknown function $1 ($script_name $@)"
 fi
