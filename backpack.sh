@@ -38,7 +38,7 @@ _unit-test () {
 	refresh=$1
 	clean
 	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
-	if ${refresh};then
+	if [ -z ${refresh+x} ];then
 		lein auto test ${@:2}
 	else
 		lein test
