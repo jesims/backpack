@@ -113,6 +113,16 @@ is-snapshot () {
 	[[ "$version" == *SNAPSHOT ]]
 }
 
+deploy() {
+	if [[ -n "$CIRCLECI" ]];then
+		lein deploy clojars &>/dev/null
+		abort_on_error
+	else
+		lein deploy clojars
+		abort_on_error
+	fi
+}
+
 ## snapshot:
 ## Pushes a snapshot to Clojars
 snapshot () {
@@ -124,7 +134,7 @@ snapshot () {
 		snapshot="$version-SNAPSHOT"
 		echo ${snapshot} > VERSION
 		echo_message "Snapshotting $snapshot"
-		LEIN_SILENT=true lein deploy clojars
+		deploy
 		echo "$version" > VERSION
 	fi
 }
@@ -136,7 +146,7 @@ release () {
 	if ! is-snapshot;then
 		version=$(cat VERSION)
 		echo_message "Releasing $version"
-		LEIN_SILENT=true lein deploy clojars
+		deploy
 	else
 		echo_message "SNAPSHOT suffix already defined... Aborting"
 		exit 1
