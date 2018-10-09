@@ -15,12 +15,13 @@ With version number of `MAJOR.MINOR.PATCH`, increment:
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-Active branches should be suffixed with `-SNAPSHOT` to indicate a work-in-progress and likely to rapidly change
+Active branches will automatically be suffixed with `-SNAPSHOT` prior to snapshot deploy to indicate a work-in-progress
+and likely to actively changing build.
 
 # Testing
 
 All utilities should be written to support both Clojure and ClojureScript with unit tests written in **CLJC** where practical.
- Unit tests can then be run by invoking `backpack.sh test` or `backpack.sh test-cljs` respectively.
+ Unit tests can then be run by invoking `backpack.sh unit-test` or `backpack.sh unit-test-cljs` respectively.
 
 ## Theme: Animal Safari
 
