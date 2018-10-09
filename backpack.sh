@@ -118,7 +118,7 @@ snapshot () {
 		snapshot="$version-SNAPSHOT"
 		echo ${snapshot} > VERSION
 		echo_message "Snapshotting $snapshot"
-	#	lein deploy clojars
+		lein deploy clojars
 		echo "$version" > VERSION
 	fi
 }
@@ -130,7 +130,7 @@ release () {
 	if ! is-snapshot;then
 		version=$(cat VERSION)
 		echo_message "Releasing $version"
-	#	lein deploy clojars
+		lein deploy clojars
 	else
 		echo_message "SNAPSHOT suffix already defined... Aborting"
 		exit 1
