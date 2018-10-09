@@ -129,6 +129,7 @@ workflows:
           requires:
             - deps
       - snapshot:
+          context: JESI
           requires:
             - test_clj
             - test_cljs
@@ -136,6 +137,7 @@ workflows:
             branches:
               ignore: /^(master|develop)$/
       - release:
+          context: JESI
           requires:
             - test_clj
             - test_cljs
