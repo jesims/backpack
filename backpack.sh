@@ -10,7 +10,13 @@ fi
 ## Installs all required dependencies for Clojure and ClojureScript
 deps () {
 	echo_message "Installing dependencies"
-	lein deps && npm install
+	lein deps
+	abort_on_error
+	if [[ -n "$CIRCLECI" ]];then
+		npm install
+	else
+		dry install --dry-keep-package-json
+	fi
 }
 
 ## clean:
