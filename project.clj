@@ -9,7 +9,7 @@
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.5"]]
   :parent-project {:coords  [io.jesi/parent "0.0.1"]
-                   :inherit [:plugins :managed-dependencies :dependencies :exclusions [:profiles :dev] :test-refresh]}
+                   :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :exclusions [:profiles :dev] :test-refresh]}
   :dependencies [[org.clojure/clojurescript]
                  [com.rpl/specter]
                  [thheller/shadow-cljs]
