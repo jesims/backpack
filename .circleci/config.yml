@@ -79,6 +79,22 @@ jobs:
           <<: *LEIN_CACHE
       - save_cache:
           <<: *NODE_CACHE
+  test_docs:
+    docker: *DEFAULT
+    steps:
+    - *CANCEL_REDUNDANT
+    - checkout
+    - *SUBMODULE_UPDATE
+    - restore_cache:
+        <<: *LEIN_CACHE
+    - restore_cache:
+        <<: *NODE_CACHE
+    - run: './backpack.sh test-docs'
+    - *NOTIFY
+    - save_cache:
+        <<: *LEIN_CACHE
+    - save_cache:
+        <<: *NODE_CACHE
   snapshot:
     docker: *DEFAULT
     steps:
@@ -122,11 +138,15 @@ workflows:
       - test_cljs:
           requires:
             - deps
+      - test_docs:
+          requires:
+          - deps
       - snapshot:
           context: JESI
           requires:
             - test_clj
             - test_cljs
+            - test_docs
           filters:
             branches:
               ignore: /^(master|develop)$/

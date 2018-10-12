@@ -6,22 +6,30 @@ if [[ $? -ne 0 ]]; then
 	exit 1
 fi
 
-## deps:
-## Installs all required dependencies for Clojure and ClojureScript
-deps () {
-	echo_message "Installing dependencies"
-	lein deps
-	abort_on_error
-	dry install --dry-keep-package-json
-	abort_on_error
-}
-
 ## clean:
 ## Cleans up the compiled and generated sources
 clean () {
 	stop
 	lein clean
 	rm -rf .shadow-cljs/
+}
+
+## deps:
+## Installs all required dependencies for Clojure and ClojureScript
+deps () {
+	echo_message 'Installing dependencies'
+	lein deps
+	abort_on_error
+	dry install --dry-keep-package-json
+	abort_on_error
+}
+
+## docs:
+## Generate api documentation
+docs () {
+	echo_message 'Generating API documentation'
+	lein codox
+	abort_on_error
 }
 
 ## stop:
@@ -124,7 +132,7 @@ deploy() {
 ## Pushes a snapshot to Clojars
 snapshot () {
 	if is-snapshot;then
-		echo_message "SNAPSHOT suffix already defined... Aborting"
+		echo_message 'SNAPSHOT suffix already defined... Aborting'
 		exit 1
 	else
 		version=$(cat VERSION)
@@ -145,22 +153,17 @@ release () {
 		echo_message "Releasing $version"
 		deploy
 	else
-		echo_message "SNAPSHOT suffix already defined... Aborting"
+		echo_message 'SNAPSHOT suffix already defined... Aborting'
 		exit 1
 	fi
 }
 
-## docs:
-## Generate api documentation
-docs () {
-	lein codox
-	abort_on_error
-}
-
-#FIXME fails even if no changes in docs dir
+## test-docs:
+## Checks that the committed api documentation is up to date with the latest code
 test-docs () {
+	echo_message 'Verifying animal facts...'
 	docs
-	if [ ! $(git diff --no-ext-diff --quiet --exit-code -- docs) ];then
+	if ! git diff --quiet --exit-code docs;then
 		echo_error 'Uncommitted changes to docs'
 		exit 1
 	fi
