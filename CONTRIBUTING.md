@@ -1,12 +1,19 @@
 # Contributing Guidelines
 
 **DO** include tests for all changes (where practical).
+
 **DO** ensure the CI checks pass.
-**DO** update the `CHANGELOG` to reflect changes (include your Github identifier).
-**DO** update the `CONTRIBUTORS` to append your name (if not already present).
+
+**DO** update the [](CHANGELOG.md) to reflect changes (include your Github identifier).
+
+**DO** update the [](CONTRIBUTORS.md) to append your name (if not already present).
+
 **DO** notify the project maintainers about any PR that has become stale.
+
 **Don't** include more than one feature or fix in a single PR.
+
 **Don't** include changes unrelated to the purpose of the PR.
+
 **Don't** open a new PR if changes are requested. Just push to the same branch and the PR will be updated.
 
 ## Testing
@@ -33,4 +40,4 @@ With version number of `MAJOR.MINOR.PATCH`, increment:
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-Active branches will automatically be suffixed with `-SNAPSHOT` and deployed to Clojars. When starting a change, please bump the `VERSION` as applicable.
+Active branches will automatically be suffixed with `-SNAPSHOT` and deployed to Clojars. When starting a change, please bump the [](VERSION) as applicable.
