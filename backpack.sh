@@ -150,6 +150,21 @@ release () {
 	fi
 }
 
+## docs
+## Generate api documentation
+docs () {
+	lein codox
+	abort_on_error
+}
+
+test-docs () {
+	docs
+	if git diff --quiet docs;then
+		echo_error 'uncommitted changes to docs'
+		exit 1
+	fi
+}
+
 if [[ "$#" -eq 0 ]] || [[ "$1" =~ ^(help|-h|--help)$ ]];then
 	usage
 	exit 1

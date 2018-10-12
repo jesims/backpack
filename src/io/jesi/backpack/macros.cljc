@@ -19,7 +19,6 @@
 (defmacro ns-of [f]
   `(-> ~f var meta :ns str))
 
-;TODO combine, macro? is also defined in io.jesi.spec.util-test
 #?(:clj
    (defn macro? [sym]
      (:macro (meta (find-var sym)))))
