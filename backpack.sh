@@ -157,10 +157,11 @@ docs () {
 	abort_on_error
 }
 
+#FIXME fails even if no changes in docs dir
 test-docs () {
 	docs
-	if git diff --quiet docs;then
-		echo_error 'uncommitted changes to docs'
+	if [ ! $(git diff --no-ext-diff --quiet --exit-code -- docs) ];then
+		echo_error 'Uncommitted changes to docs'
 		exit 1
 	fi
 }
