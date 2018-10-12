@@ -5,7 +5,7 @@
 
 # Backpack
 
-Backpack is a collection of common utility functions and helpers that we've found ourselves using across multiple projects for Clojure(Script).
+Backpack is a collection of common utility functions and helpers for Clojure(Script) that we've found ourselves using across multiple projects.
 
 ## Other Great (similar) Projects Include
 
@@ -18,7 +18,9 @@ Backpack is a collection of common utility functions and helpers that we've foun
 # Contributions
 
 Please use the project's GitHub issues page for all questions, ideas, etc.
+
 Pull requests are welcome; though we ask that you follow the [CONTIBUTING](CONTRIBUTING.md) guidelines.
+
 Backpacks [CONTRIBUTORS](CONTRIBUTORS.md).
 
 # License
