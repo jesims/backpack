@@ -4,9 +4,9 @@
 
 **DO** ensure the CI checks pass.
 
-**DO** update the [CHANGELOG](CHANGELOG.md) to reflect changes (include your Github identifier).
+**DO** update the [CHANGELOG.md](CHANGELOG.md) to reflect changes (include your Github identifier).
 
-**DO** update the [CONTRIBUTORS](CONTRIBUTORS.md) to append your name (if not already present).
+**DO** update the [CONTRIBUTORS.md](CONTRIBUTORS.md) to append your name (if not already present).
 
 **DO** notify the project maintainers about any PR that has become stale.
 
@@ -28,7 +28,7 @@ We like to have a theme when testing code that requires data. This projects them
 
 ## Helper Utilities
 
-Many additional automation and helper utilities are provided within `backpack.sh`. Invoke `backpack.sh help` to find out more.
+Many additional automation and helper utilities are provided within [backpack.sh](backpack.sh). Invoke `backpack.sh help` to find out more.
 
 ## Versioning
 
