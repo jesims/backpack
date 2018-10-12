@@ -150,7 +150,7 @@ release () {
 	fi
 }
 
-## docs
+## docs:
 ## Generate api documentation
 docs () {
 	lein codox
