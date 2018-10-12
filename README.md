@@ -5,23 +5,6 @@ Clojure(Script) cross-project utilities
 
 [![Clojars Project](https://img.shields.io/clojars/v/io.jesi/backpack.svg)](https://clojars.org/io.jesi/backpack)
 
-# Versioning
-
-> Backpack versions should follow the **Semver** convention.
-
-With version number of `MAJOR.MINOR.PATCH`, increment:
-
-* MAJOR version when you make incompatible API changes,
-* MINOR version when you add functionality in a backwards-compatible manner, and
-* PATCH version when you make backwards-compatible bug fixes.
-
-Active branches will automatically be suffixed with `-SNAPSHOT` prior to a snapshot deploy to indicate a work-in-progress build.
-
-# Testing
-
-All utilities should be written to support both Clojure and ClojureScript with unit tests written in **CLJC** where practical.
-Unit tests can then be run by invoking `backpack.sh unit-test` or `backpack.sh unit-test-cljs` respectively.
-
 ## Theme: Animal Safari
 
 All string quotes within test functions should be interesting animal facts; with bonus points for David Attenborough quotes.
