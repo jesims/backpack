@@ -1,5 +1,5 @@
+#TODO use Clojure config
 version: 2
-
 aliases:
   cache:
     lein_cache: &LEIN_CACHE
@@ -30,7 +30,6 @@ aliases:
       run:
         command: './notify.sh'
         when: on_fail
-
 jobs:
   deps:
     docker: *DEFAULT
@@ -48,7 +47,6 @@ jobs:
           <<: *LEIN_CACHE
       - save_cache:
           <<: *NODE_CACHE
-
   test_clj:
     docker: *DEFAULT
     steps:
@@ -65,7 +63,6 @@ jobs:
           <<: *LEIN_CACHE
       - save_cache:
           <<: *NODE_CACHE
-
   test_cljs:
     docker: *DEFAULT
     steps:
@@ -82,7 +79,6 @@ jobs:
           <<: *LEIN_CACHE
       - save_cache:
           <<: *NODE_CACHE
-
   snapshot:
     docker: *DEFAULT
     steps:
@@ -99,7 +95,6 @@ jobs:
           <<: *LEIN_CACHE
       - save_cache:
           <<: *NODE_CACHE
-
   release:
     docker: *DEFAULT
     steps:
@@ -116,7 +111,6 @@ jobs:
           <<: *LEIN_CACHE
       - save_cache:
           <<: *NODE_CACHE
-
 workflows:
   version: 2
   build:

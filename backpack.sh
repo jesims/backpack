@@ -12,11 +12,8 @@ deps () {
 	echo_message "Installing dependencies"
 	lein deps
 	abort_on_error
-	if [[ -n "$CIRCLECI" ]];then
-		npm install
-	else
-		dry install --dry-keep-package-json
-	fi
+	dry install --dry-keep-package-json
+	abort_on_error
 }
 
 ## clean:
