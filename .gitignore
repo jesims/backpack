@@ -4,5 +4,6 @@
 .lein-failures
 .shadow-cljs/
 node_modules/
+package.json
 pom.xml
 target/
