@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/backpack.iml" filepath="$PROJECT_DIR$/backpack.iml" />
-      <module fileurl="file://$PROJECT_DIR$/build-scripts/parent-clj/parent-clj.iml" filepath="$PROJECT_DIR$/build-scripts/parent-clj/parent-clj.iml" />
     </modules>
   </component>
 </project>
