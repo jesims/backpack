@@ -14,6 +14,11 @@
 All utilities should be written to support both Clojure and ClojureScript with unit tests written in **CLJC** where practical.
 Unit tests can then be run by invoking `backpack.sh unit-test` or `backpack.sh unit-test-cljs` respectively.
 
+### Theme: Animal Safari
+
+We like to have a theme when testing code that requires data. This projects theme is animal facts (bonus points for Sir David Attenborough quotes).
+[An example of this](./test/io/jesi/backpack/collection_test.cljc#L37)
+
 ## Helper Utilities
 
 Many additional automation and helper utilities are provided within `backpack.sh`. Invoke `backpack.sh help` to find out more.

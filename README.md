@@ -4,10 +4,8 @@ Clojure(Script) cross-project utilities
 # Latest Version
 
 [![Clojars Project](https://img.shields.io/clojars/v/io.jesi/backpack.svg)](https://clojars.org/io.jesi/backpack)
+[![CircleCI](https://circleci.com/gh/jesims/backpack.svg?style=svg)](https://circleci.com/gh/jesims/backpack)
 
-## Theme: Animal Safari
-
-All string quotes within test functions should be interesting animal facts; with bonus points for David Attenborough quotes.
 
 # Other Projects
 
