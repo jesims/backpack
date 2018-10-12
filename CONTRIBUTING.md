@@ -4,11 +4,13 @@
 
 **DO** ensure the CI checks pass.
 
-**DO** update the [CHANGELOG.md](CHANGELOG.md) to reflect changes (include your Github identifier).
+**DO** update the [CHANGELOG](CHANGELOG.md) to reflect changes (include your Github identifier).
 
-**DO** update the [CONTRIBUTORS.md](CONTRIBUTORS.md) to append your name (if not already present).
+**DO** update the [CONTRIBUTORS](CONTRIBUTORS.md) to append your name (if not already present).
 
 **DO** notify the project maintainers about any PR that has become stale.
+
+**DO** search [crossclj.info](https://crossclj.info/) when considering new additions to see if something already exists.
 
 **Don't** include more than one feature or fix in a single PR.
 
