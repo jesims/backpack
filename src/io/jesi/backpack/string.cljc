@@ -3,7 +3,7 @@
     [clojure.string :as string]))
 
 (defn uuid-str?
-  "True if `s` is a string and matches the UUID format"
+  "True if 's' is a string and matches the UUID format"
   [s]
   (and (string? s) (re-matches #"(\w{8}(-\w{4}){3}-\w{12}?)$" s)))
 
@@ -23,7 +23,9 @@
       nil
       (subs s 0 (+ index (count match))))))
 
-(defn true-string? [s]
+(defn true-string?
+  "True if 's' is the string literal 'true'"
+  [s]
   (= s "true"))
 
 (defn ->camelCase [s]

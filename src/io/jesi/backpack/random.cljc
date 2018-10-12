@@ -25,11 +25,15 @@
                  #^{:static true} [wktLinestring [] String]
                  #^{:static true} [wktLinestring [int int] String]])))
 
-(defn uuid []
+(defn uuid
+  "Generates a random UUID"
+  []
   #?(:clj  (UUID/randomUUID)
      :cljs (UUID/make-random-uuid)))
 
-(defn uuid-str [] (str (uuid)))
+(defn uuid-str
+  "Generates a random UUID string"
+  [] (str (uuid)))
 
 (def ^:private basic-chars
   (->> (concat
@@ -87,7 +91,9 @@
 (defn- remove-exponential-chance [v]
   (if (< -0.1 v 0.1) (+ 0.2 v) v))
 
-(defn lnglat []
+(defn lnglat
+  "Generates a random [lng lat] value"
+  []
   (let [lng (- (rand 360) 180)
         lat (- (rand 180) 90)]
     [(remove-exponential-chance lng)
@@ -100,6 +106,7 @@
       (string/replace #"\.$" ".0")))                        ; Restores end zero if necessary
 
 (defn wkt-linestring
+  "Generates a random WellKnownText linestring value"
   ([] (wkt-linestring 2 10000))
   ([min max]
    (let [size (+ min (rand-int (+ max min)))]
