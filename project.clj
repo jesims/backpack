@@ -24,4 +24,4 @@
   :release-tasks [["deploy"]]
   ;FIXME generate docs for cljc, clj and cljs
   :codox {:output-path "docs"
-          :namespaces  [io.jesi.backpack io.jesi.backpack.macros]})
+          :namespaces  [io.jesi.backpack io.jesi.backpack.macros io.jesi.backpack.random]})
