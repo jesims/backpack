@@ -8,7 +8,7 @@
 
 **DO** update the [CONTRIBUTORS](CONTRIBUTORS.md) to append your name (if not already present).
 
-**DO** notify the project maintainers about any PR that has become stale.
+**DO** notify the project maintainers about any PR that has become stale. We're human and sometimes miss notifications.
 
 **DO** search [crossclj.info](https://crossclj.info/) when considering new additions to see if something already exists.
 
@@ -26,7 +26,7 @@ Unit tests can then be run by invoking `backpack.sh unit-test` or `backpack.sh u
 ### Theme: Animal Safari
 
 We like to have a theme when testing code that requires data. This projects theme is animal facts (bonus points for Sir David Attenborough quotes).
-[An example of this](./test/io/jesi/backpack/collection_test.cljc#L37)
+[View an example](./test/io/jesi/backpack/collection_test.cljc#L35)
 
 ## Helper Utilities
 
