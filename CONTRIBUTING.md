@@ -4,9 +4,9 @@
 
 **DO** ensure the CI checks pass.
 
-**DO** update the [](CHANGELOG.md) to reflect changes (include your Github identifier).
+**DO** update the [CHANGELOG](CHANGELOG.md) to reflect changes (include your Github identifier).
 
-**DO** update the [](CONTRIBUTORS.md) to append your name (if not already present).
+**DO** update the [CONTRIBUTORS](CONTRIBUTORS.md) to append your name (if not already present).
 
 **DO** notify the project maintainers about any PR that has become stale.
 
@@ -40,4 +40,4 @@ With version number of `MAJOR.MINOR.PATCH`, increment:
 * MINOR version when you add functionality in a backwards-compatible manner, and
 * PATCH version when you make backwards-compatible bug fixes.
 
-Active branches will automatically be suffixed with `-SNAPSHOT` and deployed to Clojars. When starting a change, please bump the [](VERSION) as applicable.
+Active branches will automatically be suffixed with `-SNAPSHOT` and deployed to Clojars. When starting a change, please bump the [VERSION](VERSION) as applicable.
