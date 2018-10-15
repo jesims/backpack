@@ -17,10 +17,10 @@
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.0.0"]
                  [pjstadig/humane-test-output "0.8.3"]]
-  :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
-             :dev  {:plugins [[kirasystems/lein-codox "0.10.4"]]}}
+  :profiles {:test    {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
+             :dev     {:plugins [[kirasystems/lein-codox "0.10.4"]]}
+             :uberjar {:aot [io.jesi.backpack.random]}}
   :clean-targets ^{:protect false} ["target"]
-  :aot [io.jesi.backpack.random]
   :release-tasks [["deploy"]]
   ;FIXME generate docs for cljc, clj and cljs
   :codox {:output-path "docs"

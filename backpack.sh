@@ -20,7 +20,7 @@ deps () {
 	echo_message 'Installing dependencies'
 	lein deps
 	abort_on_error
-	dry install --dry-keep-package-json
+	dry install
 	abort_on_error
 }
 
@@ -118,7 +118,7 @@ is-snapshot () {
 	[[ "$version" == *SNAPSHOT ]]
 }
 
-deploy() {
+deploy () {
 	if [[ -n "$CIRCLECI" ]];then
 		lein deploy clojars &>/dev/null
 		abort_on_error
@@ -161,8 +161,8 @@ release () {
 ## test-docs:
 ## Checks that the committed api documentation is up to date with the latest code
 test-docs () {
-	echo_message 'Verifying animal facts...'
 	docs
+	echo_message 'Verifying animal facts...'
 	if ! git diff --quiet --exit-code docs;then
 		echo_error 'Uncommitted changes to docs'
 		exit 1

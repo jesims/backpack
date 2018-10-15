@@ -1,6 +1,5 @@
 {
   "name": "backpack",
-  "version": "0.0.17",
   "description": "Clojure(Script) cross-project utilities",
   "license": "EPL-1.0",
   "homepage": "https://github.com/jesims/backpack#readme",
