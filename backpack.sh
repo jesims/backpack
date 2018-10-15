@@ -20,7 +20,7 @@ deps () {
 	echo_message 'Installing dependencies'
 	lein deps
 	abort_on_error
-	dry install
+	dry install --dry-keep-package-json
 	abort_on_error
 }
 
