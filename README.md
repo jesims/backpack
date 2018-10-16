@@ -7,6 +7,10 @@
 
 Backpack is a collection of common utility functions and helpers for Clojure(Script) that we've found ourselves using across multiple projects.
 
+# API Docs
+
+[https://jesims.github.io/backpack/](https://jesims.github.io/backpack/)
+
 ## Other Great (similar) Projects Include
 
 * [weavejester/medley](https://github.com/weavejester/medley)
