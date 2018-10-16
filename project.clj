@@ -1,17 +1,27 @@
-(defproject io.jesi/backpack "0.0.17"
+(def VERSION (.trim (slurp "VERSION")))
+
+(defproject io.jesi/backpack VERSION
   :description "Clojure(Script) cross-project utilities"
-  :license "Unlicensed"
   :url "https://github.com/jesims/backpack"
-  :plugins [[lein-parent "0.3.4"]]
-  :parent-project {:path    "build-scripts/parent-clj/project.clj"
-                   :inherit [:plugins :repositories :managed-dependencies :dependencies :exclusions [:profiles :dev] :test-refresh]}
-  :dependencies [[org.clojure/clojurescript]
+  :license {:name         "Eclipse Public License - v 1.0"
+            :url          "http://www.eclipse.org/legal/epl-v10.html"
+            :distribution :repo
+            :comments     "same as Clojure"}
+  :plugins [[lein-parent "0.3.5"]]
+  :parent-project {:coords  [io.jesi/parent "0.0.1"]
+                   :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :exclusions [:profiles :dev] :test-refresh]}
+  :dependencies [[org.clojure/clojure]
+                 [org.clojure/clojurescript]
                  [com.rpl/specter]
                  [thheller/shadow-cljs]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.0.0"]
-                 [org.clojure/tools.namespace "0.2.11"]
                  [pjstadig/humane-test-output "0.8.3"]]
+  :profiles {:test    {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
+             :dev     {:plugins [[kirasystems/lein-codox "0.10.4"]]}
+             :uberjar {:aot [io.jesi.backpack.random]}}
   :clean-targets ^{:protect false} ["target"]
-  :aot [io.jesi.backpack.random]
-  :release-tasks [["deploy"]])
+  :release-tasks [["deploy"]]
+  ;FIXME generate docs for cljc, clj and cljs
+  :codox {:output-path "docs"
+          :namespaces  [io.jesi.backpack io.jesi.backpack.macros io.jesi.backpack.random]})

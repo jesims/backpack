@@ -8,8 +8,12 @@
      ~@(apply concat
          (for [[ns & names] imports
                name names
-               :let [src (symbol (str ns) (str name))]]
-           `((def ~name ~src))))))
+               :let [src (symbol (str ns) (str name))
+                     meta (meta (resolve src))
+                     arglists (get meta :arglists)
+                     doc (get meta :doc "")]]
+           `((def ~name ~doc ~src)
+             (alter-meta! #'~name assoc :arglists '~arglists))))))
 
 (defmacro catch->nil [& body]
   `(try
@@ -19,7 +23,6 @@
 (defmacro ns-of [f]
   `(-> ~f var meta :ns str))
 
-;TODO combine, macro? is also defined in io.jesi.spec.util-test
 #?(:clj
    (defn macro? [sym]
      (:macro (meta (find-var sym)))))
