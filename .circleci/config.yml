@@ -8,7 +8,7 @@ aliases:
       - ~/.lein
       - ~/.m2
     node_cache: &NODE_CACHE
-      key: node-{{ checksum "/tmp/.node_version" }}-{{ checksum "package-lock.json" }}
+      key: node-{{ checksum "/tmp/.node_version" }}-{{ checksum "package-dry.json" }}
       paths:
       - node_modules
   containers:

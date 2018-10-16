@@ -20,7 +20,7 @@ deps () {
 	echo_message 'Installing dependencies'
 	lein deps
 	abort_on_error
-	dry install --dry-keep-package-json
+	dry install
 	abort_on_error
 }
 
@@ -41,7 +41,6 @@ stop () {
 
 _unit-test () {
 	refresh=$1
-	deps
 	clean
 	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
 	if [ "${refresh}" = true ];then
@@ -102,7 +101,6 @@ unit-test-cljs-refresh () {
 ## [-n] Executes the tests targeting Node.js
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates
 unit-test-cljs () {
-	deps
 	case $1 in
 		-r)
 			unit-test-cljs-refresh;;
