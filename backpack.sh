@@ -1,54 +1,67 @@
 #!/usr/bin/env bash
 cd $(realpath $(dirname $0))
-source build-scripts/project.sh &&
-source build-scripts/s3-wagon-util.sh
+# TODO: Source and load from common repository
+source ./project.sh
 if [[ $? -ne 0 ]]; then
 	exit 1
 fi
 
-usage () {
-	cat << EOF
-${txtbld}SYNOPSIS${txtrst}
-	${script_name} clean
-	${script_name} release
-	${script_name} snapshot [-l]
-	${script_name} test [-r]
-	${script_name} test-cljs [-r|-b|-n]
-
-${txtbld}DESCRIPTION${txtrst}
-	${txtbld}clean${txtrst}
-		cleans
-	${txtbld}release${txtrst}
-		releases the library onto s3 repository
-	${txtbld}snapshot${txtrst}
-		releases the library onto s3 as a snapshot
-			${txtbld}-l${txtrst}  snapshot to local repository
-	${txtbld}test${txtrst}
-		runs the CLJ unit tests
-	${txtbld}test-cljs${txtrst}
-		runs the CLJS unit tests
-EOF
-}
-
-deps () {
-	lein deps && npm install
-}
-
+## clean:
+## Cleans up the compiled and generated sources
 clean () {
 	stop
 	lein clean
+	rm -rf .shadow-cljs/
 }
 
-unit-test () {
+## deps:
+## Installs all required dependencies for Clojure and ClojureScript
+deps () {
+	echo_message 'Installing dependencies'
+	lein deps
+	abort_on_error
+	dry install
+	abort_on_error
+}
+
+## docs:
+## Generate api documentation
+docs () {
+	echo_message 'Generating API documentation'
+	lein codox
+	abort_on_error
+}
+
+## stop:
+## Stops shadow-cljs and karma
+stop () {
+	npx shadow-cljs stop &>/dev/null
+	pkill -f 'karma ' &>/dev/null
+}
+
+_unit-test () {
+	refresh=$1
+	clean
 	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
-	lein test
+	if [ "${refresh}" = true ];then
+		lein auto test ${@:2}
+	else
+		lein test
+	fi
 	abort_on_error 'Clojure tests failed'
 }
 
-unit-test-refresh () {
-	clean
-	echo_message 'The truth is our natural world is changing. And we are totally dependent on that world.'
-	lein auto test $@
+## unit-test:
+## args: [-r]
+## Runs the Clojure unit tests
+## [-r] Watches tests and source files for changes, and subsequently re-evaluates
+unit-test () {
+	case $1 in
+		-r)
+			_unit-test true ${@:2};;
+		*)
+			_unit-test;;
+	esac
 }
 
 unit-test-node () {
@@ -63,14 +76,12 @@ unit-test-karma () {
 	abort_on_error 'kamra tests failed'
 }
 
-unit-test-cljs () {
-	echo_message 'In the clojure kingdom, the rule is, transform or be transformed.'
-	unit-test-karma
-}
-
-stop () {
-	npx shadow-cljs stop &>/dev/null
-	pkill -f 'karma ' &>/dev/null
+unit-test-browser-refresh () {
+	clean
+	trap stop EXIT
+	open http://localhost:8091/
+	npx shadow-cljs watch browser
+	abort_on_error
 }
 
 unit-test-cljs-refresh () {
@@ -83,55 +94,87 @@ unit-test-cljs-refresh () {
 	npx shadow-cljs watch karma
 }
 
-unit-test-browser-refresh () {
-	clean
-	trap stop EXIT
-	open http://localhost:8091/
-	npx shadow-cljs watch browser
-	abort_on_error
-}
-
-parse () {
+## unit-test-cljs:
+## args: [-b|-n|-r]
+## Runs the ClojureScript unit tests
+## [-b] Watches and compiles tests for execution within a browser
+## [-n] Executes the tests targeting Node.js
+## [-r] Watches tests and source files for changes, and subsequently re-evaluates
+unit-test-cljs () {
 	case $1 in
-		-h|--help)
-			usage;;
-		clean)
-			clean;;
-		deps)
-			deps;;
-		release)
-			s3_release;;
-		snapshot)
-			case $2 in
-				-l|-local)
-					snapshot_local;;
-				*)
-					s3_snapshot;;
-			esac;;
-		stop)
-			stop;;
-		test)
-			case $2 in
-				-r)
-					unit-test-refresh ${@:3};;
-				*)
-					unit-test;;
-			esac ;;
-		test-cljs)
-			case $2 in
-				-r)
-					unit-test-cljs-refresh;;
-				-b)
-					unit-test-browser-refresh;;
-				-n)
-					unit-test-node;;
-				*)
-					unit-test-cljs;;
-			esac ;;
+		-r)
+			unit-test-cljs-refresh;;
+		-b)
+			unit-test-browser-refresh;;
+		-n)
+			unit-test-node;;
 		*)
-			usage
-			exit 1;;
+			unit-test-karma;;
 	esac
 }
 
-parse $@
+is-snapshot () {
+	version=$(cat VERSION)
+	[[ "$version" == *SNAPSHOT ]]
+}
+
+deploy () {
+	if [[ -n "$CIRCLECI" ]];then
+		lein deploy clojars &>/dev/null
+		abort_on_error
+	else
+		lein deploy clojars
+		abort_on_error
+	fi
+}
+
+## snapshot:
+## Pushes a snapshot to Clojars
+snapshot () {
+	if is-snapshot;then
+		echo_message 'SNAPSHOT suffix already defined... Aborting'
+		exit 1
+	else
+		version=$(cat VERSION)
+		snapshot="$version-SNAPSHOT"
+		echo ${snapshot} > VERSION
+		echo_message "Snapshotting $snapshot"
+		deploy
+		echo "$version" > VERSION
+	fi
+}
+
+## release:
+## Pushes a release to Clojars
+release () {
+	version=$(cat VERSION)
+	if ! is-snapshot;then
+		version=$(cat VERSION)
+		echo_message "Releasing $version"
+		deploy
+	else
+		echo_message 'SNAPSHOT suffix already defined... Aborting'
+		exit 1
+	fi
+}
+
+## test-docs:
+## Checks that the committed api documentation is up to date with the latest code
+test-docs () {
+	docs
+	echo_message 'Verifying animal facts...'
+	if ! git diff --quiet --exit-code docs;then
+		echo_error 'Uncommitted changes to docs'
+		exit 1
+	fi
+}
+
+if [[ "$#" -eq 0 ]] || [[ "$1" =~ ^(help|-h|--help)$ ]];then
+	usage
+	exit 1
+elif [[ $(grep "^$1\ (" "$script_name") ]];then
+	eval $@
+else
+	echo_error "Unknown function $1 ($script_name $@)"
+	exit 1
+fi

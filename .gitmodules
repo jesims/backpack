@@ -1,3 +1,0 @@
-[submodule "build-scripts"]
-	path = build-scripts
-	url = git@github.com:jesims/build-scripts.git
