@@ -66,15 +66,17 @@
            (-> clj bp/clj->json bp/json->clj)))))
 
 (deftest uuid-conversion-test
-  (let [round-trip (comp bp/json->clj bp/clj->json)]
+  (let [json-round-trip (comp bp/json->clj bp/clj->json)
+        js-round-trip (comp bp/js->clj bp/clj->js)]
     (testing "cljs uuids"
       (let [id (rnd/uuid)]
-        (is (= (str id) (round-trip id)))))
+        (is (= (str id) (js-round-trip id)))
+        (is (= (str id) (json-round-trip id)))))
 
     (testing "transit uuids"
       (let [id (t/uuid (rnd/uuid-str))]
-        (prn (type id))
-        (is (= (str id) (round-trip id)))))))
+        (is (= (str id) (js-round-trip id)))
+        (is (= (str id) (json-round-trip id)))))))
 
 (deftest json->clj-test
 
