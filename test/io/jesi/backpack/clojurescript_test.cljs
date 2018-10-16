@@ -3,8 +3,7 @@
     [clojure.test :refer [deftest testing is]]
     [cognitect.transit :as t]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.random :as rnd]
-    [oops.core :refer [oget]]))
+    [io.jesi.backpack.random :as rnd]))
 
 (defn- json= [& args]
   (apply = (map js/JSON.stringify args)))
@@ -51,7 +50,7 @@
   (testing "converts UUIDs to strings"
     (is (string? (-> {:id (random-uuid)}
                      bp/clj->js
-                     (oget "id"))))
+                     (.-id))))
     (is (string? (bp/clj->js (random-uuid))))))
 
 (deftest clj->json-test
