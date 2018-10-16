@@ -1,7 +1,9 @@
 (ns io.jesi.backpack.clojurescript-test
   (:require
     [clojure.test :refer [deftest testing is]]
+    [cognitect.transit :as t]
     [io.jesi.backpack :as bp]
+    [io.jesi.backpack.random :as rnd]
     [oops.core :refer [oget]]))
 
 (defn- json= [& args]
@@ -62,6 +64,17 @@
            (bp/clj->json js)))
     (is (= clj
            (-> clj bp/clj->json bp/json->clj)))))
+
+(deftest uuid-conversion-test
+  (let [round-trip (comp bp/json->clj bp/clj->json)]
+    (testing "cljs uuids"
+      (let [id (rnd/uuid)]
+        (is (= (str id) (round-trip id)))))
+
+    (testing "transit uuids"
+      (let [id (t/uuid (rnd/uuid-str))]
+        (prn (type id))
+        (is (= (str id) (round-trip id)))))))
 
 (deftest json->clj-test
 
