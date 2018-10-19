@@ -14,6 +14,7 @@
        sp/LAST
        [sp/LAST self])]))
 
-(def ^:deprecated no-empty-values
+(def ^{:no-doc     true
+       :deprecated true} no-empty-values
   "DEPRECATED: use collections/remove-empty"
   remove-empty)
