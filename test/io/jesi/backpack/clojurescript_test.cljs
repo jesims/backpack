@@ -1,7 +1,6 @@
 (ns io.jesi.backpack.clojurescript-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [cognitect.transit :as t]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]))
 
@@ -69,11 +68,6 @@
         js-round-trip (comp bp/js->clj bp/clj->js)]
     (testing "cljs uuids"
       (let [id (rnd/uuid)]
-        (is (= (str id) (js-round-trip id)))
-        (is (= (str id) (json-round-trip id)))))
-
-    (testing "transit uuids"
-      (let [id (t/uuid (rnd/uuid-str))]
         (is (= (str id) (js-round-trip id)))
         (is (= (str id) (json-round-trip id)))))))
 

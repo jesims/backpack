@@ -3,7 +3,6 @@
   (:require
     [clojure.string :as string]
     [clojure.walk :refer [postwalk]]
-    [com.cognitect.transit.types :as ty]
     [goog.object :as gobj]
     [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]]))
 
@@ -14,11 +13,6 @@
     (postwalk (fn [x] (if (map? x) (into {} (map transform x)) x)) coll)))
 
 (extend-type UUID
-  IEncodeJS
-  (-clj->js [x]
-    (str x)))
-
-(extend-type ty/UUID
   IEncodeJS
   (-clj->js [x]
     (str x)))
