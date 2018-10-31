@@ -9,10 +9,12 @@
       </value>
     </option>
     <ClojureCodeStyleSettings>{
+  :cljs.core/-&gt; 0
   :cljs.core/-&gt;&gt; 0
   :cljs.core/= 0
   :cljs.core/or 0
   :cljs.core/some-&gt; 0
+  :clojure.core/-&gt;&gt; 0
   :clojure.core/= 0
   :clojure.core/and 0
   :clojure.core/some-&gt; 0

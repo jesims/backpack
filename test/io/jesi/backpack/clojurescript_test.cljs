@@ -1,7 +1,8 @@
 (ns io.jesi.backpack.clojurescript-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [io.jesi.backpack :as bp]))
+    [io.jesi.backpack :as bp]
+    [io.jesi.backpack.random :as rnd]))
 
 (defn- json= [& args]
   (apply = (map js/JSON.stringify args)))
@@ -43,7 +44,13 @@
     (is (json= js (-> clj bp/clj->js))))
 
   (testing "end-to-end js->clj->js"
-    (is (json= js (-> js bp/js->clj bp/clj->js)))))
+    (is (json= js (-> js bp/js->clj bp/clj->js))))
+
+  (testing "converts UUIDs to strings"
+    (is (string? (-> {:id (random-uuid)}
+                     bp/clj->js
+                     (.-id))))
+    (is (string? (bp/clj->js (random-uuid))))))
 
 (deftest clj->json-test
 
@@ -55,6 +62,14 @@
            (bp/clj->json js)))
     (is (= clj
            (-> clj bp/clj->json bp/json->clj)))))
+
+(deftest uuid-conversion-test
+  (let [json-round-trip (comp bp/json->clj bp/clj->json)
+        js-round-trip (comp bp/js->clj bp/clj->js)]
+    (testing "cljs uuids"
+      (let [id (rnd/uuid)]
+        (is (= (str id) (js-round-trip id)))
+        (is (= (str id) (json-round-trip id)))))))
 
 (deftest json->clj-test
 

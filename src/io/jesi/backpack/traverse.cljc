@@ -9,7 +9,7 @@
   #?(:clj  (MapEntry. k v)
      :cljs (->MapEntry k v nil)))
 
-(defn ^:export walk
+(defn walk
   "Like clojure.walk/walk, but does not convert MapEntry to vector"
   [inner outer form]
   (condp #(%1 %2) form

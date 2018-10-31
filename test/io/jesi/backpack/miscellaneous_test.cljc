@@ -104,4 +104,18 @@
         (is-not-called?)
         (bp/assoc-changed! a :this (concat [1] [2]))
         (is-equal? {:this [1 2]})
+        (is-called-once?))
+
+      (testing "allows providing multiple kvs"
+        (reset {:this []})
+        (is-not-called?)
+        (bp/assoc-changed! a
+          :this :that
+          [:something :else] "value"
+          :range (range 0 5)
+          [:meaning :of :life] 42)
+        (is-equal? {:this      :that
+                    :range     [0 1 2 3 4]
+                    :something {:else "value"}
+                    :meaning   {:of {:life 42}}})
         (is-called-once?)))))

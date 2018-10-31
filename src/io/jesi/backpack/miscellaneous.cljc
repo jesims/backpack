@@ -1,5 +1,7 @@
 (ns io.jesi.backpack.miscellaneous
+  (:refer-clojure :exclude [assoc-in])
   (:require
+    [io.jesi.backpack.collection :refer [assoc-in]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
      (:import (java.util UUID))))
@@ -16,7 +18,8 @@
 
 (defn assoc-changed!
   "assoc(-in) the atom when the value has changed"
-  [atom ks value]
-  (let [ks (if (vector? ks) ks [ks])]
-    (when (not= value (get-in @atom ks))
-      (swap! atom assoc-in ks value))))
+  [atom & kvs]
+  (let [base @atom
+        updated (apply assoc-in base kvs)]
+    (when (not= updated base)
+      (reset! atom updated))))
