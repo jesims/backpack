@@ -18,6 +18,7 @@
    assoc-in
    contains-any?
    dissoc-all
+   dissoc-in
    distinct-by
    filter-empty
    filter-nil-keys

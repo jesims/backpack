@@ -81,6 +81,30 @@
     m
     (partition 2 kvs)))
 
+;based on clojure.core.incubator/dissoc-in
+(defn- dissoc-in1 [m [k & ks :as path]]
+  (if (and path (map? m))
+    (if ks
+      (if-let [nextmap (get m k)]
+        (let [newmap (dissoc-in1 nextmap ks)]
+          (if (or (nil? newmap)
+                  (and (map? newmap)
+                       (empty? newmap)))
+            ;TODO use transient map
+            (dissoc m k)
+            (assoc m k newmap)))
+        m)
+      (dissoc m k))
+    m))
+
+(defn dissoc-in
+  "Dissociates paths from a map.
+  Any empty maps produced will be removed"
+  [m path & paths]
+  (if path
+    (recur (dissoc-in1 m path) (first paths) (rest paths))
+    m))
+
 (defn trans-reduce-kv [f init coll]
   (->> coll
        (reduce-kv f (transient init))
