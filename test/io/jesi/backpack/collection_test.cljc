@@ -279,3 +279,37 @@
         (is (= [[1] [2] [3]]
                (reduce conj [] values)
                (bp/trans-reduce conj! [] values)))))))
+
+(deftest dissoc-in-test
+
+  (testing "dissoc-in"
+
+    (testing "dissociates paths from a nested map"
+      (is (= {:a 1}
+             (bp/dissoc-in {:a 1 :b 1} [:b])))
+      (is (= {:a {:b 1}}
+             (bp/dissoc-in {:a {:b 1 :c 1}} [:a :c])))
+      (is (= {:a {:b 1}
+              :d {:e 1}}
+             (bp/dissoc-in {:a {:b 1 :c 1}
+                            :d {:e 1
+                                :f 1}
+                            :g 1}
+               [:a :c]
+               [:d :f]
+               [:g]))))
+
+    (testing "ignores path if not found"
+      (let [m {:a {:b 1}}]
+        (is (identical? m (bp/dissoc-in m [])))
+        (is (identical? m (bp/dissoc-in m [:a :c])))
+        (is (identical? m (bp/dissoc-in m [:a :b :c])))
+        (is (identical? m (bp/dissoc-in m [:c])))
+        (is (identical? m (bp/dissoc-in m [:a :c] [:a :b :c] [:c] [])))))
+
+    (testing "removes empty collections along the paths"
+      (is (= {:a 1}
+             (bp/dissoc-in {:a 1 :b {:c 1}} [:b :c])))
+      (is (= {}
+             (bp/dissoc-in {:a {:b 1}} [:a :b]))))))
+
