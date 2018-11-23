@@ -13,7 +13,7 @@
   "dry": {
     "extends": "@io.jesi/parent/package-dry.json",
     "dependencies": {
-      "@io.jesi/parent": "0.0.1"
+      "@io.jesi/parent": "0.0.3"
     }
   },
   "devDependencies": {

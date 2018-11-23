@@ -8,7 +8,7 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.5"]]
-  :parent-project {:coords  [io.jesi/parent "0.0.1"]
+  :parent-project {:coords  [io.jesi/parent "0.0.6"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :exclusions [:profiles :dev] :test-refresh]}
   :dependencies [[org.clojure/clojure]
                  [org.clojure/clojurescript]
@@ -16,7 +16,7 @@
                  [thheller/shadow-cljs]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.0.0"]
-                 [pjstadig/humane-test-output "0.8.3"]]
+                 [pjstadig/humane-test-output "0.9.0"]]
   :profiles {:test    {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
              :dev     {:plugins [[kirasystems/lein-codox "0.10.4"]]}
              :uberjar {:aot [io.jesi.backpack.random]}}
