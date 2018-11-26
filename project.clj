@@ -8,7 +8,7 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.5"]]
-  :parent-project {:coords  [io.jesi/parent "0.0.6"]
+  :parent-project {:coords  [io.jesi/parent "0.0.7"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :exclusions [:profiles :dev] :test-refresh]}
   :dependencies [[org.clojure/clojure]
                  [org.clojure/clojurescript]
