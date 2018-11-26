@@ -25,7 +25,9 @@
 
 (defn clj->js [x]
   "Transforms ClojureScript to JavaScript converting keys to camelCase"
-  (clojure.core/clj->js x :keyword-fn ->camelCase))
+  (some->> x
+    (transform-keys ->camelCase)
+    clojure.core/clj->js))
 
 (defn clj->json
   [x]
