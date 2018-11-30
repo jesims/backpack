@@ -129,7 +129,9 @@ deploy () {
 }
 
 ## snapshot:
+## args: [-l]
 ## Pushes a snapshot to Clojars
+## [-l] local
 snapshot () {
 	if is-snapshot;then
 		echo_message 'SNAPSHOT suffix already defined... Aborting'
@@ -139,7 +141,13 @@ snapshot () {
 		snapshot="$version-SNAPSHOT"
 		echo ${snapshot} > VERSION
 		echo_message "Snapshotting $snapshot"
-		deploy
+		case $1 in
+			-l)
+				lein install
+				abort_on_error;;
+			*)
+				deploy;;
+		esac
 		echo "$version" > VERSION
 	fi
 }
