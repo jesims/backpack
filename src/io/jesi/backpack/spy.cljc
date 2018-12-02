@@ -1,14 +1,14 @@
 (ns io.jesi.backpack.spy
   (:refer-clojure :exclude [prn])
+  (:require
+    [io.jesi.backpack :as bp])
   #?(:cljs (:require-macros io.jesi.backpack.macros)))
 
 (defmacro prn [& more]
-  ;FIXME don't print var names as strings (no " ")
-  `(do
-     (doseq [v# ~more]
-       (print (name ~v#))
-       (print \space)
-       (pr ~v#))
-     (newline)))
-  ;(let [vars (vec (flatten (map (fn [v] [(str (name v) \:) v]) more)))]
-  ;  `(apply clojure.core/prn ~vars)))
+  `(println ~@(bp/trans-reduce
+                (fn [col sym]
+                  (doto col
+                    (conj! (str (name sym) \:))
+                    (conj! `(pr-str ~sym))))
+                []
+                more)))
