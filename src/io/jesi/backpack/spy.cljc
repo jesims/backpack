@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [prn])
   (:require
     [io.jesi.backpack :as bp])
-  #?(:cljs (:require-macros io.jesi.backpack.macros)))
+  #?(:cljs (:require-macros io.jesi.backpack.spy)))
 
 (defmacro prn [& more]
   `(println ~@(bp/trans-reduce

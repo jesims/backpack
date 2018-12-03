@@ -2,15 +2,16 @@
   (:require
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.spy :as spy])
-  (:import (java.io StringWriter)))
+    [io.jesi.backpack.spy :as spy]))
 
 (deftest prn-test
+  #?(:clj
 
-  #?(:clj (testing "is a macro"
-            (bp/macro? `spy/prn)))
+     (testing "is a macro"
+       (bp/macro? `spy/prn)))
 
   (let [a 1 b 2]
+
     (testing "expands to applying prn"
       (is (= '(clojure.core/println "a:" (clojure.core/pr-str a) "b:" (clojure.core/pr-str b))
              (macroexpand-1 '(io.jesi.backpack.spy/prn a b)))))
