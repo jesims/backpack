@@ -14,8 +14,9 @@
                  [org.clojure/clojure]
                  [com.rpl/specter]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
-                 [medley "1.0.0"]
-                 [pjstadig/humane-test-output "0.9.0"]]
+                 [medley "1.0.0"]]
+                 ; commented out until https://github.com/pjstadig/humane-test-output/issues/37 is fixed
+                 ;[pjstadig/humane-test-output "0.9.0"]]
   :profiles {:test    {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
              :dev     {:plugins [[kirasystems/lein-codox "0.10.4"]]}
              :uberjar {:aot [io.jesi.backpack.random]}}
