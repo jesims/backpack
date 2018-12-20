@@ -8,15 +8,15 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.5"]]
-  :parent-project {:coords  [io.jesi/parent "0.0.1"]
-                   :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :exclusions [:profiles :dev] :test-refresh]}
-  :dependencies [[org.clojure/clojure]
-                 [org.clojure/clojurescript]
+  :parent-project {:coords  [io.jesi/parent "0.0.7"]
+                   :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh :global-vars]}
+  :dependencies [[thheller/shadow-cljs]
+                 [org.clojure/clojure]
                  [com.rpl/specter]
-                 [thheller/shadow-cljs]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
-                 [medley "1.0.0"]
-                 [pjstadig/humane-test-output "0.8.3"]]
+                 [medley "1.0.0"]]
+                 ; commented out until https://github.com/pjstadig/humane-test-output/issues/37 is fixed
+                 ;[pjstadig/humane-test-output "0.9.0"]]
   :profiles {:test    {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
              :dev     {:plugins [[kirasystems/lein-codox "0.10.4"]]}
              :uberjar {:aot [io.jesi.backpack.random]}}

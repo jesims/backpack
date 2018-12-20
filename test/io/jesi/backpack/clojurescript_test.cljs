@@ -10,11 +10,15 @@
 (def ^:private js (clj->js {:baseUrl "https://"
                             :v2      "is better than v1"
                             :actions [{:name "Next" :type "GET"}]
+                            :geojson {:type "LineString"}
                             :aCat    {:aHat true}}))
 (def ^:private clj {:base-url "https://"
                     :v2       "is better than v1"
                     :actions  [{:name "Next" :type "GET"}]
+                    :geojson  {:type :LineString}
                     :a-cat    {:a-hat true}})
+
+(def ^:private from-js->clj (update-in clj [:geojson :type] name))
 
 (defn- nillmap [& keys]
   (zipmap keys (repeat nil)))
@@ -25,12 +29,13 @@
     (is (fn? bp/js->clj)))
 
   (testing "converts all keys to kebab-case"
-    (is (= clj (-> js bp/js->clj)))
+    (is (= from-js->clj (-> js bp/js->clj)))
     (is (= (nillmap :base-url :helios-url)
            (bp/js->clj (nillmap :baseURL :heliosURL)))))
 
   (testing "end-to-end clj->js->clj"
-    (is (= clj (-> clj bp/clj->js bp/js->clj))))
+    (is (= from-js->clj
+           (-> clj bp/clj->js bp/js->clj))))
 
   (testing "returns nil"
     (is (nil? (bp/clj->js nil)))))
@@ -60,7 +65,7 @@
   (testing "converts ClojureScript to JSON string"
     (is (= (js/JSON.stringify js)
            (bp/clj->json js)))
-    (is (= clj
+    (is (= from-js->clj
            (-> clj bp/clj->json bp/json->clj)))))
 
 (deftest uuid-conversion-test
@@ -77,7 +82,7 @@
     (is (fn? bp/json->clj)))
 
   (testing "converts JSON strings to ClojureScript"
-    (is (= clj
+    (is (= from-js->clj
            (-> clj bp/clj->js js/JSON.stringify bp/json->clj)))
     (let [json (js/JSON.stringify js)]
       (is (= json

@@ -4,6 +4,7 @@
     [clojure.string :as string]
     [clojure.walk :refer [postwalk]]
     [goog.object :as gobj]
+    [io.jesi.backpack.collection :refer [trans-reduce]]
     [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]]))
 
 ; Came from camel-snake-kebab
@@ -25,7 +26,9 @@
 
 (defn clj->js [x]
   "Transforms ClojureScript to JavaScript converting keys to camelCase"
-  (clojure.core/clj->js x :keyword-fn ->camelCase))
+  (some->> x
+    (transform-keys ->camelCase)
+    clojure.core/clj->js))
 
 (defn clj->json
   [x]
@@ -39,17 +42,6 @@
             js->clj)))
 
 (defn class->clj [x]
-  (let [ignored-keys #{"constructor"}
-        ignored-vals #{cljs.core.PROTOCOL_SENTINEL}]
-    (->> x
-         gobj/getAllPropertyNames
-         (remove ignored-keys)
-         (reduce
-           (fn [m k]
-             (let [key (keyword k)
-                   val (gobj/get x k)]
-               (if (contains? ignored-vals val)
-                 m
-                 (assoc! m key val))))
-           (transient {}))
-         persistent!)))
+  (let [m (transient {})]
+    (gobj/forEach x (fn [v k] (assoc! m (keyword k) v)))
+    (persistent! m)))

@@ -6,12 +6,21 @@
   #?(:clj
      (:import (java.util UUID))))
 
-(defn ->uuid [s]
-  (cond
-    (uuid? s) s
-    (uuid-str? s) #?(:clj  (UUID/fromString s)
-                     :cljs (UUID. s nil))
-    :else nil))
+(defmulti ->uuid
+  "Coerces a value into a UUID if possible, otherwise returns nil"
+  type)
+
+(defmethod ->uuid :default [_] nil)
+
+(defmethod ->uuid UUID [s] s)
+
+#?(:clj (defmethod ->uuid String [s]
+          (when (uuid-str? s)
+            (UUID/fromString s)))
+
+   :cljs (defmethod ->uuid js/String [s]
+           (when (uuid-str? s)
+             (UUID. s nil))))
 
 (defn ->uuid-or-not [id]
   (or (->uuid id) id))

@@ -3,7 +3,8 @@
   (:require
     [cljs.test :as ct]
     [clojure.string :as string]
-    [pjstadig.humane-test-output]
+    ; commented out until https://github.com/pjstadig/humane-test-output/issues/37 is fixed
+    ;[pjstadig.humane-test-output]
     [shadow.dom :as dom]
     [shadow.test :as st]))
 
