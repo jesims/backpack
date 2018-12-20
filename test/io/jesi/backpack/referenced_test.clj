@@ -6,10 +6,10 @@
     [clojure.tools.namespace.find :as ns-find]
     [io.jesi.backpack :as bp]))
 
-(def excluded-ns #{'io.jesi.backpack.random
-                   'io.jesi.backpack.macros
-                   'io.jesi.backpack.test.util              ; Excluded because clojurescript won't need macros (also ns-publics returns defmacro)
-                   'io.jesi.backpack.spy})                  ; Excluded because spy uses -pprint which has to be public?
+(def excluded-ns #{'io.jesi.backpack.macros
+                   'io.jesi.backpack.random
+                   'io.jesi.backpack.spy                    ; Excluded because spy uses -pprint which has to be public
+                   'io.jesi.backpack.test.util})            ; Excluded because clojurescript won't need macros (also ns-publics returns defmacro)
 
 (deftest core-test
   (let [models-ns (->> "src/io/jesi/backpack/"
@@ -18,6 +18,7 @@
                        (map second)
                        (remove excluded-ns)
                        set)]
+
     (testing "Loads all the model namespaces"
       (is (seq models-ns))
       (is (not (contains? models-ns 'io.jesi.backpack.random)))
