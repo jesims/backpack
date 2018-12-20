@@ -8,7 +8,8 @@
 
 (def excluded-ns #{'io.jesi.backpack.random
                    'io.jesi.backpack.macros
-                   'io.jesi.backpack.test.util})            ; Excluded because clojurescript won't need macros (also ns-publics returns defmacro)
+                   'io.jesi.backpack.test.util              ; Excluded because clojurescript won't need macros (also ns-publics returns defmacro)
+                   'io.jesi.backpack.spy})                  ; Excluded because spy uses -pprint which has to be public?
 
 (deftest core-test
   (let [models-ns (->> "src/io/jesi/backpack/"
