@@ -2,6 +2,7 @@
 .idea/libraries/
 .idea/workspace.xml
 .lein-failures
+.nrepl-port
 .shadow-cljs/
 node_modules/
 package.json

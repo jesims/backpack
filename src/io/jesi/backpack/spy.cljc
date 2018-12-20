@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [prn])
   (:require
     [io.jesi.backpack :as bp]
-    [clojure.pprint :as pprint])
+    #?(:clj  [clojure.pprint :as pprint]
+       :cljs [cljs.pprint :as pprint]))
   #?(:cljs (:require-macros io.jesi.backpack.spy)))
 
 ;TODO remove if advanced optimization is on (check goog.DEBUG)
@@ -16,9 +17,9 @@
                 []
                 more)))
 
-;;TODO create pprint
-#_(defmacro pprint [& more]
-    `(do ~@(for [o more]
-             (prn (str (name o) \:))
-             '(pprint/pprint
-                `(pr-str ~o)))))
+(def -pprint pprint/pprint)
+
+(defmacro pprint [& more]
+  `(do ~@(apply concat (for [o more]
+                         [`(println ~(str (name o) \:))
+                          `(-pprint ~o)]))))
