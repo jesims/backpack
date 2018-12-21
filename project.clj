@@ -8,7 +8,7 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.5"]]
-  :parent-project {:coords  [io.jesi/parent "0.0.7"]
+  :parent-project {:coords  [io.jesi/parent "0.0.9"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh :global-vars]}
   :dependencies [[thheller/shadow-cljs]
                  [org.clojure/clojure]
@@ -19,7 +19,7 @@
                  ;[pjstadig/humane-test-output "0.9.0"]]
   :profiles {:test    {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
              :dev     {:plugins [[kirasystems/lein-codox "0.10.4"]]}
-             :uberjar {:aot [io.jesi.backpack.random]}}
+             :install {:aot [io.jesi.backpack.random]}}
   :clean-targets ^{:protect false} ["target"]
   :release-tasks [["deploy"]]
   ;FIXME generate docs for cljc, clj and cljs
