@@ -120,10 +120,10 @@ is-snapshot () {
 
 deploy () {
 	if [[ -n "$CIRCLECI" ]];then
-		lein deploy clojars &>/dev/null
+		lein with-profile install deploy clojars &>/dev/null
 		abort_on_error
 	else
-		lein deploy clojars
+		lein with-profile install deploy clojars
 		abort_on_error
 	fi
 }
@@ -143,7 +143,7 @@ snapshot () {
 		echo_message "Snapshotting $snapshot"
 		case $1 in
 			-l)
-				lein install
+				lein with-profile install install
 				abort_on_error;;
 			*)
 				deploy;;
