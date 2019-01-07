@@ -12,10 +12,20 @@
 
 (enable-console-print!)
 
-(def log-node (delay (dom/by-id "log")))
+(defonce ^:private log-node-id "log")
+
+(defn- log-node []
+  (dom/by-id log-node-id))
+
+(defn- create-log-node []
+  (when (nil? (log-node))
+    (let [node (js/document.createElement "pre")]
+      (.setAttribute node "id" log-node-id)
+      (.appendChild (.-body js/document) node))))
 
 (defn- append-log [& more]
-  (dom/append @log-node (str (string/join \  more) \newline)))
+  (some-> (log-node)
+          (dom/append (str (string/join \space more) \newline))))
 
 (set-print-fn! append-log)
 (set-print-err-fn! append-log)
@@ -45,12 +55,13 @@
     (println stack)))
 
 (defn start []
+  (create-log-node)
   (js/console.clear)
   (st/run-all-tests))
 
 (defn stop [done]
-  (let [log @log-node]
-    (set! (.-innerText log) ""))
+  (when-let [node (log-node)]
+    (set! (.-innerText node) ""))
 
   ;; FIXME: determine if async tests are still running
   ;; and call done after instead
