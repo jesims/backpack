@@ -67,7 +67,8 @@
    subs-to
    suffix
    true-string?
-   uuid-str?]
+   uuid-str?
+   remove-prefix]
 
   [io.jesi.backpack.traverse
    walk

@@ -120,3 +120,11 @@
   (testing "doesn't suffix if already suffixed"
     (is (= "stuff/" (bp/suffix \/ "stuff/")))
     (is (= "stuffed" (bp/suffix "ed" "stuffed")))))
+
+(deftest remove-prefix-test
+
+  (testing "returns the correct formatted address when name is in the formatted name "
+    (is (= "Newstead QLD 4006, Australia" (bp/remove-prefix "100 Skyring Terrace"  "100 Skyring Terrace, Newstead QLD 4006, Australia"))))
+
+  (testing "returns the correct formatted address when name is not in the formatted name"
+    (is (= "38-52 Howitt St, North Ward QLD 4810, Australia" (bp/remove-prefix "Jezzine Military Barracks" "38-52 Howitt St, North Ward QLD 4810, Australia")))))
