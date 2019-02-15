@@ -15,10 +15,8 @@
   ([prefix separator s]
    (let [match (str prefix separator)]
      (if (string/starts-with? s match)
-       (subs s (dec (count match)))
-       (if (= separator ", ")
-         (remove-prefix prefix \space s)
-         s)))))
+       (subs s (dec (+ 1 (count match))))
+       s))))
 
 (defn subs-to
   "Returns the substring of 's' up until the 'match'"
