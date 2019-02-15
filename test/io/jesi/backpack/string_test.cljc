@@ -1,9 +1,11 @@
 (ns io.jesi.backpack.string-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [io.jesi.backpack :as bp]))
+    [io.jesi.backpack :as bp]
+    [io.jesi.backpack.random :as rnd]))
 
 (deftest uuid-str?-test
+
   (testing "uuid-str? is a UUID string"
     (is (bp/uuid-str? "2c80c3ca-535c-4706-bea2-afd2a2bf374d"))
     (is (not (bp/uuid-str? "1234")))
@@ -29,6 +31,7 @@
       (is (= "What" (bp/subs-to " humans" input))))))
 
 (deftest true-string?-test
+
   (testing "returns true for a true string"
     (is (true? (bp/true-string? "true"))))
 
@@ -124,7 +127,17 @@
 (deftest remove-prefix-test
 
   (testing "returns the correct formatted address when name is in the formatted name "
-    (is (= "Newstead QLD 4006, Australia" (bp/remove-prefix "100 Skyring Terrace"  "100 Skyring Terrace, Newstead QLD 4006, Australia"))))
+    (let [fact "Meerkats hunt and eat insects, scorpions, small lizards, snakes, eggs."]
 
-  (testing "returns the correct formatted address when name is not in the formatted name"
-    (is (= "38-52 Howitt St, North Ward QLD 4810, Australia" (bp/remove-prefix "Jezzine Military Barracks" "38-52 Howitt St, North Ward QLD 4810, Australia")))))
+      (testing "does nothing if prefix is not found"
+        (is (= fact
+               (bp/remove-prefix (rnd/string) fact))))
+
+      (testing "removes the prefix with a default separator of `, `"
+        (is (= "scorpions, small lizards, snakes, eggs."
+               (bp/remove-prefix "Meerkats hunt and eat insects" fact))))
+
+      (testing "allows specifying a custom separator"
+        (is (= "insects, scorpions, small lizards, snakes, eggs."
+               (bp/remove-prefix "Meerkats hunt and eat" \space fact)))))))
+
