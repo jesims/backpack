@@ -63,12 +63,12 @@
    ->snake_case
    ->snake_case-key
    prefix
+   remove-prefix
    subs-inc
    subs-to
    suffix
    true-string?
-   uuid-str?
-   remove-prefix]
+   uuid-str?]
 
   [io.jesi.backpack.traverse
    walk
