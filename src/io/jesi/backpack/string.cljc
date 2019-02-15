@@ -15,7 +15,7 @@
   ([prefix separator s]
    (let [match (str prefix separator)]
      (if (string/starts-with? s match)
-       (subs s (dec (+ 1 (count match))))
+       (subs s (count match))
        s))))
 
 (defn subs-to
