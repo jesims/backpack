@@ -15,7 +15,7 @@
   ([prefix separator s]
    (let [match (str prefix separator)]
      (if (string/starts-with? s match)
-       (string/replace-first s match "")
+       (subs s (dec (count match)))
        (if (= separator ", ")
          (remove-prefix prefix \space s)
          s)))))
