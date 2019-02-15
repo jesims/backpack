@@ -76,4 +76,3 @@
 (def prefix (create-affix string/starts-with? reverse))
 
 (def suffix (create-affix string/ends-with? identity))
-
