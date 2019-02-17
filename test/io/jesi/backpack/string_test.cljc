@@ -140,4 +140,3 @@
       (testing "allows specifying a custom separator"
         (is (= "insects, scorpions, small lizards, snakes, eggs."
                (bp/remove-prefix "Meerkats hunt and eat" \space fact)))))))
-
