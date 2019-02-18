@@ -7,6 +7,17 @@
   [s]
   (and (string? s) (re-matches #"(\w{8}(-\w{4}){3}-\w{12}?)$" s)))
 
+(defn remove-prefix
+  "Removes the prefix if the string starts with it otherwise ignores, is case sensitive"
+  ([prefix s]
+   (remove-prefix prefix ", " s))
+
+  ([prefix separator s]
+   (let [match (str prefix separator)]
+     (if (string/starts-with? s match)
+       (subs s (count match))
+       s))))
+
 (defn subs-to
   "Returns the substring of 's' up until the 'match'"
   [match s]
@@ -63,4 +74,3 @@
 (def prefix (create-affix string/starts-with? reverse))
 
 (def suffix (create-affix string/ends-with? identity))
-

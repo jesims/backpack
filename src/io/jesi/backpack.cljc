@@ -63,6 +63,7 @@
    ->snake_case
    ->snake_case-key
    prefix
+   remove-prefix
    subs-inc
    subs-to
    suffix
