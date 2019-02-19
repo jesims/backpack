@@ -1,3 +1,4 @@
+;TODO move to test utils library
 (ns io.jesi.backpack.test.util
   (:require
     [clojure.pprint :refer [pprint]]
@@ -5,7 +6,7 @@
     [clojure.test :refer [is]]
     [clojure.walk :refer [postwalk]]))
 
-(defn- pprint-str [x]
+(defn pprint-str [x]
   (with-out-str (pprint x)))
 
 (defn is-macro= [expected expanded]
