@@ -1,6 +1,7 @@
 ;TODO move to test utils library
 (ns io.jesi.backpack.spy
-  (:refer-clojure :exclude [prn])
+  #?(:clj  (:refer-clojure :exclude [prn])
+     :cljs (:refer-clojure :exclude [prn -name]))
   (:require
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.test.util :refer [pprint-str]])
