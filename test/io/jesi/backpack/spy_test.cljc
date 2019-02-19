@@ -23,7 +23,6 @@
          :cljs (is (= '(clojure.core/when js/goog.DEBUG (prn "hello"))
                       (macroexpand-1 '(io.jesi.backpack.spy/when-debug (prn "hello")))))))))
 
-
 (deftest prn-test
 
   (testing "spy/prn"

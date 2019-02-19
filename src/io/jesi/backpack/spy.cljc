@@ -1,15 +1,14 @@
-;TODO move to test utils library
 (ns io.jesi.backpack.spy
   (:refer-clojure :exclude [prn])
   (:require
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.test.util :refer [pprint-str]]
-    #?(:clj  [clojure.pprint :as pprint]
-       :cljs [cljs.pprint :as pprint]))
+    [io.jesi.backpack.test.util :refer [pprint-str]])
   #?(:cljs (:require-macros io.jesi.backpack.spy)))
 
+;TODO move to test utils library
+
 (defmacro when-debug [body]
-  (if (boolean (:ns &env))                                  ;in-js?
+  (if (boolean (:ns &env))
     `(when ~(vary-meta 'js/goog.DEBUG assoc :tag 'boolean)
        ~body)
     body))
