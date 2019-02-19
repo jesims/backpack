@@ -1,9 +1,8 @@
+;TODO move to test utils library
 (ns io.jesi.backpack.test.karma
   (:require
     [cljs.test :as ct]
     [shadow.test.karma :as karma]))
-
-;TODO move to test utils library
 
 (defmethod ct/report [::karma/default :begin-test-ns] [_])
 

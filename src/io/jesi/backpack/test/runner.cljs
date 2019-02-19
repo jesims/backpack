@@ -1,3 +1,4 @@
+;TODO move to test utils library
 (ns io.jesi.backpack.test.runner
   "Based on shadow.test.browser"
   (:require
@@ -7,8 +8,6 @@
     ;[pjstadig.humane-test-output]
     [shadow.dom :as dom]
     [shadow.test :as st]))
-
-;TODO move to test utils library
 
 ;TODO colours!
 

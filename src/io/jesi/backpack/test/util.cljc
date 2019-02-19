@@ -1,11 +1,10 @@
+;TODO move to test utils library
 (ns io.jesi.backpack.test.util
   (:require
     [clojure.pprint :refer [pprint]]
     [clojure.string :as string]
     [clojure.test :refer [is]]
     [clojure.walk :refer [postwalk]]))
-
-;TODO move to test utils library
 
 (defn pprint-str [x]
   (with-out-str (pprint x)))
