@@ -12,6 +12,7 @@
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh]}
   :dependencies [[thheller/shadow-cljs]
                  [org.clojure/clojure]
+                 [cheshire "5.8.1"]
                  [com.rpl/specter]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.1.0"]]

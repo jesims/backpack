@@ -1,15 +1,14 @@
 (ns io.jesi.backpack.json
   (:require
     [clojure.string :as string]
-    [cheshire.core :refer :all]))
+    #?(:clj[cheshire.core :refer[generate-string parse-string] ])
+    #?(:cljs[io.jesi.backpack.clojurescript :refer [clj->js]]))
 
-(defn clj->json
-  [x]
-  (js/JSON.stringify (clj->js x)))
+#?(:cljs(defn clj->json [x] )
+   (js/JSON.stringify (clj->js x)))
 
-(defn json->clj
-  [s]
-  (when-not (string/blank? s)
-    (some-> s
-            js/JSON.parse
-            js->clj)))
+#?(:cljs (defn json->clj [s]
+           (when-not (string/blank? s)
+                                 (some-> s
+                                         js/JSON.parse
+                                         js->clj))))

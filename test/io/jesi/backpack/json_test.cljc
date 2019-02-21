@@ -1,6 +1,7 @@
 (ns io.jesi.backpack.json-test
-  (:require [clojure.test :refer :all])
-  (:require [io.jesi.backpack.json :refer [clj->json]]))
+  (:require
+   [clojure.test :refer [deftest testing is]
+   [io.jesi.backpack :as bp]))
 
 (deftest clj->json-test
 
