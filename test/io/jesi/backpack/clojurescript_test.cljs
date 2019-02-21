@@ -57,17 +57,6 @@
                      (.-id))))
     (is (string? (bp/clj->js (random-uuid))))))
 
-(deftest clj->json-test
-
-  (testing "is a function"
-    (is (fn? bp/clj->json)))
-
-  (testing "converts ClojureScript to JSON string"
-    (is (= (js/JSON.stringify js)
-           (bp/clj->json js)))
-    (is (= from-js->clj
-           (-> clj bp/clj->json bp/json->clj)))))
-
 (deftest uuid-conversion-test
   (let [json-round-trip (comp bp/json->clj bp/clj->json)
         js-round-trip (comp bp/js->clj bp/clj->js)]
@@ -75,36 +64,6 @@
       (let [id (rnd/uuid)]
         (is (= (str id) (js-round-trip id)))
         (is (= (str id) (json-round-trip id)))))))
-
-(deftest json->clj-test
-
-  (testing "is a function"
-    (is (fn? bp/json->clj)))
-
-  (testing "converts JSON strings to ClojureScript"
-    (is (= from-js->clj
-           (-> clj bp/clj->js js/JSON.stringify bp/json->clj)))
-    (let [json (js/JSON.stringify js)]
-      (is (= json
-             (-> json bp/json->clj bp/clj->json)))))
-
-  (testing "parses nil and blank"
-    (is (nil? (bp/json->clj nil)))
-    (is (nil? (bp/json->clj "")))
-    (is (nil? (bp/json->clj " ")))
-    (is (nil? (bp/json->clj (str \tab \  \newline)))))
-
-  (testing "parses empty and literal values"
-    (let [assert-eq (fn [expected s]
-                      (is (= expected (bp/json->clj s))))]
-      (assert-eq {} "{}")
-      (assert-eq [] "[]")
-      (assert-eq nil "null")
-      (assert-eq true "true")
-      (assert-eq false "false")
-      (assert-eq "" "\"\"")
-      (assert-eq 3.14 "3.14")
-      (assert-eq 42 "42"))))
 
 (deftype TestClass [f1 f2]
   Object)

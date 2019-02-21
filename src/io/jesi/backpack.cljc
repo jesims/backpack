@@ -3,12 +3,13 @@
   (:require
     [io.jesi.backpack.collection]
     [io.jesi.backpack.fn]
+    [io.jesi.backpack.json]
+    [io.jesi.backpack.macros :refer [import-vars]]
     [io.jesi.backpack.miscellaneous]
     [io.jesi.backpack.number]
     [io.jesi.backpack.specter]
     [io.jesi.backpack.string]
     [io.jesi.backpack.traverse]
-    [io.jesi.backpack.macros :refer [import-vars]]
     #?(:cljs [io.jesi.backpack.clojurescript]))
   #?(:clj
      (:require [io.jesi.backpack.clojure])))
@@ -75,7 +76,11 @@
    prewalk
    postwalk
    prewalk-demo
-   postwalk-demo])
+   postwalk-demo]
+
+  [io.jesi.backpack.json
+   clj->json
+   json->clj])
 
 #?(:clj
    (import-vars
@@ -91,6 +96,4 @@
      [io.jesi.backpack.clojurescript
       class->clj
       clj->js
-      clj->json
-      js->clj
-      json->clj]))
+      js->clj]))

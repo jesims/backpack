@@ -4,7 +4,8 @@
     [clojure.string :as string]
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand condf defconsts]])
+    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand condf defconsts]]
+    [io.jesi.backpack.test.util :refer [is-macro=]])
   #?(:clj
      (:import (java.lang ArithmeticException
                          SecurityException))))
@@ -13,9 +14,9 @@
   (throw (ex-info "Error" {})))
 
 (deftest catch->nil-test
-  #?(:clj
-     (testing "is a macro"
-       (is (bp/macro? `catch->nil))))
+
+  #?(:clj (testing "is a macro"
+            (is (bp/macro? `catch->nil))))
 
   (testing "surrounds with a try catch"
     (let [ex #?(:clj `Throwable :cljs :default)
@@ -30,6 +31,7 @@
     (is (nil? (catch->nil (throw-ex))))))
 
 (deftest fn1-test
+
   (testing "fn1 returns a function"
     (is (fn? (fn1))))
 
@@ -37,6 +39,7 @@
     (is (true? ((fn1 true) false)))))
 
 (deftest when-let-test
+
   (testing "Acts as standard when-let"
     (when-let [x true]
       (is (true? x))))
@@ -72,9 +75,10 @@
       (is (true? false)))))
 
 (deftest defkw-test
+
   (testing "expands to def a namespaced keyword with the same name"
-    (is (= '(def crocodile ::crocodile)
-           (macroexpand-1 '(io.jesi.backpack.macros/defkw ::crocodile))))))
+    (is-macro= '(def crocodile ::crocodile)
+               (macroexpand-1 '(io.jesi.backpack.macros/defkw ::crocodile)))))
 
 #?(:clj
    (defn- throw-for [x]
@@ -91,6 +95,7 @@
 
 #?(:clj
    (deftest try*-test
+
      (testing "Doesn't catch if none thrown"
        (is (= "Not Caught" (throw-for -1))))
 
@@ -107,9 +112,9 @@
 (def ^:private shorthand-test-variable "long name is long")
 
 (deftest shorthand-test
-  #?(:clj
-     (testing "is a macro"
-       (is (:macro (meta #'shorthand)))))
+
+  #?(:clj (testing "is a macro"
+            (is (:macro (meta #'shorthand)))))
 
   (testing "creates a map with the keywords from the symbol names"
     (let [a 1
@@ -123,9 +128,9 @@
       (is (= {:a 1 :shorthand-test-variable "long name is long"} (shorthand a shorthand-test-variable))))))
 
 (deftest condf-test
-  #?(:clj
-     (testing "is a macro"
-       (is (:macro (meta #'condf)))))
+
+  #?(:clj (testing "is a macro"
+            (is (:macro (meta #'condf)))))
 
   (testing "takes functions as condp predicates"
     (let [f #(condf %
@@ -137,16 +142,16 @@
       (is (nil? (f 1))))))
 
 (deftest defconsts-test
-  #?(:clj
-     (testing "is a macro"
-       (is (true? (bp/macro? `defconsts)))))
+
+  #?(:clj (testing "is a macro"
+            (is (true? (bp/macro? `defconsts)))))
 
   (testing "expands so a series of defs"
-    (is (= '(do
-              (def hello (identity "hello"))
-              (def world (identity "world"))
-              (def -all (clojure.core/hash-set hello world)))
-           (macroexpand-1 '(io.jesi.backpack.macros/defconsts identity 'hello 'world)))))
+    (is-macro= '(do
+                  (def hello (identity "hello"))
+                  (def world (identity "world"))
+                  (def -all (clojure.core/hash-set hello world)))
+               (macroexpand-1 '(io.jesi.backpack.macros/defconsts identity 'hello 'world))))
 
   (testing "transforms the symbol values with the given function"
     (defconsts bp/->snake_case

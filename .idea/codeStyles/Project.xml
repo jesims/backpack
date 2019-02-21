@@ -19,6 +19,7 @@
   :clojure.core/and 0
   :clojure.core/some-&gt; 0
   :cursive.formatting/default-only-indent true
+  :io.jesi.backpack.test.util/is-macro= 0
 }</ClojureCodeStyleSettings>
     <JSCodeStyleSettings version="0">
       <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />

@@ -1,9 +1,10 @@
+;TODO move to test utils library
 (ns io.jesi.backpack.spy
-  (:refer-clojure :exclude [prn])
+  #?(:clj  (:refer-clojure :exclude [prn])
+     :cljs (:refer-clojure :exclude [prn -name]))
   (:require
     [io.jesi.backpack :as bp]
-    #?(:clj  [clojure.pprint :as pprint]
-       :cljs [cljs.pprint :as pprint]))
+    [io.jesi.backpack.test.util :refer [pprint-str]])
   #?(:cljs (:require-macros io.jesi.backpack.spy)))
 
 (defmacro when-debug [body]
@@ -12,20 +13,22 @@
        ~body)
     body))
 
+(defn -name [form]
+  (if (symbol? form)
+    (name form)
+    (str form)))
+
 (defmacro prn [& more]
   `(when-debug
      (println ~@(bp/trans-reduce
-                  (fn [col sym]
+                  (fn [col form]
                     (doto col
-                      (conj! (str (name sym) \:))
-                      (conj! `(pr-str ~sym))))
+                      (conj! (str (-name form) \:))
+                      (conj! `(pr-str ~form))))
                   []
                   more))))
 
-(def -pprint pprint/pprint)
-
 (defmacro pprint [& more]
   `(when-debug
-     (do ~@(apply concat (for [o more]
-                           [`(println ~(str (name o) \:))
-                            `(-pprint ~o)])))))
+     (do ~@(for [form more]
+             `(print (str ~(str (-name form) \: \newline) (pprint-str ~form)))))))
