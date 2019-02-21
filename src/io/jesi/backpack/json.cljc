@@ -1,4 +1,5 @@
 (ns io.jesi.backpack.json
+  #?(:cljs (:refer-clojure :exclude [clj->js js->clj]))
   (:require
     #?(:clj [cheshire.core :refer [generate-string parse-string]])
     #?(:clj [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]])
