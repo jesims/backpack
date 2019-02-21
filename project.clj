@@ -18,10 +18,10 @@
                  [medley "1.1.0"]]
   ; commented out until https://github.com/pjstadig/humane-test-output/issues/37 is fixed
   ;[pjstadig/humane-test-output "0.9.0"]]
-  :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}}
+  :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
              ;commented out until https://github.com/weavejester/codox/issues/166 is fixed
              ;:dev  {:plugins [[lein-codox "0.10.6"]]}}
-  :install {:aot [io.jesi.backpack.random]}
+             :install {:aot [io.jesi.backpack.random]}}
   :clean-targets ^{:protect false} ["target"]
   :release-tasks [["deploy"]]
   ;FIXME generate docs for cljc, clj and cljs
