@@ -9,13 +9,14 @@
      (:import (clojure.lang IDeref))))
 
 (deftest partial-right-test
+
   (testing "partial-right"
 
     (testing "is a function"
-      (is (ifn? bp/partial-right)))
+      (is (fn? bp/partial-right)))
 
     (testing "returns a function"
-      (is (ifn? (bp/partial-right nil))))
+      (is (fn? (bp/partial-right nil))))
 
     (let [identity (fn [& args] args)]
       (testing "returns the provided function if not args"
@@ -81,10 +82,10 @@
   (testing "if-fn"
 
     (testing "is a function"
-      (is (ifn? bp/if-fn)))
+      (is (fn? bp/if-fn)))
 
     (testing "returns a function"
-      (is (ifn? (bp/if-fn some? identity))))
+      (is (fn? (bp/if-fn some? identity))))
 
     (testing "takes a predicate function"
       (let [f (bp/if-fn even? inc identity)]

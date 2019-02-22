@@ -48,7 +48,7 @@
 
   ([pred then]
    (fn if-fn [v]
-     (if (pred v)
+     (when (pred v)
        (then v))))
 
   ([pred then else]
