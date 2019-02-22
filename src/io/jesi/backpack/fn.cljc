@@ -42,6 +42,9 @@
 (def noop (constantly nil))
 
 (defn if-fn
+  "Higher-order if function.
+  Takes a predicate (`pred`), calling `then` or (optionally) `else` based on the predicate.
+  Returns nil if no `else` defined."
 
   ([pred then]
    (fn if-fn [v]
