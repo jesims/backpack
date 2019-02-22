@@ -5,12 +5,10 @@
 
 (def clj {:base-url "https://"
           :v2       "is better than v1"
-          :actions  [{:name "Next" :type "GET"}]
-          :geojson  {:type :LineString}
+          :actions  [{:name "Next" :method "GET"}]
+          :geojson  #:geojson {:type :LineString}
           :a-cat    {:a-hat true}})
 
-;Keyword values are not converted
-(def from-js->clj (update-in clj [:geojson :type] name))
 
 (def json "{\"baseUrl\":\"https://\"}")
 
@@ -23,11 +21,7 @@
 
   (testing "converts Clojure to JSON string"
     (is (= json
-           (bp/clj->json simple)))
-
-    (testing "end to end"
-      (is (= from-js->clj
-             (-> clj bp/clj->json bp/json->clj))))))
+           (bp/clj->json simple)))))
 
 (deftest json->clj-test
 
@@ -59,5 +53,6 @@
 (deftest clj->json->clj
 
   (testing "Can convert Clojure to JSON and back"
-    (is (= from-js->clj
+    ;Keyword values are not converted
+    (is (= (update-in clj [:geojson :geojson/type] name)
            (-> clj bp/clj->json bp/json->clj)))))

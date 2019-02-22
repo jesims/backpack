@@ -36,6 +36,7 @@
   [io.jesi.backpack.fn
    apply-when
    d#
+   if-fn
    map-if
    noop
    partial-right

@@ -1,6 +1,7 @@
 (ns io.jesi.backpack.string
   (:require
-    [clojure.string :as string]))
+    [clojure.string :as string]
+    [io.jesi.backpack.fn :refer [if-fn]]))
 
 (defn uuid-str?
   "True if 's' is a string and matches the UUID format"
@@ -39,14 +40,21 @@
   [s]
   (= s "true"))
 
+(defn- kw->str [k]
+  (if-let [ns (namespace k)]
+    (str ns \/ (name k))
+    (name k)))
+
+(def ^:private ->str (if-fn keyword? kw->str str))
+
 (defn ->camelCase [s]
   (when s
-    (let [[head & tail] (string/split (name s) #"-|(?=[A-Z])")]
+    (let [[head & tail] (string/split (->str s) #"-|(?=[A-Z])")]
       (string/join (cons (string/lower-case head) (map string/capitalize tail))))))
 
 (defn ->kebab-case [s]
   (some-> s
-          name
+          ->str
           (string/replace #"([A-Z]{2,})([a-z])" "$1 $2")
           (string/replace #"([a-z])([A-Z])" "$1 $2")
           (string/replace \_ \-)
