@@ -40,3 +40,16 @@
      (f %)))
 
 (def noop (constantly nil))
+
+(defn if-fn
+
+  ([pred then]
+   (fn if-fn [v]
+     (if (pred v)
+       (then v))))
+
+  ([pred then else]
+   (fn if-fn [v]
+     (if (pred v)
+       (then v)
+       (else v)))))

@@ -75,3 +75,26 @@
     (testing "derefs when not derefable"
       (assert-deref identity))))
 
+
+(deftest if-fn-test
+
+  (testing "if-fn"
+
+    (testing "is a function"
+      (is (ifn? bp/if-fn)))
+
+    (testing "returns a function"
+      (is (ifn? (bp/if-fn some? identity))))
+
+    (testing "takes a predicate function"
+      (let [f (bp/if-fn even? inc identity)]
+
+        (testing "returning the result of then if true"
+          (is (= 3 (f 2))))
+
+        (testing "returning the result of else if false"
+          (is (= 1 (f 1)))
+
+          (testing "or nil if no else defined"
+            (let [f (bp/if-fn even? inc)]
+              (is (nil? (f 1))))))))))

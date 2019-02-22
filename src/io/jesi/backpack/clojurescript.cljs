@@ -19,16 +19,26 @@
     (str x)))
 
 (defn js->clj
-  "Transforms JavaScript to ClojureScript converting keys to kebab-case keywords"
-  [x]
-  (when-some [clj (some-> x (clojure.core/js->clj :keywordize-keys true))]
-    (transform-keys ->kebab-case-key clj)))
+  "Transforms JavaScript to ClojureScript. Converting keys to kebab-case keywords by default"
 
-(defn clj->js [x]
-  "Transforms ClojureScript to JavaScript converting keys to camelCase"
-  (some->> x
-    (transform-keys ->camelCase)
-    clojure.core/clj->js))
+  ([js]
+   (js->clj js ->kebab-case-key))
+
+  ([js key-fn]
+   (some->> js
+            clojure.core/js->clj
+            (transform-keys key-fn))))
+
+(defn clj->js
+  "Transforms ClojureScript to JavaScript. Converting keys to camelCase by default"
+
+  ([x]
+   (clj->js x ->camelCase))
+
+  ([o key-fn]
+   (some->> o
+            (transform-keys key-fn)
+            clojure.core/clj->js)))
 
 (defn clj->json
   [x]
