@@ -55,6 +55,14 @@
          (bp/->camelCase "_actions"))))
 
 (deftest ->kebab-case-test
+  (is (= "kebab-case"
+         (bp/->kebab-case :kebab-case)
+         (bp/->kebab-case "kebab-case")))
+
+  (is (= "namespaced/kebab-case"
+         (bp/->kebab-case :namespaced/kebab-case)
+         (bp/->kebab-case "namespaced/kebab-case")))
+
   (is (= "v2"
          (bp/->kebab-case :v2)
          (bp/->kebab-case "v2")))
@@ -83,6 +91,12 @@
 
   (is (= "lots-of-yelling"
          (bp/->kebab-case :LOTS_OF_YELLING))))
+
+(deftest ->kebab-case-key-test
+  (is (= :turtles.can.breathe.through/their-anus
+         (bp/->kebab-case-key :turtles.can.breathe.through/their-anus)
+         (bp/->kebab-case-key "turtles.can.breathe.through/their-anus")
+         (bp/->kebab-case-key "turtles.can.breathe.through/theirAnus"))))
 
 (deftest ->snake_case-test
   (is (= "v2"
