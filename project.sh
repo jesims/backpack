@@ -48,3 +48,15 @@ usage () {
 	done <<< "$doc"
 	echo -e "${txtbld}SYNOPSIS${txtrst}${synopsis}\n\n${txtbld}DESCRIPTION${txtrst}${desc}"
 }
+
+script-invoke () {
+	if [[ "$#" -eq 0 ]] || [[ "$1" =~ ^(help|-h|--help)$ ]];then
+		usage
+		exit 1
+	elif [[ $(grep "^$1\ (" "$script_name") ]];then
+		eval $@
+	else
+		echo_error "Unknown function $1 ($script_name $@)"
+		exit 1
+	fi
+}
