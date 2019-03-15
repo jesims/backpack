@@ -7,13 +7,15 @@
     [clojure.walk :refer [postwalk]]))
 
 (defn pprint-str [object]
-  (with-out-str
-    (pprint/pprint object)))
+  (pprint/write object
+    :pretty true
+    :stream nil))
 
 (defn pprint-str-code [object]
-  (with-out-str
-    (pprint/with-pprint-dispatch pprint/code-dispatch
-      (pprint/pprint object))))
+  (pprint/write object
+    :dispatch pprint/code-dispatch
+    :pretty true
+    :stream nil))
 
 (defn is-macro= [expected expanded]
   (let [actual (->> expanded

@@ -67,8 +67,8 @@
       (is (= '(io.jesi.backpack.spy/when-debug
                 (clojure.core/when io.jesi.backpack.spy/*enabled*
                   (do
-                    (clojure.core/print (clojure.core/str "a:\n" (io.jesi.backpack.test.util/pprint-str a)))
-                    (clojure.core/print (clojure.core/str "b:\n" (io.jesi.backpack.test.util/pprint-str b))))))
+                    (clojure.core/println (clojure.core/str "a:\n" (io.jesi.backpack.test.util/pprint-str a)))
+                    (clojure.core/println (clojure.core/str "b:\n" (io.jesi.backpack.test.util/pprint-str b))))))
              (macroexpand-1 '(io.jesi.backpack.spy/pprint a b)))))
 
     (testing "pprints"

@@ -39,4 +39,4 @@
   `(when-debug
      (when *enabled*
        (do ~@(for [form more]
-               `(print (str ~(str (-name form) \: \newline) (pprint-str ~form))))))))
+               `(println (str ~(str (-name form) \: \newline) (pprint-str ~form))))))))
