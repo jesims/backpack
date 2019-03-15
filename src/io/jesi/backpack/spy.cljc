@@ -7,6 +7,12 @@
     [io.jesi.backpack.test.util :refer [pprint-str]])
   #?(:cljs (:require-macros io.jesi.backpack.spy)))
 
+(def ^:dynamic *enabled* false)
+
+(defmacro with-spy [& body]
+  `(binding [*enabled* true]
+     ~@body))
+
 (defmacro when-debug [body]
   (if (boolean (:ns &env))
     `(when ~(vary-meta 'js/goog.DEBUG assoc :tag 'boolean)
@@ -20,15 +26,17 @@
 
 (defmacro prn [& more]
   `(when-debug
-     (println ~@(bp/trans-reduce
-                  (fn [col form]
-                    (doto col
-                      (conj! (str (-name form) \:))
-                      (conj! `(pr-str ~form))))
-                  []
-                  more))))
+     (when *enabled*
+       (println ~@(bp/trans-reduce
+                    (fn [col form]
+                      (doto col
+                        (conj! (str (-name form) \:))
+                        (conj! `(pr-str ~form))))
+                    []
+                    more)))))
 
 (defmacro pprint [& more]
   `(when-debug
-     (do ~@(for [form more]
-             `(print (str ~(str (-name form) \: \newline) (pprint-str ~form)))))))
+     (when *enabled*
+       (do ~@(for [form more]
+               `(print (str ~(str (-name form) \: \newline) (pprint-str ~form))))))))
