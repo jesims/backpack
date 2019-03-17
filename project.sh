@@ -40,7 +40,7 @@ usage () {
 		elif [[ "$line" == args:* ]];then
 			args="$( cut -d ':' -f 2- <<< "$line" )"
 			synopsis+="$args"
-		elif [[ "$line" == [* ]];then
+		elif [[ "$line" =~ ^(<[{)* ]];then
 			desc+="\n\t\t\t${line}"
 		else
 			desc+="\n\t\t${line}"
