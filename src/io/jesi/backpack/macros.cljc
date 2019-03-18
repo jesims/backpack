@@ -2,6 +2,9 @@
   (:refer-clojure :exclude [when-let])
   #?(:cljs (:require-macros io.jesi.backpack.macros)))
 
+;XXX DO NOT FORMAT THIS FILE
+;it breaks import-vars
+
 (defmacro import-vars
   [& imports]
   `(do
@@ -83,3 +86,7 @@
                :let [body (str name)]]
            `(def ~name (~body-fn ~body)))
        (def ~'-all (hash-set ~@names)))))
+
+(defmacro when-not= [test body]
+  `(when-not (= ~test ~body)
+     ~body))

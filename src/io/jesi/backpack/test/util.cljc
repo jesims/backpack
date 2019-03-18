@@ -13,9 +13,9 @@
 
 (defn pprint-str-code [object]
   (pprint/write object
-    :dispatch pprint/code-dispatch
     :pretty true
-    :stream nil))
+    :stream nil
+    :dispatch pprint/code-dispatch))
 
 (defn is-macro= [expected expanded]
   (let [actual (->> expanded
