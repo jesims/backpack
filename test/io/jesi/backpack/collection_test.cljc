@@ -241,22 +241,29 @@
 (deftest assoc-in-test
   (let [m {}]
 
-    (testing "Same ass assoc in"
-      (is (= (assoc-in m [:a] 1)
-             (bp/assoc-in m [:a] 1)))
-      (is (= (assoc-in m [:a :b] 1)
-             (bp/assoc-in m [:a :b] 1))))
+    (testing "assoc-in"
 
-    (testing "Takes multiple path value pairs"
-      (is (= {:a 1 :b 2}
-             (bp/assoc-in m
-               [:a] 1
-               [:b] 2))))
-    (is (= {:a {:b 1}
-            :c {:d 2}}
-           (bp/assoc-in m
-             [:a :b] 1
-             [:c :d] 2)))))
+      (testing "Same ass assoc in"
+        (is (= (assoc-in m [:a] 1)
+               (bp/assoc-in m [:a] 1)))
+        (is (= (assoc-in m [:a :b] 1)
+               (bp/assoc-in m [:a :b] 1))))
+
+      (testing "Takes multiple path value pairs"
+        (is (= {:a 1 :b 2}
+               (bp/assoc-in m
+                 [:a] 1
+                 [:b] 2)))
+        (is (= {:a 1 :b 2}
+               (bp/assoc-in m
+                 :a 1
+                 :b 2)))
+        (is (= {:a {:b 1}
+                :c {:d 2}}
+               (bp/assoc-in m
+                 [:a :b] 1
+                 [:c :d] 2)))))))
+
 
 (deftest trans-reduce-kv-test
   (testing "Works like reduce-kv, but takes a function that expects a transient"
