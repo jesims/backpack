@@ -40,11 +40,23 @@ usage () {
 		elif [[ "$line" == args:* ]];then
 			args="$( cut -d ':' -f 2- <<< "$line" )"
 			synopsis+="$args"
-		elif [[ "$line" == [* ]];then
+		elif [[ "$line" =~ ^(<[{)* ]];then
 			desc+="\n\t\t\t${line}"
 		else
 			desc+="\n\t\t${line}"
 		fi
 	done <<< "$doc"
 	echo -e "${txtbld}SYNOPSIS${txtrst}${synopsis}\n\n${txtbld}DESCRIPTION${txtrst}${desc}"
+}
+
+script-invoke () {
+	if [[ "$#" -eq 0 ]] || [[ "$1" =~ ^(help|-h|--help)$ ]];then
+		usage
+		exit 1
+	elif [[ $(grep "^$1\ (" "$script_name") ]];then
+		eval $@
+	else
+		echo_error "Unknown function $1 ($script_name $@)"
+		exit 1
+	fi
 }
