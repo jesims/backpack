@@ -178,12 +178,4 @@ test-docs () {
 	fi
 }
 
-if [[ "$#" -eq 0 ]] || [[ "$1" =~ ^(help|-h|--help)$ ]];then
-	usage
-	exit 1
-elif [[ $(grep "^$1\ (" "$script_name") ]];then
-	eval $@
-else
-	echo_error "Unknown function $1 ($script_name $@)"
-	exit 1
-fi
+script-invoke $@
