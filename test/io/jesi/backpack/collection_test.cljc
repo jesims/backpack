@@ -5,6 +5,7 @@
     [io.jesi.backpack.random :as rnd]))
 
 (deftest safe-empty?-test
+
   (testing "returns true when empty coll/string/map"
     (is (bp/safe-empty? []))
     (is (bp/safe-empty? '()))
@@ -25,6 +26,7 @@
     (is (false? (bp/safe-empty? (rnd/uuid))))))
 
 (deftest distinct-by-test
+
   (testing "returns true if a collection of maps are distinct by a given keyword"
     (let [generator (fn [level] {:val (rnd/string) :type "animal" :danger-level level})
           maps (map (partial generator) (range 5))]
@@ -33,6 +35,7 @@
       (is (false? (bp/distinct-by :type maps))))))
 
 (deftest in?-test
+
   (testing "true if a collection contains a given value"
     (let [col ["An" "ostrich's" "eye" "is" "bigger" "than" "it's" "brain"]]
       (is (true? (bp/in? col "An")))
@@ -41,12 +44,15 @@
       (is (false? (bp/in? col "bear"))))))
 
 (deftest filter-values-test
-  (testing "filter-values: "
+
+  (testing "filter-values:"
+
     (testing "filter map values based on a predicate"
       (is (= {} (bp/filter-values true? {})))
       (is (= {:a true} (bp/filter-values true? {:a true :b nil}))))))
 
 (deftest filter-empty-test
+
   (testing "filters out any empty values"
     (let [original {:value  "123"
                     :key    :123
@@ -64,11 +70,15 @@
       (is (= expected actual)))))
 
 (deftest select-non-nil-keys-test
+
   (testing "select-non-nil-keys: "
+
     (testing "doesn't return keys that don't exist"
       (is (= {:a 1} (bp/select-non-nil-keys {:a 1} [:a :b :c]))))
+
     (testing "doesn't return keys with nil values"
       (is (= {:a 1} (bp/select-non-nil-keys {:a 1 :b nil} [:a :b :c]))))
+
     (testing "preserves true and false values values"
       (is (= {:a true :b false} (bp/select-non-nil-keys {:a true :b false} [:a :b :c]))))))
 
@@ -118,6 +128,7 @@
       (is (not (contains-any? :d :e))))))
 
 (deftest dissoc-all-test
+
   (testing "Removes multiple keys"
     (let [m {:a 1 :b 2 :c 3}]
       (is (= {:a 1} (bp/dissoc-all m :b :c)))
@@ -127,6 +138,7 @@
     (is (= {:b {}} (bp/dissoc-all {:a 1 :b {:a 2}} :a)))))
 
 (deftest first-some-test
+
   (testing "Returns nil if all keys are nil"
     (is (nil? (bp/first-some {} :these :do :not :exist))))
 
@@ -159,6 +171,7 @@
     (is (= (dissoc m :age) (bp/filter-nil-keys m)))))
 
 (deftest translate-keys-test
+
   (testing "Is a function"
     (is (fn? bp/translate-keys)))
 
@@ -243,7 +256,7 @@
 
     (testing "assoc-in"
 
-      (testing "Same ass assoc in"
+      (testing "Same as assoc in"
         (is (= (assoc-in m [:a] 1)
                (bp/assoc-in m [:a] 1)))
         (is (= (assoc-in m [:a :b] 1)
@@ -266,6 +279,7 @@
 
 
 (deftest trans-reduce-kv-test
+
   (testing "Works like reduce-kv, but takes a function that expects a transient"
     (let [values (sorted-map :a 1 :b 2 :c 3 :d 4 :e 5)
           reducer (fn [modifier coll _ v]
@@ -275,8 +289,10 @@
              (bp/trans-reduce-kv (partial reducer conj!) [] values))))))
 
 (deftest trans-reduce-test
+
   (testing "Works like reduce, but takes a function that expects a transient"
     (let [values [[1] [2] [3]]]
+
       (testing "taking only a function and collection"
         (is (= [1 [2] [3]]
                (reduce conj values)
@@ -320,3 +336,14 @@
       (is (= {}
              (bp/dissoc-in {:a {:b 1}} [:a :b]))))))
 
+(deftest rename-keys!-test
+
+  (testing "rename-keys!"
+
+    (testing "renames keys in a transient map"
+      (is (= {:a 1 :b 1 :c 1}
+             (-> {:x 1 :z 1 :c 1} transient (bp/rename-keys! {:x :a :z :b}) persistent!)))
+
+      (testing "if the map contains the old key"
+        (is (= {:a 1 :b 1}
+               (-> {:a 1 :b 1} transient (bp/rename-keys! {:x :a :z :b}) persistent!)))))))

@@ -27,11 +27,13 @@
    first-some
    in?
    remove-empty
+   rename-keys!
    safe-empty?
    select-non-nil-keys
    trans-reduce
    trans-reduce-kv
-   translate-keys]
+   translate-keys
+   update!]
 
   [io.jesi.backpack.fn
    apply-when

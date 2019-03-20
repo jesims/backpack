@@ -118,3 +118,31 @@
    (->> coll
         (reduce f (transient init))
         persistent!)))
+
+(defn rename-keys!
+  "Returns the transient map with the keys in kmap renamed to the vals in kmap"
+  [tmap kmap]
+  (let [tmap (reduce
+               (fn [tmap [old-key new-key]]
+                 (if (contains? tmap old-key)
+                   (assoc! tmap new-key (get tmap old-key))
+                   tmap))
+               tmap
+               kmap)]
+    (apply dissoc! tmap (keys kmap))))
+
+(defn update!
+  "'Updates' a value in an transient associative structure, where key is a
+  key and f is a function that will take the old value and any supplied args
+  and return the new value, and returns a new structure.
+  If the key does not exist, nil is passed as the old value."
+  ([tcol key f]
+   (assoc! tcol key (f (get tcol key))))
+  ([tcol key f x]
+   (assoc! tcol key (f (get tcol key) x)))
+  ([tcol key f x y]
+   (assoc! tcol key (f (get tcol key) x y)))
+  ([tcol key f x y z]
+   (assoc! tcol key (f (get tcol key) x y z)))
+  ([tcol key f x y z & more]
+   (assoc! tcol key (apply f (get tcol key) x y z more))))
