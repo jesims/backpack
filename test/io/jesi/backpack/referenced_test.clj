@@ -8,6 +8,7 @@
 
 (def excluded-ns #{'io.jesi.backpack.macros
                    'io.jesi.backpack.random
+                   'io.jesi.backpack.http
                    'io.jesi.backpack.spy                    ; Excluded because spy uses -pprint which has to be public
                    'io.jesi.backpack.test.util})            ; Excluded because clojurescript won't need macros (also ns-publics returns defmacro)
 
