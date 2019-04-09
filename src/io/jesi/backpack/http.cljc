@@ -1,28 +1,25 @@
 (ns io.jesi.backpack.http
-  #?(:cljs (:require-macros io.jesi.backpack.http)))
+  #?(:cljs
+     (:require-macros [io.jesi.backpack.http :refer [def-status def-status-range]])))
 
 (defmacro def-status [status-code quoted-sym]
   (let [sym (last quoted-sym)
         status-f-name? (symbol (str sym \?))
         sym (symbol sym)]
-    ;(defn ~sym
-    ;  ([] (~sym {}))
-    ;  ([request#] (assoc request# :status ~status-code)))
-    `(defn ~status-f-name? [response#]
-       (= ~status-code (:status response#)))))
+    `(do
+       (defn ~sym
+         ([] (~sym {}))
+         ([request#] (assoc request# :status ~status-code)))
+       (defn ~status-f-name? [response#]
+         (= ~status-code (:status response#))))))
 
 (defmacro def-status-range [start end quoted-sym]
   (let [sym (last quoted-sym)
         status-f-name? (symbol (str sym \?))]
-    `(do
-       (defn ~status-f-name? [response#]
-         (let [status# (:status response#)]
-           (boolean (and status#
-                         (<= ~start status# ~end))))))))
-
-(do
-  (defn this [] (prn "works"))
-  (defn that [] (prn "that")))
+    `(defn ~status-f-name? [response#]
+       (let [status# (:status response#)]
+         (boolean (and status#
+                       (<= ~start status# ~end)))))))
 
 (def-status 200 'ok)
 (def-status 201 'created)
