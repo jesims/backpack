@@ -5,8 +5,7 @@
   (:require
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.macros :refer [when-not=]]
-    [io.jesi.backpack.test.util :refer [pprint-str]]
-    [clojure.string :as string])
+    [io.jesi.backpack.test.util :refer [pprint-str]])
   #?(:cljs (:require-macros io.jesi.backpack.spy)))
 
 (def ^:dynamic *enabled* false)
