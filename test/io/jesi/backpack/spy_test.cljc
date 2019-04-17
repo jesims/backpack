@@ -5,14 +5,13 @@
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.spy :as spy]))
 
-(def a 1)
-(def b 2)
-(def c (shorthand a b))
+(defn- set-debug [v]
+  #?(:cljs (set! js/goog.DEBUG v)))
 
 (use-fixtures :each
   (fn [f]
     (f)
-    #?(:cljs (set! js/goog.DEBUG false))))
+    (set-debug false)))
 
 (deftest when-debug-test
 
@@ -39,6 +38,10 @@
 (defn- add-line [n]
   (swap! line + n))
 
+(def a 1)
+(def b 2)
+(def c (shorthand a b))
+
 (deftest prn-test
 
   (testing "spy/prn"
@@ -48,10 +51,10 @@
 
     (testing "prns"
       (spy/with-spy
-        #?(:cljs (set! js/goog.DEBUG true))
+        (set-debug true)
 
         (testing "the specified values"
-          (is (= (str file ":" (set-line 55) " a: 1\n")
+          (is (= (str file ":" (set-line 58) " a: 1\n")
                  (with-out-str (spy/prn a))))
           (is (= (str file ":" (add-line 2) " a: 1 b: 2\n")
                  (with-out-str (spy/prn a b)))))
@@ -69,7 +72,7 @@
       (testing "nothing when not"
 
         #?(:cljs (testing "debug"
-                   (set! js/goog.DEBUG false)
+                   (set-debug false)
                    (is (empty? (with-out-str (spy/prn a))))
                    (is (empty? (with-out-str (spy/prn a b))))))
 
@@ -85,11 +88,11 @@
 
     (testing "pprints"
       (spy/with-spy
-        #?(:cljs (set! js/goog.DEBUG true))
+        (set-debug true)
 
         (testing "the specified values"
           (is (= (str
-                   file ":" (set-line 94) " a:\n"
+                   file ":" (set-line 97) " a:\n"
                    "1\n")
                  (with-out-str (spy/pprint a))))
           (is (= (str
@@ -119,7 +122,7 @@
       (testing "nothing when not"
 
         #?(:cljs (testing "debug"
-                   (set! js/goog.DEBUG false)
+                   (set-debug false)
                    (is (empty? (with-out-str (spy/pprint a))))
                    (is (empty? (with-out-str (spy/pprint a b))))
                    (is (empty? (with-out-str (spy/pprint c))))))

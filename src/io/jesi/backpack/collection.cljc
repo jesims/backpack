@@ -132,17 +132,17 @@
     (apply dissoc! tmap (keys kmap))))
 
 (defn update!
-  "'Updates' a value in an transient associative structure, where key is a
+  "'Updates' a value in an transient associative structure, where k is a
   key and f is a function that will take the old value and any supplied args
   and return the new value, and returns a new structure.
   If the key does not exist, nil is passed as the old value."
-  ([tcol key f]
-   (assoc! tcol key (f (get tcol key))))
-  ([tcol key f x]
-   (assoc! tcol key (f (get tcol key) x)))
-  ([tcol key f x y]
-   (assoc! tcol key (f (get tcol key) x y)))
-  ([tcol key f x y z]
-   (assoc! tcol key (f (get tcol key) x y z)))
-  ([tcol key f x y z & more]
-   (assoc! tcol key (apply f (get tcol key) x y z more))))
+  ([tcol k f]
+   (assoc! tcol k (f (get tcol k))))
+  ([tcol k f x]
+   (assoc! tcol k (f (get tcol k) x)))
+  ([tcol k f x y]
+   (assoc! tcol k (f (get tcol k) x y)))
+  ([tcol k f x y z]
+   (assoc! tcol k (f (get tcol k) x y z)))
+  ([tcol k f x y z & more]
+   (assoc! tcol k (apply f (get tcol k) x y z more))))
