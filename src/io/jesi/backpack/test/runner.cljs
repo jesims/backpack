@@ -7,7 +7,8 @@
     ; commented out until https://github.com/pjstadig/humane-test-output/issues/37 is fixed
     ;[pjstadig.humane-test-output]
     [shadow.dom :as dom]
-    [shadow.test :as st]))
+    [shadow.test :as st]
+    [shadow.test.env :as env]))
 
 ;TODO colours!
 
@@ -58,6 +59,8 @@
 (defn start []
   (create-log-node)
   (js/console.clear)
+  (-> (env/get-test-data)
+      (env/reset-test-data!))
   (st/run-all-tests))
 
 (defn stop [done]
