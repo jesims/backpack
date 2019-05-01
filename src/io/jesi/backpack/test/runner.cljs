@@ -12,16 +12,11 @@
 ;TODO better test diff
 (enable-console-print!)
 
-(goog-define ns-regexp "")
-
 (defn start []
   (js/console.clear)
   (-> (env/get-test-data)
       (env/reset-test-data!))
-  (let [test-env (ctd/init! "test-root")]
-    (if (clojure.string/blank? ns-regexp)
-      (st/run-all-tests test-env)
-      (st/run-all-tests test-env (re-pattern ns-regexp)))))
+  (st/run-all-tests (ctd/init! "test-root")))
 
 (defn ^:dev/before-load-async stop [done]
   ;FIXME determine if async tests are still pending https://github.com/clojure/clojurescript-site/blob/master/content/tools/testing.adoc#detecting-test-completion--success

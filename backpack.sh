@@ -102,13 +102,14 @@ unit-test-cljs-refresh () {
 ## unit-test-cljs:
 ## args: [-k|-b|-n|-r] [test-ns-regex]
 ## Runs the ClojureScript unit tests
-## [-k] Watches and compiles tests for execution within karma (Default)
+## [-k] Watches and compiles tests for execution with karma (Default)
 ## [-b] Watches and compiles tests for execution within a browser
 ## [-n] Executes the tests targeting Node.js
-## [-r] Watches tests and source files for changes, and subsequently re-evaluates
+## [-r] Watches tests and source files for changes, and subsequently re-evaluates with karma
 ## [test-ns-regex] Watches tests and source files for changes, and subsequently re-evaluates
 unit-test-cljs () {
-	export TEST_NS_REGEXP=$2
+	export TEST_NS_REGEXP=${2:-'-test$'}
+	echo ${TEST_NS_REGEXP}
 	case $1 in
 		-r)
 			unit-test-cljs-refresh;;
