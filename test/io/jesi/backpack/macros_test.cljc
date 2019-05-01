@@ -163,6 +163,7 @@
       (is (= (set vals) -all))))
 
   (testing "allows function composition"
+    (ns-unmap 'io.jesi.backpack.macros-test '-all)
     (defconsts (comp string/upper-case bp/->snake_case)
       'a-rhinoceros-horn-is-made-of-hair)
     (let [val "A_RHINOCEROS_HORN_IS_MADE_OF_HAIR"]
