@@ -154,6 +154,7 @@
                (macroexpand-1 '(io.jesi.backpack.macros/defconsts identity 'hello 'world))))
 
   (testing "transforms the symbol values with the given function"
+    (ns-unmap 'io.jesi.backpack.macros-test '-all)
     (defconsts bp/->snake_case
       'a-snail-can-sleep-for-three-years
       'slugsHaveFourNoses)
