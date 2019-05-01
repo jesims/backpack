@@ -109,7 +109,6 @@ unit-test-cljs-refresh () {
 ## [test-ns-regex] Watches tests and source files for changes, and subsequently re-evaluates
 unit-test-cljs () {
 	export TEST_NS_REGEXP=${2:-'-test$'}
-	echo ${TEST_NS_REGEXP}
 	case $1 in
 		-r)
 			unit-test-cljs-refresh;;
