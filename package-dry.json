@@ -13,14 +13,13 @@
   "dry": {
     "extends": "@io.jesi/parent/package-dry.json",
     "dependencies": {
-      "@io.jesi/parent": "0.0.4"
+      "@io.jesi/parent": "0.0.7"
     }
   },
   "devDependencies": {
     "karma": "managed",
     "karma-chrome-launcher": "managed",
     "karma-cljs-test": "managed",
-    "shadow-cljs": "managed",
     "standard": "managed"
   }
 }

@@ -6,6 +6,10 @@ if [[ $? -ne 0 ]]; then
 	exit 1
 fi
 
+shadow-cljs () {
+	lein trampoline run -m shadow.cljs.devtools.cli $@
+}
+
 ## clean:
 ## Cleans up the compiled and generated sources
 clean () {
@@ -28,7 +32,7 @@ deps () {
 ## Generate api documentation
 docs () {
 	echo_message 'Generating API documentation'
-  # commented out until https://github.com/weavejester/codox/issues/166 is fixed
+	# commented out until https://github.com/weavejester/codox/issues/166 is fixed
 #	lein codox
 #	abort_on_error
 }
@@ -36,7 +40,7 @@ docs () {
 ## stop:
 ## Stops shadow-cljs and karma
 stop () {
-	npx shadow-cljs stop &>/dev/null
+	shadow-cljs stop &>/dev/null
 	pkill -f 'karma ' &>/dev/null
 }
 
@@ -66,13 +70,13 @@ unit-test () {
 }
 
 unit-test-node () {
-	npx shadow-cljs compile node \
+	shadow-cljs compile node \
 	&& node target/node/test.js
 	abort_on_error 'node tests failed'
 }
 
 unit-test-karma () {
-	npx shadow-cljs compile karma \
+	shadow-cljs compile karma \
 	&& npx karma start --single-run
 	abort_on_error 'kamra tests failed'
 }
@@ -81,27 +85,30 @@ unit-test-browser-refresh () {
 	clean
 	trap stop EXIT
 	open http://localhost:8091/
-	npx shadow-cljs watch browser
+	shadow-cljs watch browser
 	abort_on_error
 }
 
 unit-test-cljs-refresh () {
 	clean
 	echo_message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
-	npx shadow-cljs compile karma
+	shadow-cljs compile karma
 	abort_on_error
 	trap stop EXIT
 	npx karma start --no-single-run &
-	npx shadow-cljs watch karma
+	shadow-cljs watch karma
 }
 
 ## unit-test-cljs:
-## args: [-b|-n|-r]
+## args: [-k|-b|-n|-r] [test-ns-regex]
 ## Runs the ClojureScript unit tests
+## [-k] Watches and compiles tests for execution with karma (Default)
 ## [-b] Watches and compiles tests for execution within a browser
 ## [-n] Executes the tests targeting Node.js
-## [-r] Watches tests and source files for changes, and subsequently re-evaluates
+## [-r] Watches tests and source files for changes, and subsequently re-evaluates with karma
+## [test-ns-regex] Watches tests and source files for changes, and subsequently re-evaluates
 unit-test-cljs () {
+	export TEST_NS_REGEXP=${2:-'-test$'}
 	case $1 in
 		-r)
 			unit-test-cljs-refresh;;
@@ -109,6 +116,8 @@ unit-test-cljs () {
 			unit-test-browser-refresh;;
 		-n)
 			unit-test-node;;
+		-k)
+			unit-test-karma;;
 		*)
 			unit-test-karma;;
 	esac

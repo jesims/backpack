@@ -1,14 +1,17 @@
 {:lein   true
- :builds {:node    {:target    :node-test
-                    :output-to "target/node/test.js"}
+ :builds {:node    {:target          :node-test
+                    :output-to       "target/node/test.js"
+                    :ns-regexp       #shadow/env "TEST_NS_REGEXP"
+                    :closure-defines {goog.DEBUG false}}
           :karma   {:target          :karma
+                    :ns-regexp       #shadow/env "TEST_NS_REGEXP"
                     :output-to       "target/karma/test.js"
                     :closure-defines {goog.DEBUG false}}
           :browser {:target          :browser-test
                     :test-dir        "target/browser/"
-                    :closure-defines {goog.DEBUG false}
-                    :ns-regexp       "-test$"
+                    :ns-regexp       #shadow/env "TEST_NS_REGEXP"
                     :runner-ns       io.jesi.backpack.test.runner
+                    :closure-defines {goog.DEBUG false}
                     :devtools        {:http-port 8091
-                                      :hud       false
+                                      :hud       true
                                       :http-root "target/browser/"}}}}

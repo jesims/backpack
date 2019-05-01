@@ -25,11 +25,11 @@
     (name form)
     (str form)))
 
-(defn- line-number [form]
-  (let [f (or (when (and *file*
-                         (not= "NO_SOURCE_PATH" *file*)
-                         (not= \/ (nth *file* 0)))
-                *file*)
+(defn- line-number [file form]
+  (let [f (or (when (and file
+                         (not= "NO_SOURCE_PATH" file)
+                         (not= \/ (nth file 0)))
+                file)
               *ns*)
         line (:line (meta form))]
     (str f \: line)))
@@ -37,7 +37,7 @@
 (defmacro prn [& more]
   `(when-debug
      (when *enabled*
-       (println ~@(let [line (line-number &form)]
+       (println ~@(let [line (line-number *file* &form)]
                     (bp/trans-reduce
                       (fn [col form]
                         (doto col
@@ -49,6 +49,6 @@
 (defmacro pprint [& more]
   `(when-debug
      (when *enabled*
-       (do ~@(let [line (line-number &form)]
+       (do ~@(let [line (line-number *file* &form)]
                (for [form more]
                  `(println (str ~(str line \space (-name form) \: \newline) (pprint-str ~form)))))))))

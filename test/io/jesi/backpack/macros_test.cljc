@@ -154,6 +154,7 @@
                (macroexpand-1 '(io.jesi.backpack.macros/defconsts identity 'hello 'world))))
 
   (testing "transforms the symbol values with the given function"
+    (ns-unmap 'io.jesi.backpack.macros-test '-all)
     (defconsts bp/->snake_case
       'a-snail-can-sleep-for-three-years
       'slugsHaveFourNoses)
@@ -163,6 +164,7 @@
       (is (= (set vals) -all))))
 
   (testing "allows function composition"
+    (ns-unmap 'io.jesi.backpack.macros-test '-all)
     (defconsts (comp string/upper-case bp/->snake_case)
       'a-rhinoceros-horn-is-made-of-hair)
     (let [val "A_RHINOCEROS_HORN_IS_MADE_OF_HAIR"]
