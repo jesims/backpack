@@ -2,7 +2,8 @@
   (:require
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.random :as rnd]))
+    [io.jesi.backpack.random :as rnd]
+    [io.jesi.backpack.test.macros :refer [is=]]))
 
 (deftest safe-empty?-test
 
@@ -347,3 +348,18 @@
       (testing "if the map contains the old key"
         (is (= {:a 1 :b 1}
                (-> {:a 1 :b 1} transient (bp/rename-keys! {:x :a :z :b}) persistent!)))))))
+
+(deftest concat!-test
+
+  (testing "concat!"
+
+    (testing "is a function"
+      (is (fn? bp/concat!))
+
+      (testing "that concatenates sequences onto a transient collection"
+        (let [concat (fn [& seqs]
+                       (persistent! (apply bp/concat! (transient []) seqs)))]
+          (is= [1 2 3]
+               (concat [1 2 3])
+               (concat [1] [2 3])
+               (concat [1] [2] [3])))))))

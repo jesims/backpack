@@ -17,6 +17,7 @@
 (import-vars
   [io.jesi.backpack.collection
    assoc-in
+   concat!
    contains-any?
    dissoc-all
    dissoc-in
