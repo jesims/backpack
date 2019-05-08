@@ -42,6 +42,7 @@
    if-fn
    map-if
    noop
+   p=
    partial-right
    pass
    pass-if]
