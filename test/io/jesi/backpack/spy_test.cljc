@@ -143,7 +143,12 @@
         (let [result (atom nil)]
           (is= (str file ":" (set-line 145) " a: 1" \newline)
                (with-out-str (reset! result (spy/peek a))))
-          (is= a @result))))))
+          (is= a @result)
+
+          (testing "even in a thread macro (no line numbers since the &from metadata is not preserved)"
+            (is= (str file " a: 1" \newline)
+                 (with-out-str (reset! result (-> a spy/peek inc))))
+            (is= (inc a) @result)))))))
 
 (deftest ppeek-test
 
@@ -156,10 +161,11 @@
       (spy/with-spy
         (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 161) " a:" \newline
-                 "1" \newline)
+          (is= (str file ":" (set-line 165) " a:" \newline "1" \newline)
                (with-out-str (reset! result (spy/ppeek a))))
           (is= a @result)
-          (is= (str file ":" (add-line 4) " a:" \newline
-                 "1" \newline)
-               (is= 2 (-> a spy/peek inc))))))))
+
+          (testing "even in a thread macro (no line numbers since the &from metadata is not preserved)"
+            (is= (str file " a:" \newline "1" \newline)
+                 (with-out-str (reset! result (-> a spy/ppeek inc))))
+            (is= (inc a) @result)))))))

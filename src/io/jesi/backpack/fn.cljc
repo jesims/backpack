@@ -56,3 +56,9 @@
      (if (pred v)
        (then v)
        (else v)))))
+
+(def
+  ^{:arglists '([& x])}
+  p=
+  "Partial ="
+  #(apply partial = %&))

@@ -32,7 +32,9 @@
                 file)
               *ns*)
         line (:line (meta form))]
-    (str f \: line)))
+    (if line
+      (str f \: line)
+      (str f))))
 
 (defn- -prn [file form & more]
   `(when-debug
