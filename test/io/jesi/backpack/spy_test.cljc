@@ -140,8 +140,9 @@
 
     (testing "prns (using spy/prn) and return the passed in value"
       (spy/with-spy
+        (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 145) " a: 1" \newline)
+          (is= (str file ":" (set-line 146) " a: 1" \newline)
                (with-out-str (reset! result (spy/peek a))))
           (is= a @result)
 
@@ -161,7 +162,7 @@
       (spy/with-spy
         (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 165) " a:" \newline "1" \newline)
+          (is= (str file ":" (set-line 166) " a:" \newline "1" \newline)
                (with-out-str (reset! result (spy/ppeek a))))
           (is= a @result)
 
