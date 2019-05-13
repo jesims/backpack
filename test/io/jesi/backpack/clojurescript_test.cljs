@@ -2,7 +2,8 @@
   (:require
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.random :as rnd]))
+    [io.jesi.backpack.random :as rnd]
+    [io.jesi.backpack.test.macros :refer [is=]]))
 
 (defn- json= [& args]
   (apply = (map js/JSON.stringify args)))
@@ -30,12 +31,12 @@
 
   (testing "converts all keys to kebab-case"
     (is= from-js->clj (-> js bp/js->clj))
-    (is= (nillmap :base-url :helios-url
-           (bp/js->clj (nillmap :baseURL :heliosURL)))))
+    (is= (nillmap :base-url :helios-url)
+         (bp/js->clj (nillmap :baseURL :heliosURL))))
 
   (testing "end-to-end clj->js->clj"
     (is= from-js->clj
-           (-> clj bp/clj->js bp/js->clj)))
+         (-> clj bp/clj->js bp/js->clj)))
 
   (testing "returns nil"
     (is (nil? (bp/clj->js nil)))))
@@ -79,5 +80,5 @@
       (is= m (bp/class->clj (TestClass. 1 2))))
 
     (testing "converts properties from prototype"
-      (is= (assoc m :f3 3
-             (bp/class->clj (js/Object.create o (clj->js {:f3 {:value 3 :enumerable true}}))))))))
+      (is= (assoc m :f3 3)
+           (bp/class->clj (js/Object.create o (clj->js {:f3 {:value 3 :enumerable true}})))))))

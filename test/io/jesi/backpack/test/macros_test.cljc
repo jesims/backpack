@@ -12,14 +12,14 @@
             (is (macro? `io.jesi.backpack.test.macros/async-go))))
 
   (testing "expands to a `cljs.test/async` `go` block"
-    (is (is-macro= '(io.jesi.backpack.macros/if-cljs
-                      (cljs.test/async done
-                        (io.jesi.backpack.async/go
-                          (try
-                            (is true)
-                            (finally
-                              (done)))))
-                      (clojure.core.async/<!!
-                        (io.jesi.backpack.async/go
-                          (is true))))
-                   (macroexpand-1 '(io.jesi.backpack.test.macros/async-go (is true)))))))
+    #?(:clj  (is-macro= '(clojure.core.async/<!!
+                           (io.jesi.backpack.async/go
+                             (is true)))
+                        (macroexpand-1 '(io.jesi.backpack.test.macros/async-go (is true))))
+       :cljs (is-macro= '(cljs.test/async done
+                           (io.jesi.backpack.async/go
+                             (try
+                               (is true)
+                               (finally
+                                 (done)))))
+                        (macroexpand-1 '(io.jesi.backpack.test.macros/async-go (is true)))))))
