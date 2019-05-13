@@ -54,8 +54,7 @@
   (let [ns (namespace sym)
         ;TODO support other runtimes
         ns (if (cljs-env? env)
-             (->> #?(:clj  \.
-                     :cljs #"\.")
+             (->> #"\."
                   (string/split ns)
                   (sp/setval sp/FIRST "cljs")
                   (string/join \.))
