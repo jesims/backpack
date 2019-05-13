@@ -102,12 +102,13 @@
     `(~go-loop* [retries# ~retries]
        (let [res# (catch->identity ~@body)]
          (if (and (~should-retry-fn res#)
-                  (> retries# 0))
+                  (pos? retries#))
            (do
              (~<!* (async/timeout (* ~delay 1000)))
              (recur (dec retries#)))
            res#)))))
 
+;From https://github.com/fullcontact/full.async
 (defmacro <?
   "Same as core.async <! but throws an exception if the channel returns a
   throwable object. Also will not crash if channel is nil."
