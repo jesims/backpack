@@ -5,8 +5,8 @@
     [clojure.core.async :as async]
     [clojure.core.async.impl.protocols :as proto]
     [io.jesi.backpack.exceptions :as ex]
-    [io.jesi.backpack.macros :refer [if-cljs catch->identity]]
-    [io.jesi.backpack.miscellaneous :refer [cljs-env? env-specific]]))
+    [io.jesi.backpack.macros :refer [catch->identity]]
+    [io.jesi.backpack.miscellaneous :refer [env-specific]]))
 
 (defn closed?
   "returns true if the channel is nil or closed"

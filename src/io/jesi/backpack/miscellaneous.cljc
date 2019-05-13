@@ -54,9 +54,6 @@
   (let [ns (namespace sym)
         ;TODO support other runtimes
         ns (if (cljs-env? env)
-             (->> #"\."
-                  (string/split ns)
-                  (sp/setval sp/FIRST "cljs")
-                  (string/join \.))
+             (str "cljs" (subs ns (string/index-of ns \.)))
              ns)]
     (symbol ns (name sym))))
