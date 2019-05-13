@@ -12,8 +12,10 @@
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh]}
   :dependencies [[thheller/shadow-cljs]
                  [org.clojure/clojure]
-                 [cheshire "5.8.1"]
+                 [org.clojure/core.async]
                  [com.rpl/specter]
+                 [fullcontact/full.async "1.0.0"]
+                 [cheshire "5.8.1"]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.1.0"]]
   ; commented out until https://github.com/pjstadig/humane-test-output/issues/37 is fixed

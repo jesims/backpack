@@ -17,6 +17,7 @@
 (import-vars
   [io.jesi.backpack.collection
    assoc-in
+   concat!
    contains-any?
    dissoc-all
    dissoc-in
@@ -41,6 +42,7 @@
    if-fn
    map-if
    noop
+   p=
    partial-right
    pass
    pass-if]

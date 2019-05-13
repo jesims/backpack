@@ -4,6 +4,8 @@
   {:dev/always true}
   (:require
     [cljs-test-display.core :as ctd]
+    [io.jesi.backpack.async :as async]
+    [io.jesi.backpack.test.reporter :refer [done-chan]]
     [shadow.dom :as dom]
     [shadow.test :as st]
     [shadow.test.env :as env]))
@@ -19,8 +21,11 @@
   (st/run-all-tests (ctd/init! "test-root")))
 
 (defn ^:dev/before-load-async stop [done]
-  ;FIXME determine if async tests are still pending https://github.com/clojure/clojurescript-site/blob/master/content/tools/testing.adoc#detecting-test-completion--success
-  (done))
+  (async/go
+    (println "Waiting for tests to complete...")
+    ;TODO cancel async tests
+    (async/<? done-chan)
+    (done)))
 
 (defn ^:export init []
   (dom/append [:div#test-root])

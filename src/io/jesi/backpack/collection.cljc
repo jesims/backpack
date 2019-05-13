@@ -1,6 +1,7 @@
 (ns io.jesi.backpack.collection
-  (:refer-clojure :exclude [assoc-in])
+  (:refer-clojure :exclude [assoc-in conj!])
   (:require
+    [clojure.core :as clj]
     [io.jesi.backpack.traverse :refer [postwalk]]))
 
 (defn distinct-by [key entities]
@@ -136,13 +137,41 @@
   key and f is a function that will take the old value and any supplied args
   and return the new value, and returns a new structure.
   If the key does not exist, nil is passed as the old value."
-  ([tcol k f]
-   (assoc! tcol k (f (get tcol k))))
-  ([tcol k f x]
-   (assoc! tcol k (f (get tcol k) x)))
-  ([tcol k f x y]
-   (assoc! tcol k (f (get tcol k) x y)))
-  ([tcol k f x y z]
-   (assoc! tcol k (f (get tcol k) x y z)))
-  ([tcol k f x y z & more]
-   (assoc! tcol k (apply f (get tcol k) x y z more))))
+  ([tcoll k f]
+   (assoc! tcoll k (f (get tcoll k))))
+  ([tcoll k f x]
+   (assoc! tcoll k (f (get tcoll k) x)))
+  ([tcoll k f x y]
+   (assoc! tcoll k (f (get tcoll k) x y)))
+  ([tcoll k f x y z]
+   (assoc! tcoll k (f (get tcoll k) x y z)))
+  ([tcoll k f x y z & more]
+   (assoc! tcoll k (apply f (get tcoll k) x y z more))))
+
+;from cljs.core/conj!
+(defn conj!
+  "Adds val to the transient collection, and return tcoll. The 'addition'
+  may happen at different 'places' depending on the concrete type."
+  ([] (transient []))
+  ([tcoll] tcoll)
+  ([tcoll val]
+   (when tcoll
+     (clj/conj! tcoll val)))
+  ([tcoll val & more]
+   (let [ntcoll (conj! tcoll val)]
+     (if more
+       (recur ntcoll (first more) (next more))
+       ntcoll))))
+
+;TODO DRY up. create macro that creates the `& more` overload (could also be used in conj! and dissoc! and disj!)
+(defn concat!
+  "Adds the values to the transient collection, returning tcoll. Concatenates of the elements in the supplied sequences"
+  ([] (transient []))
+  ([tcoll] tcoll)
+  ([tcoll seq]
+   (apply conj! tcoll seq))
+  ([tcoll seq & more]
+   (let [ntcoll (concat! tcoll seq)]
+     (if more
+       (recur ntcoll (first more) (next more))
+       ntcoll))))

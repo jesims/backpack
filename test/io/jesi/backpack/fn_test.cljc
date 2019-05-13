@@ -99,3 +99,19 @@
           (testing "or nil if no else defined"
             (let [f (bp/if-fn even? inc)]
               (is (nil? (f 1))))))))))
+
+(deftest p=-test
+
+  (testing "p="
+
+    (testing "is a function"
+      (is (fn? bp/p=)))
+
+    (testing "is partial ="
+      (let [=1 (partial = 1)]
+        (is (= (=1 1)
+               ((bp/p= 1) 1))))
+
+      (testing "that can take multiple arguments"
+        (is ((bp/p= 1 1) 1))
+        (is (false? ((bp/p= 1 2) 1)))))))
