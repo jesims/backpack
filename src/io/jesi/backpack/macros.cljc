@@ -1,9 +1,9 @@
 (ns io.jesi.backpack.macros
   (:refer-clojure :exclude [when-let])
-  #?(:cljs (:require-macros io.jesi.backpack.macros)))
-
-;XXX DO NOT FORMAT THIS FILE
-;it breaks import-vars
+  #?(:cljs (:require-macros [io.jesi.backpack.macros]))
+  (:require
+    [io.jesi.backpack.fn :refer [noop]]
+    [io.jesi.backpack.miscellaneous :refer [cljs-env?]]))
 
 (defmacro import-vars
   [& imports]
@@ -15,20 +15,34 @@
                      meta (meta (resolve src))
                      arglists (get meta :arglists)
                      doc (get meta :doc "")]]
-           `((def ~name ~doc ~src)
-             (alter-meta! #'~name assoc :arglists '~arglists))))))
+           `(
+              (def ~name ~doc ~src)
+              (alter-meta! #'~name assoc :arglists '~arglists))))))
 
-(defmacro catch->nil [& body]
+(defmacro if-cljs
+  "Return `then` if we are generating cljs code, and `else` for Clojure code"
+  [then else]
+  (if (cljs-env? &env)
+    then
+    else))
+
+(defmacro catch-> [handle & body]
   `(try
      ~@body
-     (catch ~(if (:ns &env) :default `Throwable) ~'e)))
+     (catch ~(if (cljs-env? &env) :default `Throwable) ~'ex
+       (~handle ~'ex))))
+
+(defmacro catch->identity [& body]
+  `(catch-> identity ~@body))
+
+(defmacro catch->nil [& body]
+  `(catch-> noop ~@body))
 
 (defmacro ns-of [f]
   `(-> ~f var meta :ns str))
 
-#?(:clj
-   (defn macro? [sym]
-     (:macro (meta (find-var sym)))))
+#?(:clj (defn macro? [sym]
+          (:macro (meta (find-var sym)))))
 
 (defmacro fn1 [& exprs]
   `(fn [_#] ~@exprs))
@@ -90,3 +104,9 @@
 (defmacro when-not= [test body]
   `(when-not (= ~test ~body)
      ~body))
+
+(defmacro when-debug [body]
+  (if (cljs-env? &env)
+    `(when ~(vary-meta 'js/goog.DEBUG assoc :tag 'boolean)
+       ~body)
+    body))

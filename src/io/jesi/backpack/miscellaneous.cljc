@@ -32,3 +32,10 @@
         updated (apply assoc-in base kvs)]
     (when (not= updated base)
       (reset! atom updated))))
+
+;https://groups.google.com/d/msg/clojurescript/iBY5HaQda4A/w1lAQi9_AwsJ
+(defn cljs-env?
+  "Take the &env from a macro, and tell whether we are expanding into cljs."
+  [env]
+  (boolean (:ns env)))
+

@@ -1,14 +1,14 @@
-;TODO move to async utils library (to avoid core.async and full.async deps)
 (ns io.jesi.backpack.async
   #?(:cljs (:require-macros
-             [full.async]
-             [full.async.env :refer [if-cljs]]
-             [io.jesi.backpack.async :refer [when-open <? go-try]]))
+             [io.jesi.backpack.async :refer [when-open go go-try]]))
   (:require
     [clojure.core.async :as async]
     [clojure.core.async.impl.protocols :as proto]
-    [full.async :as fa]
-    #?(:clj [full.async.env :refer [if-cljs]])))
+    [io.jesi.backpack.exceptions :as ex]
+    [io.jesi.backpack.macros :refer [if-cljs catch->identity]]
+    [io.jesi.backpack.miscellaneous :refer [cljs-env?]]
+    #?(:clj [cljs.core.async.macros])))
+
 
 (defn closed?
   "returns true if the channel is nil or closed"
@@ -39,43 +39,12 @@
   placed in the channel."
   async/chan)
 
-(defmacro >!
-  "puts a val into port. nil values are ignored. Must be called inside a (go ...) block. Will park if no buffer space is available.
-   Returns true unless port is already closed."
-  [port val]
-  `(when (some? ~val)
-     (if-cljs
-       (cljs.core.async/>! ~port ~val)
-       (async/>! ~port ~val))))
-
-(defmacro go-try
-  "Asynchronously executes the body in a go block. Returns a channel which
-  will receive the result of the body when completed or an exception if one
-  is thrown."
-  [& body]
-  `(fa/go-try ~@body))
-
-(defmacro go-retry
-  "Attempts to evaluate a go block and retries it if `should-retry-fn`
-   which is invoked with block's evaluation result evaluates to false.
-   `should-retry-fn` is optional and by default it will simply check if
-   result is of type Throwable (clj) / js/Error (cljs). If the evaluation
-   still fails after given retries, the last failed result will be
-   returned in channel.
-   Parameters:
-   * retries - how many times to retry (default 5 times)
-   * delay - how long to wait in seconds between retries (default 1s)
-   * should-retry-fn - function that is invoked with result of block's
-                       evaluation and should indicate whether to retry
-                       (if it returns true) or not (returns false)"
-  [config & body]
-  `(fa/go-retry ~config ~@body))
-
-(defmacro <?
-  "Same as core.async <! but throws an exception if the channel returns a
-   throwable object. Also will not crash if channel is nil."
-  [ch]
-  `(fa/<? ~ch))
+;TODO make simpler by using a map and generic support of other runtimes
+(defn- env-specific [env fname]
+  (let [ns (if (cljs-env? env)
+             'cljs.core.async
+             'clojure.core.async)]
+    (symbol (str ns) (str fname))))
 
 (defmacro go
   "Asynchronously executes the body, returning immediately to the
@@ -88,9 +57,8 @@
   Returns a channel which will receive the result of the body when
   completed"
   [& body]
-  `(if-cljs
-     (cljs.core.async.macros/go ~@body)
-     (async/go ~@body)))
+  (let [go* (env-specific &env 'go)]
+    `(~go* ~@body)))
 
 (defn close!
   "Closes a channel. The channel will no longer accept any puts (they
@@ -113,3 +81,55 @@
   (when (and (open? chan) (some? val))
     (async/put! chan val)
     chan))
+
+(defmacro go-try
+  "Asynchronously executes the body in a go block. Returns a channel which
+   will receive the result of the body when completed or an exception if one
+   is thrown."
+  [& body]
+  `(go
+     (catch->identity ~@body)))
+
+(defmacro go-retry
+  "Attempts to evaluate a go block and retries it if `should-retry-fn`
+   which is invoked with block's evaluation result evaluates to false.
+   `should-retry-fn` is optional and by default it will simply check if
+   result is an exception. If the evaluation still fails after given
+   retries, the last failed result will be returned in channel.
+   Parameters:
+   * retries - how many times to retry (default 5 times)
+   * delay - how long to wait in seconds between retries (default 1s)
+   * should-retry-fn - function that is invoked with result of block's
+                       evaluation and should indicate whether to retry
+                       (if it returns true) or not (returns false)"
+  [{:keys [exception retries delay should-retry-fn on-error]
+    :or   {retries 5, delay 1, on-error nil}}
+   & body]
+  (let [<!* (env-specific &env '<!)
+        go-loop* (env-specific &env 'go-loop)]
+    `(let [on-error# ~on-error
+           retry?# (or ~should-retry-fn
+                       (fn [res#]
+                         (and (instance? (if-cljs
+                                           js/Error
+                                           (or ~exception Throwable))
+                                res#))))]
+       (~go-loop* [retries# ~retries]
+         (let [res# (catch->identity ~@body)]
+           (if (and (retry?# res#)
+                    (> retries# 0))
+             (do
+               (when on-error#
+                 (on-error# res#))
+               (~<!* (async/timeout (* ~delay 1000)))
+               (recur (dec retries#)))
+             res#))))))
+
+(defmacro <?
+  "Same as core.async <! but throws an exception if the channel returns a
+  throwable object. Also will not crash if channel is nil."
+  [ch]
+  (let [<!* (env-specific &env '<!)]
+    `(ex/throw-if-throwable
+       (when-let [ch# ~ch]
+         (~<!* ch#)))))

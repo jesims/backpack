@@ -11,8 +11,8 @@
   #?(:clj (testing "is a macro"
             (is (macro? `io.jesi.backpack.test.macros/async-go))))
 
-  (testing "expands to a `async` `go` block"
-    (is (is-macro= '(full.async.env/if-cljs
+  (testing "expands to a `cljs.test/async` `go` block"
+    (is (is-macro= '(io.jesi.backpack.macros/if-cljs
                       (cljs.test/async done
                         (io.jesi.backpack.async/go
                           (try

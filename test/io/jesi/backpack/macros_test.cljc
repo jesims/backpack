@@ -2,13 +2,22 @@
   (:refer-clojure :exclude [when-let])
   (:require
     [clojure.string :as string]
-    [clojure.test :refer [deftest testing is]]
+    [clojure.test :refer [deftest testing is use-fixtures]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand condf defconsts]]
+    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand condf defconsts when-debug]]
+    [io.jesi.backpack.test.macros :refer [is=]]
     [io.jesi.backpack.test.util :refer [is-macro=]])
   #?(:clj
      (:import (java.lang ArithmeticException
                          SecurityException))))
+
+(defn- set-debug [v]
+  #?(:cljs (set! js/goog.DEBUG v)))
+
+(use-fixtures :each
+  (fn [f]
+    (f)
+    (set-debug false)))
 
 (defn- throw-ex []
   (throw (ex-info "Error" {})))
@@ -17,15 +26,6 @@
 
   #?(:clj (testing "is a macro"
             (is (bp/macro? `catch->nil))))
-
-  (testing "surrounds with a try catch"
-    (let [ex #?(:clj `Throwable :cljs :default)
-          expected (->> `(try (throw-ex) (catch ~ex e#))
-                        str
-                        (re-find #".+?(?=__)"))
-          actual (str (macroexpand-1 '(io.jesi.backpack.macros/catch->nil (io.jesi.backpack.macros-test/throw-ex))))]
-      (is (some? (seq expected)))
-      (is (string/starts-with? actual expected))))
 
   (testing "returns nil if the body throws an exception"
     (is (nil? (catch->nil (throw-ex))))))
@@ -170,3 +170,25 @@
     (let [val "A_RHINOCEROS_HORN_IS_MADE_OF_HAIR"]
       (is (= val a-rhinoceros-horn-is-made-of-hair))
       (is (= (hash-set val) -all)))))
+
+(deftest when-debug-test
+
+  (testing "when-debug"
+
+    #?(:clj (testing "is a macro"
+              (bp/macro? `when-debug)))
+
+    (testing "expands"
+      #?(:clj  (is (= '(prn "hello")
+                      (macroexpand-1 '(io.jesi.backpack.macros/when-debug (prn "hello")))))
+
+         :cljs (is (= '(clojure.core/when js/goog.DEBUG (prn "hello"))
+                      (macroexpand-1 '(io.jesi.backpack.macros/when-debug (prn "hello")))))))
+
+    (testing "executes the body when debug mode is on"
+      #?(:cljs (do
+                 (set-debug false)
+                 (when-debug
+                   (throw (ex-info "Unexpected exception" {})))
+                 (set-debug true)
+                 (is= 1 (when-debug 1)))))))

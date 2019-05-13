@@ -14,20 +14,6 @@
     (f)
     (set-debug false)))
 
-(deftest when-debug-test
-
-  (testing "when-debug"
-
-    #?(:clj (testing "is a macro"
-              (bp/macro? `spy/when-debug)))
-
-    (testing "expands"
-      #?(:clj  (is (= '(prn "hello")
-                      (macroexpand-1 '(io.jesi.backpack.spy/when-debug (prn "hello")))))
-
-         :cljs (is (= '(clojure.core/when js/goog.DEBUG (prn "hello"))
-                      (macroexpand-1 '(io.jesi.backpack.spy/when-debug (prn "hello")))))))))
-
 (def file #?(:cljs "io.jesi.backpack.spy-test"
              :clj  *file*))
 
@@ -55,7 +41,7 @@
         (set-debug true)
 
         (testing "the specified values"
-          (is (= (str file ":" (set-line 59) " a: 1" \newline)
+          (is (= (str file ":" (set-line 45) " a: 1" \newline)
                  (with-out-str (spy/prn a))))
           (is (= (str file ":" (add-line 2) " a: 1 b: 2" \newline)
                  (with-out-str (spy/prn a b)))))
@@ -93,7 +79,7 @@
 
         (testing "the specified values"
           (is (= (str
-                   file ":" (set-line 98) " a:" \newline
+                   file ":" (set-line 84) " a:" \newline
                    "1" \newline)
                  (with-out-str (spy/pprint a))))
           (is (= (str
@@ -142,7 +128,7 @@
       (spy/with-spy
         (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 146) " a: 1" \newline)
+          (is= (str file ":" (set-line 132) " a: 1" \newline)
                (with-out-str (reset! result (spy/peek a))))
           (is= a @result)
 
@@ -162,7 +148,7 @@
       (spy/with-spy
         (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 166) " a:" \newline "1" \newline)
+          (is= (str file ":" (set-line 152) " a:" \newline "1" \newline)
                (with-out-str (reset! result (spy/ppeek a))))
           (is= a @result)
 
@@ -170,3 +156,4 @@
             (is= (str file " a:" \newline "1" \newline)
                  (with-out-str (reset! result (-> a spy/ppeek inc))))
             (is= (inc a) @result)))))))
+

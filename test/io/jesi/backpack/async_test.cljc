@@ -1,11 +1,10 @@
 (ns io.jesi.backpack.async-test
   (:require
     [clojure.core.async :as core-async]
-    [io.jesi.backpack.test.macros :refer [async-go]]
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack.async :as async]
-    [io.jesi.backpack.macros :refer [shorthand]])
-  #?(:clj (:import (clojure.lang ExceptionInfo))))
+    [io.jesi.backpack.macros :refer [shorthand]]
+    [io.jesi.backpack.test.macros :refer [async-go]]))
 
 (deftest closed?-test
 

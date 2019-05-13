@@ -50,7 +50,8 @@
   [io.jesi.backpack.miscellaneous
    ->uuid
    ->uuid-or-not
-   assoc-changed!]
+   assoc-changed!
+   cljs-env?]
 
   [io.jesi.backpack.number
    infinity
