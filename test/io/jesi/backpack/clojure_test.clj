@@ -1,7 +1,8 @@
 (ns io.jesi.backpack.clojure-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [io.jesi.backpack :as bp])
+    [io.jesi.backpack :as bp]
+    [io.jesi.backpack.test.macros :refer [is=]])
   (:import
     (java.net URI)))
 
@@ -9,8 +10,8 @@
   (testing "Converts URI and strings into URI objects"
     (let [uri "https://www.thefactsite.com/2010/09/300-random-animal-facts.html"
           u (new URI uri)]
-      (is (= u (bp/->uri u)))
-      (is (= u (bp/->uri uri)))
+      (is= u (bp/->uri u))
+      (is= u (bp/->uri uri))
       (is (identical? u (bp/->uri u)))
       (is (uri? (bp/->uri "asdf")))))
 
@@ -32,7 +33,7 @@
     (is (instance? TestType lots-of-yelling)))
 
   (testing "Applies the arguments to the type constructor"
-    (is (= ::tested (.val tested)))
-    (is (= ::and-worked (.val and-worked)))
-    (is (= :LOTS_OF_YELLING (.val lots-of-yelling)))
+    (is= ::tested (.val tested))
+    (is= ::and-worked (.val and-worked))
+    (is= :LOTS_OF_YELLING (.val lots-of-yelling))
     (is (.loud? lots-of-yelling))))

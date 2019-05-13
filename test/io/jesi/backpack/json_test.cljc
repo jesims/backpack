@@ -1,7 +1,8 @@
 (ns io.jesi.backpack.json-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [io.jesi.backpack :as bp]))
+    [io.jesi.backpack :as bp]
+    [io.jesi.backpack.test.macros :refer [is=]]))
 
 (def clj {:base-url "https://"
           :v2       "is better than v1"
@@ -20,8 +21,8 @@
     (is (fn? bp/clj->json)))
 
   (testing "converts Clojure to JSON string"
-    (is (= json
-           (bp/clj->json simple)))))
+    (is= json
+         (bp/clj->json simple))))
 
 (deftest json->clj-test
 
@@ -29,8 +30,8 @@
     (is (fn? bp/json->clj)))
 
   (testing "converts JSON strings to Clojure"
-    (is (= simple
-           (bp/json->clj json))))
+    (is= simple
+         (bp/json->clj json)))
 
   (testing "parses nil and blank"
     (is (nil? (bp/json->clj nil)))
@@ -40,7 +41,7 @@
 
   (testing "parses empty and literal values"
     (let [assert-eq (fn [expected s]
-                      (is (= expected (bp/json->clj s))))]
+                      (is= expected (bp/json->clj s)))]
       (assert-eq {} "{}")
       (assert-eq [] "[]")
       (assert-eq nil "null")
@@ -54,5 +55,5 @@
 
   (testing "Can convert Clojure to JSON and back"
     ;Keyword values are not converted
-    (is (= (update-in clj [:geojson :geojson/type] name)
-           (-> clj bp/clj->json bp/json->clj)))))
+    (is= (update-in clj [:geojson :geojson/type] name)
+         (-> clj bp/clj->json bp/json->clj))))

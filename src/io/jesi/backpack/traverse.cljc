@@ -1,4 +1,6 @@
-(ns io.jesi.backpack.traverse
+;TODO remove since this had been fixed in 1.10
+(ns ^:deprecated io.jesi.backpack.traverse
+  "DEPRECATED: Use Clojure 1.10"
   #?(:cljs
      (:require
        [cljs.core :refer [->MapEntry]])

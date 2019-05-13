@@ -48,9 +48,9 @@
     (when-let [x "Almost half the pigs"
                y "in the world are kept"
                z "by farmers in China."]
-      (is (= "Almost half the pigs" x))
-      (is (= "in the world are kept" y))
-      (is (= "by farmers in China." z))))
+      (is= "Almost half the pigs" x)
+      (is= "in the world are kept" y)
+      (is= "by farmers in China." z)))
 
   (testing "doesn't evaluate when false values"
     (when-let [x true
@@ -97,17 +97,17 @@
    (deftest try*-test
 
      (testing "Doesn't catch if none thrown"
-       (is (= "Not Caught" (throw-for -1))))
+       (is= "Not Caught" (throw-for -1)))
 
      (testing "allows catching multiple exception types"
-       (is (= "Multi" (throw-for 1)))
-       (is (= "Multi" (throw-for 2))))
+       (is= "Multi" (throw-for 1))
+       (is= "Multi" (throw-for 2)))
 
      (testing "allows catching multiple types and single exceptions"
-       (is (= "ArithmeticException" (throw-for 3))))
+       (is= "ArithmeticException" (throw-for 3)))
 
      (testing "allows catching single exceptions"
-       (is (= "Exception" (throw-for 0))))))
+       (is= "Exception" (throw-for 0)))))
 
 (def ^:private shorthand-test-variable "long name is long")
 
@@ -120,12 +120,12 @@
     (let [a 1
           b 2
           c {:cheese false}]
-      (is (= {:a 1} (shorthand a)))
-      (is (= {:b 2} (shorthand b)))
-      (is (= {:a 1 :b 2} (shorthand a b)))
-      (is (= {:c {:cheese false}} (shorthand c)))
-      (is (= {:c {:cheese false} :a 1 :b 2} (shorthand c a b)))
-      (is (= {:a 1 :shorthand-test-variable "long name is long"} (shorthand a shorthand-test-variable))))))
+      (is= {:a 1} (shorthand a))
+      (is= {:b 2} (shorthand b))
+      (is= {:a 1 :b 2} (shorthand a b))
+      (is= {:c {:cheese false}} (shorthand c))
+      (is= {:c {:cheese false} :a 1 :b 2} (shorthand c a b))
+      (is= {:a 1 :shorthand-test-variable "long name is long"} (shorthand a shorthand-test-variable)))))
 
 (deftest condf-test
 
@@ -137,8 +137,8 @@
                map? "map"
                string? "string"
                nil)]
-      (is (= "map" (f {:a 1})))
-      (is (= "string" (f "hi")))
+      (is= "map" (f {:a 1}))
+      (is= "string" (f "hi"))
       (is (nil? (f 1))))))
 
 (deftest defconsts-test
@@ -159,17 +159,17 @@
       'a-snail-can-sleep-for-three-years
       'slugsHaveFourNoses)
     (let [vals ["a_snail_can_sleep_for_three_years" "slugs_have_four_noses"]]
-      (is (= (first vals) a-snail-can-sleep-for-three-years))
-      (is (= (second vals) slugsHaveFourNoses))
-      (is (= (set vals) -all))))
+      (is= (first vals) a-snail-can-sleep-for-three-years)
+      (is= (second vals) slugsHaveFourNoses)
+      (is= (set vals) -all)))
 
   (testing "allows function composition"
     (ns-unmap 'io.jesi.backpack.macros-test '-all)
     (defconsts (comp string/upper-case bp/->snake_case)
       'a-rhinoceros-horn-is-made-of-hair)
     (let [val "A_RHINOCEROS_HORN_IS_MADE_OF_HAIR"]
-      (is (= val a-rhinoceros-horn-is-made-of-hair))
-      (is (= (hash-set val) -all)))))
+      (is= val a-rhinoceros-horn-is-made-of-hair)
+      (is= (hash-set val) -all))))
 
 (deftest when-debug-test
 
@@ -179,11 +179,11 @@
               (bp/macro? `when-debug)))
 
     (testing "expands"
-      #?(:clj  (is (= '(prn "hello")
-                      (macroexpand-1 '(io.jesi.backpack.macros/when-debug (prn "hello")))))
+      #?(:clj  (is= '(prn "hello")
+                    (macroexpand-1 '(io.jesi.backpack.macros/when-debug (prn "hello"))))
 
-         :cljs (is (= '(clojure.core/when js/goog.DEBUG (prn "hello"))
-                      (macroexpand-1 '(io.jesi.backpack.macros/when-debug (prn "hello")))))))
+         :cljs (is= '(clojure.core/when js/goog.DEBUG (prn "hello"))
+                    (macroexpand-1 '(io.jesi.backpack.macros/when-debug (prn "hello"))))))
 
     (testing "executes the body when debug mode is on"
       #?(:cljs (do

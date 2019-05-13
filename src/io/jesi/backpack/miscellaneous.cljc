@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [assoc-in])
   (:require
     [clojure.string :as string]
-    [com.rpl.specter :as sp]
     [io.jesi.backpack.collection :refer [assoc-in]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj

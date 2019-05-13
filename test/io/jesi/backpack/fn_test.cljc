@@ -2,7 +2,8 @@
   (:require
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.random :as random])
+    [io.jesi.backpack.random :as random]
+    [io.jesi.backpack.test.macros :refer [is=]])
   #?(:cljs
      (:require [cljs.core :refer [IDeref]])
      :clj
@@ -20,12 +21,12 @@
 
     (let [identity (fn [& args] args)]
       (testing "returns the provided function if not args"
-        (is (= [1 2 3] ((bp/partial-right identity) 1 2 3))))
+        (is= [1 2 3] ((bp/partial-right identity) 1 2 3)))
 
       (testing "partially applies parameters from the right"
-        (is (= [1 2 3] ((bp/partial-right identity 3) 1 2)))
-        (is (= [1 2 3] ((bp/partial-right identity 2 3) 1)))
-        (is (= [1 2 3] ((bp/partial-right identity 1 2 3))))))))
+        (is= [1 2 3] ((bp/partial-right identity 3) 1 2))
+        (is= [1 2 3] ((bp/partial-right identity 2 3) 1))
+        (is= [1 2 3] ((bp/partial-right identity 1 2 3)))))))
 
 (deftest apply-when-test
   (let [quote "We were running dark, yes?"]
@@ -34,14 +35,14 @@
         (is (nil? (bp/apply-when nil quote))))
 
       (testing "invokes f when it's truthy"
-        (is (= quote (bp/apply-when identity quote)))))))
+        (is= quote (bp/apply-when identity quote))))))
 
 (deftest pass-test
   (testing "pass returns a function"
     (is (fn? (bp/pass +))))
 
   (testing "pass returns the original parameter"
-    (is (= 1 ((bp/pass +) 1)))))
+    (is= 1 ((bp/pass +) 1))))
 
 (deftest pass-if-test
   (testing "pass-if returns a function"
@@ -49,12 +50,12 @@
 
   (testing "pass-if returns the original parameter if the predicate is true"
     (let [inc-odd (bp/pass-if even? inc)]
-      (is (= 2 (inc-odd 1)))
-      (is (= 2 (inc-odd 2))))))
+      (is= 2 (inc-odd 1))
+      (is= 2 (inc-odd 2)))))
 
 (deftest map-if-test
   (testing "map-if only maps if predicate is true"
-    (is (= [2 2 4] (bp/map-if odd? inc [1 2 3])))))
+    (is= [2 2 4] (bp/map-if odd? inc [1 2 3]))))
 
 (deftype Derefable [v]
   IDeref
@@ -65,7 +66,7 @@
 
 (deftest d#-test
   (let [assert-deref #(let [val (random/string)]
-                        (is (= val (bp/d# (% val)))))]
+                        (is= val (bp/d# (% val))))]
 
     (testing "derefs when atom"
       (assert-deref atom))
@@ -91,10 +92,10 @@
       (let [f (bp/if-fn even? inc identity)]
 
         (testing "returning the result of then if true"
-          (is (= 3 (f 2))))
+          (is= 3 (f 2)))
 
         (testing "returning the result of else if false"
-          (is (= 1 (f 1)))
+          (is= 1 (f 1))
 
           (testing "or nil if no else defined"
             (let [f (bp/if-fn even? inc)]
@@ -109,8 +110,8 @@
 
     (testing "is partial ="
       (let [=1 (partial = 1)]
-        (is (= (=1 1)
-               ((bp/p= 1) 1))))
+        (is= (=1 1)
+             ((bp/p= 1) 1)))
 
       (testing "that can take multiple arguments"
         (is ((bp/p= 1 1) 1))

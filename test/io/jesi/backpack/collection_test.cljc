@@ -49,8 +49,8 @@
   (testing "filter-values:"
 
     (testing "filter map values based on a predicate"
-      (is (= {} (bp/filter-values true? {})))
-      (is (= {:a true} (bp/filter-values true? {:a true :b nil}))))))
+      (is= {} (bp/filter-values true? {}))
+      (is= {:a true} (bp/filter-values true? {:a true :b nil})))))
 
 (deftest filter-empty-test
 
@@ -68,20 +68,20 @@
                     :number 1
                     :false  false}
           actual (bp/filter-empty original)]
-      (is (= expected actual)))))
+      (is= expected actual))))
 
 (deftest select-non-nil-keys-test
 
   (testing "select-non-nil-keys: "
 
     (testing "doesn't return keys that don't exist"
-      (is (= {:a 1} (bp/select-non-nil-keys {:a 1} [:a :b :c]))))
+      (is= {:a 1} (bp/select-non-nil-keys {:a 1} [:a :b :c])))
 
     (testing "doesn't return keys with nil values"
-      (is (= {:a 1} (bp/select-non-nil-keys {:a 1 :b nil} [:a :b :c]))))
+      (is= {:a 1} (bp/select-non-nil-keys {:a 1 :b nil} [:a :b :c])))
 
     (testing "preserves true and false values values"
-      (is (= {:a true :b false} (bp/select-non-nil-keys {:a true :b false} [:a :b :c]))))))
+      (is= {:a true :b false} (bp/select-non-nil-keys {:a true :b false} [:a :b :c])))))
 
 (deftest contains-any?-test
   (let [m {:a 1 :b 2 :c 3}
@@ -90,15 +90,15 @@
 
     (testing "Same as contains for one key"
       (let [key :a]
-        (is (= (contains? key) (contains-any? key))))
+        (is= (contains? key) (contains-any? key)))
       (let [key :b]
-        (is (= (contains? key) (contains-any? key))))
+        (is= (contains? key) (contains-any? key)))
       (let [key :c]
-        (is (= (contains? key) (contains-any? key))))
+        (is= (contains? key) (contains-any? key)))
       (let [key :d]
-        (is (= (contains? key) (contains-any? key))))
+        (is= (contains? key) (contains-any? key)))
       (let [key "d"]
-        (is (= (contains? key) (contains-any? key)))))
+        (is= (contains? key) (contains-any? key))))
 
     (testing "Supports multiple keys"
       (is (contains-any? :a))
@@ -111,15 +111,15 @@
           contains? (partial contains? m)
           contains-any? (partial bp/contains-any? m)]
       (let [key :a]
-        (is (= (contains? key) (contains-any? key))))
+        (is= (contains? key) (contains-any? key)))
       (let [key :b]
-        (is (= (contains? key) (contains-any? key))))
+        (is= (contains? key) (contains-any? key)))
       (let [key :c]
-        (is (= (contains? key) (contains-any? key))))
+        (is= (contains? key) (contains-any? key)))
       (let [key :d]
-        (is (= (contains? key) (contains-any? key))))
+        (is= (contains? key) (contains-any? key)))
       (let [key "d"]
-        (is (= (contains? key) (contains-any? key))))))
+        (is= (contains? key) (contains-any? key)))))
 
   (testing "Supports multiple keys"
     (let [contains-any? (partial bp/contains-any? {:a 1 :b 2 :c 3})]
@@ -132,11 +132,11 @@
 
   (testing "Removes multiple keys"
     (let [m {:a 1 :b 2 :c 3}]
-      (is (= {:a 1} (bp/dissoc-all m :b :c)))
-      (is (= {:a 1} (bp/dissoc-all m :b :c :d)))))
+      (is= {:a 1} (bp/dissoc-all m :b :c))
+      (is= {:a 1} (bp/dissoc-all m :b :c :d))))
 
   (testing "Removed nested keys"
-    (is (= {:b {}} (bp/dissoc-all {:a 1 :b {:a 2}} :a)))))
+    (is= {:b {}} (bp/dissoc-all {:a 1 :b {:a 2}} :a))))
 
 (deftest first-some-test
 
@@ -149,8 +149,8 @@
              :fact   "In the wild, usually makes no more than twenty kills a year."
              :name   nil
              :id     id}]
-      (is (= id (bp/first-some m :id :animal :this)))
-      (is (= "Lion" (bp/first-some m :name :missing :animal :id)))))
+      (is= id (bp/first-some m :id :animal :this))
+      (is= "Lion" (bp/first-some m :name :missing :animal :id))))
 
   (testing "Allows using functions"
     (let [fn1 #(:id %)
@@ -159,8 +159,8 @@
           fn4 (constantly "Oh My!")
           m {:animal "Lion"
              :fact   "The female lion does ninety percent of the hunting."}]
-      (is (= false (bp/first-some m fn1 fn2 fn3 fn4)))
-      (is (= "Oh My!" (bp/first-some m fn4 fn3 fn2 fn1))))))
+      (is= false (bp/first-some m fn1 fn2 fn3 fn4))
+      (is= "Oh My!" (bp/first-some m fn4 fn3 fn2 fn1)))))
 
 (deftest filter-nil-keys-test
   (let [m {:id          (rnd/uuid)
@@ -169,7 +169,7 @@
            :age         nil
            :diet        ["plants"]
            :environment []}]
-    (is (= (dissoc m :age) (bp/filter-nil-keys m)))))
+    (is= (dissoc m :age) (bp/filter-nil-keys m))))
 
 (deftest translate-keys-test
 
@@ -180,36 +180,36 @@
     (let [m {:a 1}]
 
       (testing "empty"
-        (is (= m (bp/translate-keys {} m))))
+        (is= m (bp/translate-keys {} m)))
 
       (testing "nil"
-        (is (= m (bp/translate-keys nil m))))))
+        (is= m (bp/translate-keys nil m)))))
 
   (testing "Returns nil if specified map is nil"
-    (is (= nil (bp/translate-keys {:a :b} nil))))
+    (is= nil (bp/translate-keys {:a :b} nil)))
 
   (testing "Returns a empty map if specified map is empty"
-    (is (= {} (bp/translate-keys {:a :b} {}))))
+    (is= {} (bp/translate-keys {:a :b} {})))
 
   (testing "Converts map keys"
-    (is (= {:a 1 :b 2 :new-a 1 :new-b 2}
-           (bp/translate-keys {:new-a :a, :new-b :b} {:a 1 :b 2}))))
+    (is= {:a 1 :b 2 :new-a 1 :new-b 2}
+         (bp/translate-keys {:new-a :a, :new-b :b} {:a 1 :b 2})))
 
   (testing "Retains existing entries"
-    (is (= {:a 1 :b 2 :c nil :d 2}
-           (bp/translate-keys {:b :d} {:a 1 :c nil :d 2}))))
+    (is= {:a 1 :b 2 :c nil :d 2}
+         (bp/translate-keys {:b :d} {:a 1 :c nil :d 2})))
 
   (testing "Replaces existing entries"
-    (is (= {:a 1 :b 1}
-           (bp/translate-keys {:b :a} {:a 1 :b 2}))))
+    (is= {:a 1 :b 1}
+         (bp/translate-keys {:b :a} {:a 1 :b 2})))
 
   (testing "Does not add the new key if the key does not exist"
-    (is (= {:a 1 :b 2}
-           (bp/translate-keys {:c :d} {:a 1 :b 2}))))
+    (is= {:a 1 :b 2}
+         (bp/translate-keys {:c :d} {:a 1 :b 2})))
 
   (testing "Can set multiple keys from a single key"
-    (is (= {:a 1 :b 1 :c 1}
-           (bp/translate-keys {:a :c, :b :c} {:c 1})))))
+    (is= {:a 1 :b 1 :c 1}
+         (bp/translate-keys {:a :c, :b :c} {:c 1}))))
 
 (deftest remove-empty-test
 
@@ -222,15 +222,15 @@
     (is (nil? (bp/remove-empty []))))
 
   (testing "returns simple values"
-    (is (= 1 (bp/remove-empty 1)))
-    (is (= {:a 1} (bp/remove-empty {:a 1})))
-    (is (= " " (bp/remove-empty " "))))
+    (is= 1 (bp/remove-empty 1))
+    (is= {:a 1} (bp/remove-empty {:a 1}))
+    (is= " " (bp/remove-empty " ")))
 
   (testing "removes empty values"
-    (is (= [1]
-           (bp/remove-empty [1 nil "" [] '() #{}])))
-    (is (= {:a 1}
-           (bp/remove-empty {:a 1 :b nil :c "" :d [] :e '() :f #{}}))))
+    (is= [1]
+         (bp/remove-empty [1 nil "" [] '() #{}]))
+    (is= {:a 1}
+         (bp/remove-empty {:a 1 :b nil :c "" :d [] :e '() :f #{}})))
 
   (testing "returns nil when empty"
     (is (nil? (bp/remove-empty {:str ""})))
@@ -238,19 +238,19 @@
 
   (testing "returns the collection without empty values"
     (is (nil? (bp/remove-empty [nil [nil] []])))
-    (is (= {:str "value" :int 123 :vec ["value"]}
-           (bp/remove-empty {:str       "value"
-                             :empty-str ""
-                             :vec       ["value"]
-                             :empty-vec []
-                             :nil-vec   [nil]
-                             :int       123
-                             :nil       nil})))
-    (is (= {:map {:str-vec ["string"]}}
-           (bp/remove-empty {:empty-map {}
-                             :map       {:str-vec ["string"]
-                                         :nil     nil
-                                         :map     [{:empty-str ""}]}})))))
+    (is= {:str "value" :int 123 :vec ["value"]}
+         (bp/remove-empty {:str       "value"
+                           :empty-str ""
+                           :vec       ["value"]
+                           :empty-vec []
+                           :nil-vec   [nil]
+                           :int       123
+                           :nil       nil}))
+    (is= {:map {:str-vec ["string"]}}
+         (bp/remove-empty {:empty-map {}
+                           :map       {:str-vec ["string"]
+                                       :nil     nil
+                                       :map     [{:empty-str ""}]}}))))
 
 (deftest assoc-in-test
   (let [m {}]
@@ -258,25 +258,25 @@
     (testing "assoc-in"
 
       (testing "Same as assoc in"
-        (is (= (assoc-in m [:a] 1)
-               (bp/assoc-in m [:a] 1)))
-        (is (= (assoc-in m [:a :b] 1)
-               (bp/assoc-in m [:a :b] 1))))
+        (is= (assoc-in m [:a] 1)
+             (bp/assoc-in m [:a] 1))
+        (is= (assoc-in m [:a :b] 1)
+             (bp/assoc-in m [:a :b] 1)))
 
       (testing "Takes multiple path value pairs"
-        (is (= {:a 1 :b 2}
-               (bp/assoc-in m
-                 [:a] 1
-                 [:b] 2)))
-        (is (= {:a 1 :b 2}
-               (bp/assoc-in m
-                 :a 1
-                 :b 2)))
-        (is (= {:a {:b 1}
-                :c {:d 2}}
-               (bp/assoc-in m
-                 [:a :b] 1
-                 [:c :d] 2)))))))
+        (is= {:a 1 :b 2}
+             (bp/assoc-in m
+               [:a] 1
+               [:b] 2))
+        (is= {:a 1 :b 2}
+             (bp/assoc-in m
+               :a 1
+               :b 2))
+        (is= {:a {:b 1}
+              :c {:d 2}}
+             (bp/assoc-in m
+               [:a :b] 1
+               [:c :d] 2))))))
 
 
 (deftest trans-reduce-kv-test
@@ -285,9 +285,9 @@
     (let [values (sorted-map :a 1 :b 2 :c 3 :d 4 :e 5)
           reducer (fn [modifier coll _ v]
                     (modifier coll (+ (count coll) v)))]
-      (is (= [1 3 5 7 9]
-             (reduce-kv (partial reducer conj) [] values)
-             (bp/trans-reduce-kv (partial reducer conj!) [] values))))))
+      (is= [1 3 5 7 9]
+           (reduce-kv (partial reducer conj) [] values)
+           (bp/trans-reduce-kv (partial reducer conj!) [] values)))))
 
 (deftest trans-reduce-test
 
@@ -295,33 +295,33 @@
     (let [values [[1] [2] [3]]]
 
       (testing "taking only a function and collection"
-        (is (= [1 [2] [3]]
-               (reduce conj values)
-               (bp/trans-reduce conj! values))))
+        (is= [1 [2] [3]]
+             (reduce conj values)
+             (bp/trans-reduce conj! values)))
 
       (testing "taking a function, initial value and collection"
-        (is (= [[1] [2] [3]]
-               (reduce conj [] values)
-               (bp/trans-reduce conj! [] values)))))))
+        (is= [[1] [2] [3]]
+             (reduce conj [] values)
+             (bp/trans-reduce conj! [] values))))))
 
 (deftest dissoc-in-test
 
   (testing "dissoc-in"
 
     (testing "dissociates paths from a nested map"
-      (is (= {:a 1}
-             (bp/dissoc-in {:a 1 :b 1} [:b])))
-      (is (= {:a {:b 1}}
-             (bp/dissoc-in {:a {:b 1 :c 1}} [:a :c])))
-      (is (= {:a {:b 1}
-              :d {:e 1}}
-             (bp/dissoc-in {:a {:b 1 :c 1}
-                            :d {:e 1
-                                :f 1}
-                            :g 1}
-               [:a :c]
-               [:d :f]
-               [:g]))))
+      (is= {:a 1}
+           (bp/dissoc-in {:a 1 :b 1} [:b]))
+      (is= {:a {:b 1}}
+           (bp/dissoc-in {:a {:b 1 :c 1}} [:a :c]))
+      (is= {:a {:b 1}
+            :d {:e 1}}
+           (bp/dissoc-in {:a {:b 1 :c 1}
+                          :d {:e 1
+                              :f 1}
+                          :g 1}
+             [:a :c]
+             [:d :f]
+             [:g])))
 
     (testing "ignores path if not found"
       (let [m {:a {:b 1}}]
@@ -332,22 +332,22 @@
         (is (identical? m (bp/dissoc-in m [:a :c] [:a :b :c] [:c] [])))))
 
     (testing "removes empty collections along the paths"
-      (is (= {:a 1}
-             (bp/dissoc-in {:a 1 :b {:c 1}} [:b :c])))
-      (is (= {}
-             (bp/dissoc-in {:a {:b 1}} [:a :b]))))))
+      (is= {:a 1}
+           (bp/dissoc-in {:a 1 :b {:c 1}} [:b :c]))
+      (is= {}
+           (bp/dissoc-in {:a {:b 1}} [:a :b])))))
 
 (deftest rename-keys!-test
 
   (testing "rename-keys!"
 
     (testing "renames keys in a transient map"
-      (is (= {:a 1 :b 1 :c 1}
-             (-> {:x 1 :z 1 :c 1} transient (bp/rename-keys! {:x :a :z :b}) persistent!)))
+      (is= {:a 1 :b 1 :c 1}
+           (-> {:x 1 :z 1 :c 1} transient (bp/rename-keys! {:x :a :z :b}) persistent!))
 
       (testing "if the map contains the old key"
-        (is (= {:a 1 :b 1}
-               (-> {:a 1 :b 1} transient (bp/rename-keys! {:x :a :z :b}) persistent!)))))))
+        (is= {:a 1 :b 1}
+             (-> {:a 1 :b 1} transient (bp/rename-keys! {:x :a :z :b}) persistent!))))))
 
 (deftest concat!-test
 
