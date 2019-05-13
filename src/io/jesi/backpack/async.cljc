@@ -6,9 +6,7 @@
     [clojure.core.async.impl.protocols :as proto]
     [io.jesi.backpack.exceptions :as ex]
     [io.jesi.backpack.macros :refer [if-cljs catch->identity]]
-    [io.jesi.backpack.miscellaneous :refer [cljs-env?]]
-    #?(:clj [cljs.core.async.macros])))
-
+    [io.jesi.backpack.miscellaneous :refer [cljs-env? env-specific]]))
 
 (defn closed?
   "returns true if the channel is nil or closed"
@@ -39,13 +37,6 @@
   placed in the channel."
   async/chan)
 
-;TODO make simpler by using a map and generic support of other runtimes
-(defn- env-specific [env fname]
-  (let [ns (if (cljs-env? env)
-             'cljs.core.async
-             'clojure.core.async)]
-    (symbol (str ns) (str fname))))
-
 (defmacro go
   "Asynchronously executes the body, returning immediately to the
   calling thread. Additionally, any visible calls to <!, >! and alt!/alts!
@@ -57,7 +48,7 @@
   Returns a channel which will receive the result of the body when
   completed"
   [& body]
-  (let [go* (env-specific &env 'go)]
+  (let [go* (env-specific &env 'clojure.core.async/go)]
     `(~go* ~@body)))
 
 (defn close!
@@ -90,6 +81,7 @@
   `(go
      (catch->identity ~@body)))
 
+;From https://github.com/fullcontact/full.async
 (defmacro go-retry
   "Attempts to evaluate a go block and retries it if `should-retry-fn`
    which is invoked with block's evaluation result evaluates to false.
@@ -102,34 +94,25 @@
    * should-retry-fn - function that is invoked with result of block's
                        evaluation and should indicate whether to retry
                        (if it returns true) or not (returns false)"
-  [{:keys [exception retries delay should-retry-fn on-error]
-    :or   {retries 5, delay 1, on-error nil}}
+  [{:keys [retries delay should-retry-fn]
+    :or   {retries 5, delay 1, should-retry-fn ex/exception?}}
    & body]
-  (let [<!* (env-specific &env '<!)
-        go-loop* (env-specific &env 'go-loop)]
-    `(let [on-error# ~on-error
-           retry?# (or ~should-retry-fn
-                       (fn [res#]
-                         (and (instance? (if-cljs
-                                           js/Error
-                                           (or ~exception Throwable))
-                                res#))))]
-       (~go-loop* [retries# ~retries]
-         (let [res# (catch->identity ~@body)]
-           (if (and (retry?# res#)
-                    (> retries# 0))
-             (do
-               (when on-error#
-                 (on-error# res#))
-               (~<!* (async/timeout (* ~delay 1000)))
-               (recur (dec retries#)))
-             res#))))))
+  (let [go-loop* (env-specific &env 'clojure.core.async/go-loop)
+        <!* (env-specific &env 'clojure.core.async/<!)]
+    `(~go-loop* [retries# ~retries]
+       (let [res# (catch->identity ~@body)]
+         (if (and (~should-retry-fn res#)
+                  (> retries# 0))
+           (do
+             (~<!* (async/timeout (* ~delay 1000)))
+             (recur (dec retries#)))
+           res#)))))
 
 (defmacro <?
   "Same as core.async <! but throws an exception if the channel returns a
   throwable object. Also will not crash if channel is nil."
   [ch]
-  (let [<!* (env-specific &env '<!)]
+  (let [<!* (env-specific &env 'clojure.core.async/<!)]
     `(ex/throw-if-throwable
        (when-let [ch# ~ch]
          (~<!* ch#)))))

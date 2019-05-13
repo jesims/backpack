@@ -51,7 +51,9 @@
    ->uuid
    ->uuid-or-not
    assoc-changed!
-   cljs-env?]
+   cljs-env?
+   env-specific
+   namespaced?]
 
   [io.jesi.backpack.number
    infinity

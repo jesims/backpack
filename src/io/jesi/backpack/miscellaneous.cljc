@@ -1,6 +1,8 @@
 (ns io.jesi.backpack.miscellaneous
   (:refer-clojure :exclude [assoc-in])
   (:require
+    [clojure.string :as string]
+    [com.rpl.specter :as sp]
     [io.jesi.backpack.collection :refer [assoc-in]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
@@ -14,9 +16,9 @@
 
 (defmethod ->uuid UUID [s] s)
 
-#?(:clj (defmethod ->uuid String [s]
-          (when (uuid-str? s)
-            (UUID/fromString s)))
+#?(:clj  (defmethod ->uuid String [s]
+           (when (uuid-str? s)
+             (UUID/fromString s)))
 
    :cljs (defmethod ->uuid js/String [s]
            (when (uuid-str? s)
@@ -39,3 +41,23 @@
   [env]
   (boolean (:ns env)))
 
+(defn namespaced?
+  "Returns true if the `named` has a namespace"
+  [named]
+  (some? (namespace named)))
+
+(defn env-specific
+  "Takes a macro &env and a namespaced symbol, returning the environment specific symbol"
+  [env sym]
+  {:pre [(symbol? sym)
+         (namespaced? sym)]}
+  (let [ns (namespace sym)
+        ;TODO support other runtimes
+        ns (if (cljs-env? env)
+             (->> #?(:clj  \.
+                     :cljs #"\.")
+                  (string/split ns)
+                  (sp/setval sp/FIRST "cljs")
+                  (string/join \.))
+             ns)]
+    (symbol ns (name sym))))
