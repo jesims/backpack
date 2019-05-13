@@ -2,6 +2,7 @@
   #?(:cljs (:require-macros [io.jesi.backpack.test.macros]))
   (:require
     [clojure.core.async]
+    [clojure.test]
     [io.jesi.backpack.async :as async]
     [io.jesi.backpack.miscellaneous :refer [cljs-env? env-specific]]))
 
