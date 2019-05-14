@@ -65,7 +65,6 @@
 (defn transform-to-env [env quoted-form]
   (sp/transform [list-walker sp/FIRST symbol? namespaced?] (partial env-specific env) quoted-form))
 
-;FIXME does not compile
 (deftest go-retry-test
 
   (testing "go-retry"
