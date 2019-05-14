@@ -45,14 +45,28 @@
   [named]
   (some? (namespace named)))
 
+;TODO support other runtimes
+(defn- runtime [env]
+  (cond
+    (cljs-env? env) :cljs
+    :else :default))
+
+(defn- ->cljs [sym]
+  (let [ns (namespace sym)]
+    (if (and (string/starts-with? ns "clojure.")
+             (not= "clojure.core" ns))
+      (symbol
+        (str "cljs" (subs ns (string/index-of ns \.)))
+        (name sym))
+      sym)))
+
 (defn env-specific
   "Takes a macro &env and a namespaced symbol, returning the environment specific symbol"
   [env sym]
   {:pre [(symbol? sym)
          (namespaced? sym)]}
-  (let [ns (namespace sym)
-        ;TODO support other runtimes
-        ns (if (cljs-env? env)
-             (str "cljs" (subs ns (string/index-of ns \.)))
-             ns)]
-    (symbol ns (name sym))))
+  (condp = (runtime env)
+    :cljs (->cljs sym)
+    :default sym))
+
+;TODO create a macro that take a form and can transform it to the required runtime e.g. cljs ns rename, cljs catch clause

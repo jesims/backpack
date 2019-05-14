@@ -4,7 +4,7 @@
     [clojure.string :as string]
     [clojure.test :refer [deftest testing is use-fixtures]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand condf defconsts when-debug]]
+    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand condf defconsts when-debug catch->identity]]
     [io.jesi.backpack.test.macros :refer [is=]]
     [io.jesi.backpack.test.util :refer [is-macro=]])
   #?(:clj
@@ -192,3 +192,15 @@
                    (throw (ex-info "Unexpected exception" {})))
                  (set-debug true)
                  (is= 1 (when-debug 1)))))))
+
+(deftest catch->identity-test
+
+  (testing "catch->identity"
+
+    #?(:clj (testing "is a macro"
+              (bp/macro? `catch->identity)))
+
+    (testing "returns caught exception"
+      (is= 1 (catch->identity 1))
+      (let [ex (ex-info "Elephants are the only animal that can't jump" {:elephant {:sad? true}})]
+        (is= ex (catch->identity (throw ex)))))))

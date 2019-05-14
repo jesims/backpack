@@ -1,12 +1,11 @@
 (ns io.jesi.backpack.async
-  #?(:cljs (:require-macros
-             [io.jesi.backpack.async :refer [when-open go go-try]]))
+  #?(:cljs (:require-macros [io.jesi.backpack.async :refer [when-open go go-try]]))
   (:require
     [clojure.core.async :as async]
     [clojure.core.async.impl.protocols :as proto]
     [io.jesi.backpack.exceptions :as ex]
     [io.jesi.backpack.macros :refer [catch->identity]]
-    [io.jesi.backpack.miscellaneous :refer [env-specific]]))
+    [io.jesi.backpack.miscellaneous :refer [env-specific cljs-env?]]))
 
 (defn closed?
   "returns true if the channel is nil or closed"
@@ -95,16 +94,19 @@
                        evaluation and should indicate whether to retry
                        (if it returns true) or not (returns false)"
   [{:keys [retries delay should-retry-fn]
-    :or   {retries 5, delay 1, should-retry-fn ex/exception?}}
+    :or   {retries 5, delay 1, should-retry-fn `ex/exception?}}
    & body]
   (let [go-loop* (env-specific &env 'clojure.core.async/go-loop)
-        <!* (env-specific &env 'clojure.core.async/<!)]
+        <!* (env-specific &env 'clojure.core.async/<!)
+        timeout (env-specific &env 'clojure.core.async/timeout)
+        delay (* delay 1000)]
     `(~go-loop* [retries# ~retries]
        (let [res# (catch->identity ~@body)]
          (if (and (~should-retry-fn res#)
                   (pos? retries#))
            (do
-             (~<!* (async/timeout (* ~delay 1000)))
+             (when (pos? ~delay)
+               (~<!* (~timeout ~delay)))
              (recur (dec retries#)))
            res#)))))
 
