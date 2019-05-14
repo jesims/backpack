@@ -4,11 +4,13 @@
     [clojure.test :refer :all]
     [clojure.test :refer :all]
     [clojure.tools.namespace.find :as ns-find]
-    [io.jesi.backpack :as bp]))
+    [io.jesi.backpack]))
 
-(def excluded-ns #{'io.jesi.backpack.macros
+(def excluded-ns #{
                    'io.jesi.backpack.async
+                   'io.jesi.backpack.exceptions
                    'io.jesi.backpack.http
+                   'io.jesi.backpack.macros
                    'io.jesi.backpack.random
                    'io.jesi.backpack.spy
                    'io.jesi.backpack.test.macros

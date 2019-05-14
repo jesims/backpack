@@ -1,17 +1,18 @@
 (ns io.jesi.backpack.http-test
   (:require
     [clojure.test :refer [deftest testing is]]
-    [io.jesi.backpack.http :as http]))
+    [io.jesi.backpack.http :as http]
+    [io.jesi.backpack.test.macros :refer [is=]]))
 
 (deftest ok-test
 
   (testing "sets the status code as 200"
     (is (fn? http/ok))
-    (is (= {:status 200} (http/ok)))
+    (is= {:status 200} (http/ok))
 
     (let [m {:body "The scientific name for a walrus is Odobenus Rosmarus"}]
-      (is (= (assoc m :status 200)
-             (http/ok m))))))
+      (is= (assoc m :status 200)
+           (http/ok m)))))
 
 (deftest ok?-test
 

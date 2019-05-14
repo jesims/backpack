@@ -2,7 +2,8 @@
   (:require
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.random :as rnd]))
+    [io.jesi.backpack.random :as rnd]
+    [io.jesi.backpack.test.macros :refer [is=]]))
 
 (deftest ->uuid-test
   (testing "Converts the first parameter to a UUID object, or returns ::s/invalid"
@@ -15,16 +16,16 @@
 (deftest ->uuid-or-not-test
   (testing "leaves UUIDs as is"
     (let [id (rnd/uuid)]
-      (is (= id (bp/->uuid-or-not id)))
+      (is= id (bp/->uuid-or-not id))
       (is (identical? id (bp/->uuid-or-not id)))))
 
   (testing "converts uuid-str to uuid"
     (let [id (rnd/uuid)]
-      (is (= id (bp/->uuid-or-not (str id))))))
+      (is= id (bp/->uuid-or-not (str id)))))
 
   (testing "doesn't convert non uuid strings"
     (let [id "just a string"]
-      (is (= id (bp/->uuid-or-not id))))))
+      (is= id (bp/->uuid-or-not id)))))
 
 (deftest assoc-changed!-test
   (let [a (atom {})
@@ -34,8 +35,8 @@
                  (reset! a (or % {}))
                  (reset! spy 0))
         is-not-called? #(is (zero? @spy))
-        is-called-once? #(is (= 1 @spy))
-        is-equal? #(is (= % @a))]
+        is-called-once? #(is= 1 @spy)
+        is-equal? #(is= % @a)]
     (add-watch a :watcher (fn [& _] (swap! spy inc)))
 
     (testing "is a function"

@@ -14,20 +14,6 @@
     (f)
     (set-debug false)))
 
-(deftest when-debug-test
-
-  (testing "when-debug"
-
-    #?(:clj (testing "is a macro"
-              (bp/macro? `spy/when-debug)))
-
-    (testing "expands"
-      #?(:clj  (is (= '(prn "hello")
-                      (macroexpand-1 '(io.jesi.backpack.spy/when-debug (prn "hello")))))
-
-         :cljs (is (= '(clojure.core/when js/goog.DEBUG (prn "hello"))
-                      (macroexpand-1 '(io.jesi.backpack.spy/when-debug (prn "hello")))))))))
-
 (def file #?(:cljs "io.jesi.backpack.spy-test"
              :clj  *file*))
 
@@ -55,20 +41,20 @@
         (set-debug true)
 
         (testing "the specified values"
-          (is (= (str file ":" (set-line 59) " a: 1" \newline)
-                 (with-out-str (spy/prn a))))
-          (is (= (str file ":" (add-line 2) " a: 1 b: 2" \newline)
-                 (with-out-str (spy/prn a b)))))
+          (is= (str file ":" (set-line 45) " a: 1" \newline)
+               (with-out-str (spy/prn a)))
+          (is= (str file ":" (add-line 2) " a: 1 b: 2" \newline)
+               (with-out-str (spy/prn a b))))
 
         (testing "literal expressions"
-          (is (= (str file ":" (add-line 4) " 1: 1" \newline)
-                 (with-out-str (spy/prn 1))))
-          (is (= (str file ":" (add-line 2) " a: \"a\"" \newline)
-                 (with-out-str (spy/prn "a"))))
-          (is (= (str file ":" (add-line 2) " (inc 1): 2" \newline)
-                 (with-out-str (spy/prn (inc 1)))))
-          (is (= (str file ":" (add-line 2) " ((comp inc dec) 1): 1" \newline)
-                 (with-out-str (spy/prn ((comp inc dec) 1)))))))
+          (is= (str file ":" (add-line 4) " 1: 1" \newline)
+               (with-out-str (spy/prn 1)))
+          (is= (str file ":" (add-line 2) " a: \"a\"" \newline)
+               (with-out-str (spy/prn "a")))
+          (is= (str file ":" (add-line 2) " (inc 1): 2" \newline)
+               (with-out-str (spy/prn (inc 1))))
+          (is= (str file ":" (add-line 2) " ((comp inc dec) 1): 1" \newline)
+               (with-out-str (spy/prn ((comp inc dec) 1))))))
 
       (testing "nothing when not"
 
@@ -92,33 +78,29 @@
         (set-debug true)
 
         (testing "the specified values"
-          (is (= (str
-                   file ":" (set-line 98) " a:" \newline
-                   "1" \newline)
-                 (with-out-str (spy/pprint a))))
-          (is (= (str
-                   file ":" (add-line 6) " a:" \newline
-                   "1" \newline
-                   file ":" @line " b:" \newline
-                   "2" \newline)
-                 (with-out-str (spy/pprint a b))))
-          (is (= (str
-                   file ":" (add-line 4) " c:" \newline
-                   "{:a 1, :b 2}" \newline)
-                 (with-out-str (spy/pprint c)))))
+          (is= (str file ":" (set-line 83) " a:" \newline
+                 "1" \newline)
+               (with-out-str (spy/pprint a)))
+          (is= (str file ":" (add-line 5) " a:" \newline
+                 "1" \newline
+                 file ":" @line " b:" \newline
+                 "2" \newline)
+               (with-out-str (spy/pprint a b)))
+          (is= (str file ":" (add-line 3) " c:" \newline
+                 "{:a 1, :b 2}" \newline)
+               (with-out-str (spy/pprint c))))
 
         ;cljs messes up the formatting, it adds a space after the :d line
         #?(:clj (testing "literal expressions"
                   (let [val {:a 0 :b 1 :c 2 :d 3 :e 4}]
-                    (is (= (str
-                             (str file ":" (add-line 13) \space)
-                             "{:a val, :b val, :c val, :d val, :e val}:" \newline
-                             "{:a {:a 0, :b 1, :c 2, :d 3, :e 4}," \newline
-                             " :b {:a 0, :b 1, :c 2, :d 3, :e 4}," \newline
-                             " :c {:a 0, :b 1, :c 2, :d 3, :e 4}," \newline
-                             " :d {:a 0, :b 1, :c 2, :d 3, :e 4}," \newline
-                             " :e {:a 0, :b 1, :c 2, :d 3, :e 4}}" \newline)
-                           (with-out-str (spy/pprint {:a val :b val :c val :d val :e val}))))))))
+                    (is= (str file ":" (add-line 12) \space
+                           "{:a val, :b val, :c val, :d val, :e val}:" \newline
+                           "{:a {:a 0, :b 1, :c 2, :d 3, :e 4}," \newline
+                           " :b {:a 0, :b 1, :c 2, :d 3, :e 4}," \newline
+                           " :c {:a 0, :b 1, :c 2, :d 3, :e 4}," \newline
+                           " :d {:a 0, :b 1, :c 2, :d 3, :e 4}," \newline
+                           " :e {:a 0, :b 1, :c 2, :d 3, :e 4}}" \newline)
+                         (with-out-str (spy/pprint {:a val :b val :c val :d val :e val})))))))
 
       (testing "nothing when not"
 
@@ -142,7 +124,7 @@
       (spy/with-spy
         (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 146) " a: 1" \newline)
+          (is= (str file ":" (set-line 128) " a: 1" \newline)
                (with-out-str (reset! result (spy/peek a))))
           (is= a @result)
 
@@ -162,7 +144,7 @@
       (spy/with-spy
         (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 166) " a:" \newline "1" \newline)
+          (is= (str file ":" (set-line 148) " a:" \newline "1" \newline)
                (with-out-str (reset! result (spy/ppeek a))))
           (is= a @result)
 

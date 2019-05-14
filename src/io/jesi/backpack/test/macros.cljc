@@ -1,26 +1,26 @@
 (ns io.jesi.backpack.test.macros
-  #?(:cljs (:require-macros
-             [full.async.env :refer [if-cljs]]
-             [io.jesi.backpack.test.macros]))
+  #?(:cljs (:require-macros [io.jesi.backpack.test.macros]))
   (:require
-    [clojure.test :refer [is]]
+    [clojure.core.async]
+    [clojure.test]
     [io.jesi.backpack.async :as async]
-    #?(:clj [full.async.env :refer [if-cljs]])
-    #?(:cljs [cljs.test])))
+    [io.jesi.backpack.miscellaneous :refer [cljs-env? env-specific]]))
 
 (defmacro async-go [& body]
-  `(if-cljs
-     (cljs.test/async ~'done
+  (if (cljs-env? &env)
+    `(cljs.test/async ~'done
        (async/go
          (try
            ~@body
            (finally
              (~'done)))))
-     (clojure.core.async/<!! (async/go
+    `(clojure.core.async/<!! (async/go
                                ~@body))))
 
 (defmacro is-nil<? [body]
-  `(is (nil? (async/<? ~body))))
+  (let [is* (env-specific &env 'clojure.test/is)]
+    `(~is* (nil? (async/<? ~body)))))
 
 (defmacro is= [& body]
-  `(is (= ~@body)))
+  (let [is* (env-specific &env 'clojure.test/is)]
+    `(~is* (= ~@body))))

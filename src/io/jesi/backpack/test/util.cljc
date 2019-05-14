@@ -3,8 +3,8 @@
   (:require
     [clojure.pprint :as pprint]
     [clojure.string :as string]
-    [clojure.test :refer [is]]
-    [clojure.walk :refer [postwalk]]))
+    [clojure.walk :refer [postwalk]]
+    [io.jesi.backpack.test.macros :refer [is=]]))
 
 (defn pprint-str [object]
   (pprint/write object
@@ -30,4 +30,4 @@
                           form)))
                     pprint-str-code)
         expected (pprint-str-code expected)]
-    (is (= expected actual))))
+    (is= expected actual)))

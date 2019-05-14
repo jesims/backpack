@@ -5,7 +5,7 @@
   #?(:cljs (:require-macros [io.jesi.backpack.spy :refer [prn pprint]]))
   (:require
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [when-not=]]
+    [io.jesi.backpack.macros :refer [when-not= if-cljs when-debug]]
     [io.jesi.backpack.test.util :refer [pprint-str]]))
 
 (def ^:dynamic *enabled* false)
@@ -13,12 +13,6 @@
 (defmacro with-spy [& body]
   `(binding [*enabled* true]
      ~@body))
-
-(defmacro when-debug [body]
-  (if (boolean (:ns &env))                                  ;if compiling JS
-    `(when ~(vary-meta 'js/goog.DEBUG assoc :tag 'boolean)
-       ~body)
-    body))
 
 (defn- -name [form]
   (if (symbol? form)

@@ -1,18 +1,19 @@
 (ns io.jesi.backpack.random-test
   (:require
+    [clojure.string :as string]
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [clojure.string :as string]))
+    [io.jesi.backpack.test.macros :refer [is=]]))
 
 (defn- assert-random [fn]
   (let [actuals (take 1000 (repeatedly fn))]
-    (is (= (count actuals) (count (set actuals))))
+    (is= (count actuals) (count (set actuals)))
     actuals))
 
 (defn- assert-random-size [size fn]
   (let [actual (fn size)]
-    (is (= size (count actual)))))
+    (is= size (count actual))))
 
 (deftest uuid-test
   (testing "UUID's are always random"
@@ -43,10 +44,10 @@
 
 (deftest extended-chars-test
   (testing "Can be converted to upper/lower still equal"
-    (is (= (string/lower-case (string/upper-case extended-chars))
-           (string/lower-case extended-chars)))
-    (is (= (string/upper-case (string/lower-case extended-chars))
-           (string/upper-case extended-chars)))))
+    (is= (string/lower-case (string/upper-case extended-chars))
+         (string/lower-case extended-chars))
+    (is= (string/upper-case (string/lower-case extended-chars))
+         (string/upper-case extended-chars))))
 
 (deftest wkt-linestring-test
   (testing "Contains no scientific notation"
