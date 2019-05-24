@@ -33,6 +33,7 @@
    select-non-nil-keys
    trans-reduce
    trans-reduce-kv
+   transform-keys
    translate-keys
    update!]
 

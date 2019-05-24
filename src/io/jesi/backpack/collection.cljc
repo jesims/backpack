@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [assoc-in conj!])
   (:require
     [clojure.core :as clj]
-    [io.jesi.backpack.traverse :refer [postwalk]]))
+    [io.jesi.backpack.traverse :refer [postwalk]]
+    [clojure.set :as set]))
 
 (defn distinct-by [key entities]
   (apply distinct? (map key entities)))
@@ -43,6 +44,7 @@
   [map]
   (into {} (filter (comp some? val) map)))
 
+;TODO isn't this the same at set/rename-keys ?
 (defn translate-keys
   "Updates map with the keys from kmap"
   [kmap map]
@@ -175,3 +177,9 @@
      (if more
        (recur ntcoll (first more) (next more))
        ntcoll))))
+
+; Came from camel-snake-kebab
+(defn transform-keys [f coll]
+  "Recursively transforms all map keys in coll with f"
+  (letfn [(transform [[k v]] [(f k) v])]
+    (postwalk (fn [x] (if (map? x) (into {} (map transform x)) x)) coll)))
