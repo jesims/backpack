@@ -4,14 +4,8 @@
     [clojure.string :as string]
     [clojure.walk :refer [postwalk]]
     [goog.object :as gobj]
-    [io.jesi.backpack.collection :refer [trans-reduce]]
+    [io.jesi.backpack.collection :refer [trans-reduce transform-keys]]
     [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]]))
-
-; Came from camel-snake-kebab
-(defn transform-keys [t coll]
-  "Recursively transforms all map keys in coll with t."
-  (letfn [(transform [[k v]] [(t k) v])]
-    (postwalk (fn [x] (if (map? x) (into {} (map transform x)) x)) coll)))
 
 (extend-type UUID
   IEncodeJS
