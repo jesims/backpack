@@ -10,7 +10,7 @@
 
 (def ^:dynamic *enabled* false)
 
-(defmacro with-spy [& body]
+(defmacro enabled [& body]
   `(binding [*enabled* true]
      ~@body))
 

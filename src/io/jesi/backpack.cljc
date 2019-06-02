@@ -80,13 +80,6 @@
    true-string?
    uuid-str?]
 
-  [io.jesi.backpack.traverse
-   walk
-   prewalk
-   postwalk
-   prewalk-demo
-   postwalk-demo]
-
   [io.jesi.backpack.json
    clj->json
    json->clj])
