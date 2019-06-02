@@ -37,7 +37,7 @@
               (bp/macro? `spy/prn)))
 
     (testing "prns"
-      (spy/with-spy
+      (spy/enabled
         (set-debug true)
 
         (testing "the specified values"
@@ -74,7 +74,7 @@
               (bp/macro? `spy/pprint)))
 
     (testing "pprints"
-      (spy/with-spy
+      (spy/enabled
         (set-debug true)
 
         (testing "the specified values"
@@ -121,7 +121,7 @@
               (bp/macro? `spy/peek)))
 
     (testing "prns (using spy/prn) and return the passed in value"
-      (spy/with-spy
+      (spy/enabled
         (set-debug true)
         (let [result (atom nil)]
           (is= (str file ":" (set-line 128) " a: 1" \newline)
@@ -141,7 +141,7 @@
               (bp/macro? `spy/ppeek)))
 
     (testing "pretty prints (using spy/pprint) and return the passed in value"
-      (spy/with-spy
+      (spy/enabled
         (set-debug true)
         (let [result (atom nil)]
           (is= (str file ":" (set-line 148) " a:" \newline "1" \newline)
