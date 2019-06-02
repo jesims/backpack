@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [assoc-in conj!])
   (:require
     [clojure.core :as clj]
-    [io.jesi.backpack.traverse :refer [postwalk]]))
+    [clojure.walk :refer [postwalk]]))
 
 (defn distinct-by [key entities]
   (apply distinct? (map key entities)))
