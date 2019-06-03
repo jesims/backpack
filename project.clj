@@ -11,7 +11,7 @@
   :parent-project {:coords  [io.jesi/parent "0.0.18"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh]}
   :dependencies [[thheller/shadow-cljs :scope "provided"]
-                 [org.clojure/clojure "1.10.0"]
+                 [org.clojure/clojure]
                  [org.clojure/core.async]
                  [com.rpl/specter]
                  [cheshire "5.8.1"]
