@@ -9,7 +9,6 @@
     [io.jesi.backpack.number]
     [io.jesi.backpack.specter]
     [io.jesi.backpack.string]
-    [io.jesi.backpack.traverse]
     #?(:cljs [io.jesi.backpack.clojurescript]))
   #?(:clj
      (:require [io.jesi.backpack.clojure])))
@@ -62,8 +61,7 @@
 
   [io.jesi.backpack.specter
    map-walker
-   map-key-walker
-   no-empty-values]
+   map-key-walker]
 
   [io.jesi.backpack.string
    ->camelCase
@@ -79,13 +77,6 @@
    suffix
    true-string?
    uuid-str?]
-
-  [io.jesi.backpack.traverse
-   walk
-   prewalk
-   postwalk
-   prewalk-demo
-   postwalk-demo]
 
   [io.jesi.backpack.json
    clj->json

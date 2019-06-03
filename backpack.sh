@@ -32,9 +32,8 @@ deps () {
 ## Generate api documentation
 docs () {
 	echo_message 'Generating API documentation'
-	# commented out until https://github.com/weavejester/codox/issues/166 is fixed
-#	lein codox
-#	abort_on_error
+	lein codox
+	abort_on_error
 }
 
 ## stop:

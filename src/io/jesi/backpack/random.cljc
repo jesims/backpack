@@ -12,18 +12,7 @@
        [goog.string :refer [format]]
        [goog.string.format]))
   #?(:clj
-     (:import (java.util UUID)))
-  #?(:clj
-     (:gen-class
-       :name io.jesi.backpack.Random
-       :prefix ""
-       :methods [#^{:static true} [alphaNumeric [] String]
-                 #^{:static true} [alphaNumeric [int] String]
-                 #^{:static true} [extendedChars [] String]
-                 #^{:static true} [string [] String]
-                 #^{:static true} [string [int] String]
-                 #^{:static true} [wktLinestring [] String]
-                 #^{:static true} [wktLinestring [int int] String]])))
+     (:import (java.util UUID))))
 
 (defn uuid
   "Generates a random UUID"
@@ -44,7 +33,7 @@
        (apply str)))
 
 ;Refer: https://en.wikipedia.org/wiki/List_of_Unicode_characters and https://clojure.org/reference/reader#_character
-(def ^:private extended-chars
+(def extended-chars
   (->>
     (concat
       (range 0 33)                                          ;Exclude c0 control characters
@@ -75,19 +64,6 @@
   ([size]
    (gen-str basic-chars size)))
 
-(defn alphaNumeric
-  "Generates a random string alpha-numeric characters [A-Za-z0-9] (24 character length default)
-
-  Note: Needed for gen-class java method (as hyphenated names are not permitted)
-  "
-  ([] (alpha-numeric 24))
-  ([size] (alpha-numeric size)))
-
-(defn extendedChars
-  "Returns all characters used in random string generation"
-  []
-  extended-chars)
-
 (defn- remove-exponential-chance [v]
   (if (< -0.1 v 0.1) (+ 0.2 v) v))
 
@@ -113,8 +89,3 @@
      (->> (repeatedly size lnglat)
           (map (comp (partial string/join " ") #(mapv fmt %)))
           (string/join ",")))))
-
-(defn wktLinestring
-  "Generates a random wkt Linestring (with default length between 2 and 10000)"
-  ([] (wkt-linestring))
-  ([min max] (wkt-linestring min max)))

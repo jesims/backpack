@@ -13,7 +13,3 @@
      (sp/if-path [sp/FIRST (partial in? keys)]
        sp/LAST
        [sp/LAST self])]))
-
-(def ^:deprecated no-empty-values
-  "DEPRECATED: use collections/remove-empty"
-  remove-empty)
