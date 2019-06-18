@@ -3,6 +3,7 @@
   (:require
     [clojure.string :as string]
     [io.jesi.backpack.collection :refer [assoc-in]]
+    [io.jesi.backpack.fn :refer [call]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
      (:import (java.util UUID))))
@@ -70,3 +71,12 @@
     :default sym))
 
 ;TODO create a macro that take a form and can transform it to the required runtime e.g. cljs ns rename, cljs catch clause
+
+(defn collify
+  "Puts value `v` in a vector if it is not a collection. Returns `nil` if no value"
+  ([] nil)
+  ([v]
+   (condp call v
+     nil? nil
+     coll? v
+     [v])))

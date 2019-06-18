@@ -105,8 +105,8 @@
            (if (and (~should-retry-fn res#)
                     (pos? retries#))
              (do
-               (when (pos? ~delay#)
-                 (~<!* (~timeout ~delay#)))
+               (when (pos? delay#)
+                 (~<!* (~timeout delay#)))
                (recur (dec retries#)))
              res#))))))
 

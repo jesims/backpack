@@ -1,5 +1,6 @@
 (ns io.jesi.backpack.fn-test
   (:require
+    [clojure.string :as str]
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as random]
@@ -116,3 +117,18 @@
       (testing "that can take multiple arguments"
         (is ((bp/p= 1 1) 1))
         (is (false? ((bp/p= 1 2) 1)))))))
+
+(deftest compr-test
+
+  (testing "compr"
+
+    (testing "composes functions left to right (the opposite of comp)"
+      (is= "2" ((bp/compr inc str) 1))
+      (is= ["aaa"] ((bp/compr str/trim str/lower-case vector) " AAA ")))
+
+    (testing "returns identity for no args"
+      (is= identity (bp/compr)))
+
+    (testing "returns same function if one arg"
+      (let [f (constantly "Kangaroos can't fart")]
+        (is= f (bp/compr f))))))

@@ -47,19 +47,19 @@ _unit-test () {
 	refresh=$1
 	clean
 	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
-	if [ "${refresh}" = true ];then
-		lein auto test ${@:2}
+	if [[ "${refresh}" = true ]];then
+		lein test-refresh ${@:2}
 	else
 		lein test
 	fi
 	abort_on_error 'Clojure tests failed'
 }
 
-## unit-test:
+## test:
 ## args: [-r]
 ## Runs the Clojure unit tests
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates
-unit-test () {
+test () {
 	case $1 in
 		-r)
 			_unit-test true ${@:2};;
@@ -98,7 +98,7 @@ unit-test-cljs-refresh () {
 	shadow-cljs watch karma
 }
 
-## unit-test-cljs:
+## test-cljs:
 ## args: [-k|-b|-n|-r] [test-ns-regex]
 ## Runs the ClojureScript unit tests
 ## [-k] Watches and compiles tests for execution with karma (Default)
@@ -106,7 +106,7 @@ unit-test-cljs-refresh () {
 ## [-n] Executes the tests targeting Node.js
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates with karma
 ## [test-ns-regex] Watches tests and source files for changes, and subsequently re-evaluates
-unit-test-cljs () {
+test-cljs () {
 	export TEST_NS_REGEXP=${2:-'-test$'}
 	case $1 in
 		-r)
@@ -115,8 +115,6 @@ unit-test-cljs () {
 			unit-test-browser-refresh;;
 		-n)
 			unit-test-node;;
-		-k)
-			unit-test-karma;;
 		*)
 			unit-test-karma;;
 	esac
