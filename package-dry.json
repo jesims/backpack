@@ -1,25 +1,34 @@
 {
   "name": "backpack",
-  "description": "Clojure(Script) cross-project utilities",
-  "license": "EPL-1.0",
-  "homepage": "https://github.com/jesims/backpack#readme",
-  "bugs": {
-    "url": "https://github.com/jesims/backpack/issues"
+  "version": "0.0.7",
+  "dependencyManagement": {
+    "karma": "^4.0.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-cljs-test": "0.1.0",
+    "standard": "^12.0.1"
   },
+  "description": "Clojure(Script) cross-project utilities",
+  "homepage": "https://github.com/jesims/backpack#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jesims/backpack.git"
+  },
+  "author": "JESI",
+  "license": "EPL-1.0",
+  "bugs": {
+    "url": "https://github.com/jesims/backpack/issues"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1",
+    "karma": "^4.0.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-cljs-test": "0.1.0",
+    "karma-clear-screen-reporter": "^1.0.0"
   },
   "dry": {
     "extends": "@io.jesi/parent/package-dry.json",
     "dependencies": {
       "@io.jesi/parent": "0.0.7"
     }
-  },
-  "devDependencies": {
-    "karma": "managed",
-    "karma-chrome-launcher": "managed",
-    "karma-cljs-test": "managed",
-    "standard": "managed"
   }
 }
