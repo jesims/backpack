@@ -98,17 +98,17 @@
    & body]
   (let [go-loop* (env-specific &env 'clojure.core.async/go-loop)
         <!* (env-specific &env 'clojure.core.async/<!)
-        timeout (env-specific &env 'clojure.core.async/timeout)
-        delay (* delay 1000)]
-    `(~go-loop* [retries# ~retries]
-       (let [res# (catch->identity ~@body)]
-         (if (and (~should-retry-fn res#)
-                  (pos? retries#))
-           (do
-             (when (pos? ~delay)
-               (~<!* (~timeout ~delay)))
-             (recur (dec retries#)))
-           res#)))))
+        timeout (env-specific &env 'clojure.core.async/timeout)]
+    `(let [delay# (* ~delay 1000)]
+       (~go-loop* [retries# ~retries]
+         (let [res# (catch->identity ~@body)]
+           (if (and (~should-retry-fn res#)
+                    (pos? retries#))
+             (do
+               (when (pos? ~delay#)
+                 (~<!* (~timeout ~delay#)))
+               (recur (dec retries#)))
+             res#))))))
 
 ;From https://github.com/fullcontact/full.async
 (defmacro <?
