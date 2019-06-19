@@ -13,11 +13,11 @@
     "url": "https://github.com/jesims/backpack/issues"
   },
   "devDependencies": {
-    "standard": "^12.0.1",
     "karma": "managed",
     "karma-chrome-launcher": "managed",
+    "karma-clear-screen-reporter": "^1.0.0",
     "karma-cljs-test": "managed",
-    "karma-clear-screen-reporter": "^1.0.0"
+    "standard": "managed"
   },
   "dry": {
     "extends": "@io.jesi/parent/package-dry.json",
