@@ -17,10 +17,12 @@
                  [cheshire "5.8.1"]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.1.0"]]
-  :profiles {:test    {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
-             :dev     {:dependencies [];commented out until https://github.com/pjstadig/humane-test-output/issues/37 is fixed
-                                      ;[pjstadig/humane-test-output "0.9.0"]]
-                       :plugins      [[lein-codox "0.10.7"]]}}
+  :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
+             :dev  {;commented out until https://github.com/pjstadig/humane-test-output/issues/37 is fixed
+                    ;:dependencies [[pjstadig/humane-test-output "0.9.0"]]
+                    :plugins [[lein-codox "0.10.7"]
+                              [lein-auto "0.1.3"]
+                              [lein-shell "0.5.0"]]}}
   :clean-targets ^{:protect false} ["target"]
   :release-tasks [["deploy"]]
   ;FIXME generate docs for cljc, clj and cljs
@@ -28,4 +30,5 @@
           :namespaces  [io.jesi.backpack
                         io.jesi.backpack.http
                         io.jesi.backpack.macros
-                        io.jesi.backpack.random]})
+                        io.jesi.backpack.random]}
+  :aliases {"test-refresh" ["auto" "do" ["shell" "clear"] "test"]})

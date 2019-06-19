@@ -62,3 +62,19 @@
   p=
   "Partial ="
   #(apply partial = %&))
+
+(defn compr
+  "Composes functions left to right, the opposite of `comp`"
+  ([] identity)
+  ([f] f)
+  ([f g]
+    ;TODO optimize by not always using apply
+   (fn [& args]
+     (g (apply f args))))
+  ([f g & more]
+   (reduce compr (list* f g more))))
+
+(defn call
+  "Calls the function `f` with a value `v`"
+  [f v]
+  (f v))

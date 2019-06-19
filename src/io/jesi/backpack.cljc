@@ -38,6 +38,8 @@
 
   [io.jesi.backpack.fn
    apply-when
+   call
+   compr
    d#
    if-fn
    map-if
@@ -52,6 +54,7 @@
    ->uuid-or-not
    assoc-changed!
    cljs-env?
+   collify
    env-specific
    namespaced?]
 

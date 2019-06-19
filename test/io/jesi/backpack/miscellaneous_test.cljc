@@ -120,3 +120,18 @@
                     :something {:else "value"}
                     :meaning   {:of {:life 42}}})
         (is-called-once?)))))
+
+(deftest collify-test
+
+  (testing "collify"
+
+    (testing "wraps a value in a vector if it's not a collection"
+      (is= [1] (bp/collify 1))
+      (is= [1] (bp/collify [1]))
+      (is= [1 2] (bp/collify [1 2]))
+      (let [fact "Giraffes have no vocal chords"]
+        (is= [fact] (bp/collify fact))))
+
+    (testing "returns nil for nil"
+      (is (nil? (bp/collify)))
+      (is (nil? (bp/collify nil))))))
