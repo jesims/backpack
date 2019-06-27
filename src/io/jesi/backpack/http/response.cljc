@@ -1,6 +1,8 @@
 (ns io.jesi.backpack.http.response
-  #?(:cljs
-     (:require-macros [io.jesi.backpack.http.response :refer [def-status def-status-range]])))
+  (:require
+    [io.jesi.backpack.http.codes :as codes])
+  #?(:cljs (:require-macros
+             [io.jesi.backpack.http.response :refer [def-status def-status-range]])))
 
 (defmacro def-status [status-code quoted-sym]
   (let [sym (last quoted-sym)
@@ -21,7 +23,7 @@
          (boolean (and status#
                        (<= ~start status# ~end)))))))
 
-(load-file "src/io/jesi/backpack/http/codes.clj")
+(codes/intern def-status)
 
 (def-status-range 200 299 'success)
 (def-status-range 300 399 'redirection)

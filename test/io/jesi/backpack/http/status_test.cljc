@@ -7,4 +7,7 @@
 (deftest ok-test
 
   (testing "Returns a 200 status code"
-    (is= 200 status/ok)))
+    (is= 200 status/ok))
+
+  (testing "Returns a 418 status code"
+    (is= 418 status/im-a-teapot)))
