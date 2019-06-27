@@ -119,3 +119,11 @@
     `(ex/throw-if-throwable
        (when-let [ch# ~ch]
          (~<!* ch#)))))
+
+(defmacro go-call
+  "Takes a function and a channel, and returns a channel which contains the
+  value produced by applying f result of the given chanel."
+  [f chan]
+  `(go-try
+     (let [res# (<? ~chan)]
+       (~f res#))))

@@ -1,15 +1,16 @@
 (ns io.jesi.backpack.async-test
   (:require
     [clojure.core.async :as core-async]
+    [clojure.core.async :refer [<!]]
     [clojure.test :refer [deftest testing is]]
     [com.rpl.specter :as sp]
-    [clojure.core.async :refer [<!]]
     [io.jesi.backpack.async :as async]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.miscellaneous :refer [env-specific namespaced?]]
     [io.jesi.backpack.test.macros :refer [async-go is=]]
     [io.jesi.backpack.test.util :refer [is-macro=]]
-    #?(:clj [io.jesi.backpack.macros :refer [macro?]])))
+    #?(:clj [io.jesi.backpack.macros :refer [macro?]])
+    [clojure.string :as string]))
 
 (deftest closed?-test
 
@@ -138,3 +139,26 @@
                     (throw (ex))))
               (let [run-time (- (now) start)]
                 (is (<= delay (/ run-time 1000)))))))))))
+
+(deftest go-call-test
+
+  (testing "go-call"
+
+    #?(:clj (testing "is a macro"
+              (is (macro? `async/go-retry))))
+
+    (testing "returns a channel with the result of passing input through f"
+      (async-go
+        (let [quote "Lemurs can tell a 1% alcohol solution from a 5% alcohol solution and prefer the solution that contains more alcohol"
+              input-chan (async/go quote)
+              actual (async/go-call string/capitalize input-chan)]
+          (is (true? (async/open? actual)))
+          (is (= (string/capitalize quote)
+                 (async/<? actual)))
+          (is (true? (async/closed? actual))))))
+
+    (testing "throws if exception throw in input-channel"
+      (async-go
+        (let [input-chan (async/go (throw (ex)))
+              actual (async/go-call string/capitalize input-chan)]
+          (is (thrown? ex-type (async/<? actual))))))))
