@@ -15,6 +15,8 @@
        (defn ~status-f-name? [response#]
          (= ~status-code (:status response#))))))
 
+(codes/intern def-status)
+
 (defmacro def-status-range [start end quoted-sym]
   (let [sym (last quoted-sym)
         status-f-name? (symbol (str sym \?))]
@@ -22,8 +24,6 @@
        (let [status# (:status response#)]
          (boolean (and status#
                        (<= ~start status# ~end)))))))
-
-(codes/intern def-status)
 
 (def-status-range 200 299 'success)
 (def-status-range 300 399 'redirection)
