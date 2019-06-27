@@ -59,7 +59,8 @@
 (defn ex []
   (ex-info "Exceptional" {}))
 
-(def ^:const ex-type #?(:clj Exception :cljs js/Error))
+(def ^:const ex-type #?(:clj  Exception
+                        :cljs js/Error))
 
 (def list-walker (sp/recursive-path [] l (sp/if-path list? (sp/continue-then-stay sp/ALL l))))
 
@@ -141,26 +142,21 @@
 
 (deftest go-call-test
 
-  (testing "go-call"
+  (async-go
+    (testing "go-call"
 
-    #?(:clj (testing "is a macro"
-              (is (macro? `async/go-retry))))
+      #?(:clj (testing "is a macro"
+                (is (macro? `async/go-retry))))
 
-    (testing "returns a channel with the result of passing input through f"
-      (async-go
+      (testing "returns a channel with the result of passing input through f"
         (let [quote "Lemurs can tell a 1% alcohol solution from a 5% alcohol solution and prefer the solution that contains more alcohol"
               input-chan (async/go quote)
               actual (async/go-call string/capitalize input-chan)]
           (is (true? (async/open? actual)))
           (is (= (string/capitalize quote)
                  (async/<? actual)))
-          (is (true? (async/closed? actual))))))
+          (is (true? (async/closed? actual)))))
 
-    (testing "throws if exception throw in input-channel"
-      (async-go
-        (is (thrown? ex-type (async/go-call string/capitalize (async/go (throw (ex)))))))
-
-      (testing "can be caught and returned go-try"
-        (async-go
-          (let [actual (async/go-call string/capitalize (async/go-try (throw (ex))))]
-            (is (thrown? ex-type (async/<? actual)))))))))
+      (testing "throws if exception throw in input-channel"
+        (is (instance? ex-type
+              (<! (async/go-call string/capitalize (async/go-try (ex))))))))))

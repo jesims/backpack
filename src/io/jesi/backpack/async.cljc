@@ -125,5 +125,4 @@
   value produced by applying f result of the given chanel."
   [f chan]
   `(go-try
-     (let [res# (<? ~chan)]
-       (~f res#))))
+     (~f (<? ~chan))))
