@@ -158,6 +158,9 @@
 
     (testing "throws if exception throw in input-channel"
       (async-go
-        (let [input-chan (async/go (throw (ex)))
-              actual (async/go-call string/capitalize input-chan)]
-          (is (thrown? ex-type (async/<? actual))))))))
+        (is (thrown? ex-type (async/go-call string/capitalize (async/go (throw (ex)))))))
+
+      (testing "can be caught and returned go-try"
+        (async-go
+          (let [actual (async/go-call string/capitalize (async/go-try (throw (ex))))]
+            (is (thrown? ex-type (async/<? actual)))))))))
