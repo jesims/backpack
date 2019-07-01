@@ -34,7 +34,8 @@
    trans-reduce-kv
    transform-keys
    translate-keys
-   update!]
+   update!
+   update-some]
 
   [io.jesi.backpack.fn
    apply-when

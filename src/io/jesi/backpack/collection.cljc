@@ -182,3 +182,12 @@
   "Recursively transforms all map keys in coll with f"
   (letfn [(transform [[k v]] [(f k) v])]
     (postwalk (fn [x] (if (map? x) (into {} (map transform x)) x)) coll)))
+
+(defn update-some
+  "Updates a key in a map with a function, only if the key is present and the result of `f` is not nil."
+  [m k f & args]
+  (if-let [v (get m k)]
+    (if-let [new-v (apply f v args)]
+      (assoc m k new-v)
+      (dissoc m k))
+    m))
