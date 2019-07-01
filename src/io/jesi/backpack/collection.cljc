@@ -186,8 +186,9 @@
 (defn update-some
   "Updates a key in a map with a function, only if the key is present and the result of `f` is not nil."
   [m k f & args]
-  (if-let [v (get m k)]
-    (if-let [new-v (apply f v args)]
-      (assoc m k new-v)
-      (dissoc m k))
-    m))
+  (let [v (get m k)]
+    (if (some? v)
+      (if-let [new-v (apply f v args)]
+        (assoc m k new-v)
+        (dissoc m k))
+      m)))

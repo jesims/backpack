@@ -365,10 +365,15 @@
                (concat [1] [2] [3])))))))
 
 (deftest update-some-test
-  (let [m {:a 1 :b 2 :c nil}]
+  (let [m {:a 1 :b 2 :c nil :d false}]
 
     (testing "if the value is already nil, nothing happens"
       (is (identical? m (bp/update-some m :c inc))))
+
+    (testing "if the value can be false"
+      (is (some? false))
+      (is (= (assoc m :d true)
+             (bp/update-some m :d not))))
 
     (testing "Updates value at a specified key in the map"
       (is (= (assoc m :b 3)
