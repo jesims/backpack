@@ -16,7 +16,9 @@
                  [com.rpl/specter]
                  [cheshire "5.8.1"]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
-                 [medley "1.1.0"]]
+                 [medley "1.1.0"]
+                 [org.clojure/core.cache "0.7.2"]
+                 [org.clojars.mmb90/cljs-cache "0.1.4"]]
   :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
              :dev  {;commented out until https://github.com/pjstadig/humane-test-output/issues/37 is fixed
                     ;:dependencies [[pjstadig/humane-test-output "0.9.0"]]
