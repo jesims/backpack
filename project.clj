@@ -7,8 +7,8 @@
             :url          "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo
             :comments     "same as Clojure"}
-  :plugins [[lein-parent "0.3.5"]]
-  :parent-project {:coords  [io.jesi/parent "0.0.18"]
+  :plugins [[lein-parent "0.3.6"]]
+  :parent-project {:coords  [io.jesi/parent "0.0.21"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh]}
   :dependencies [[thheller/shadow-cljs :scope "provided"]
                  [org.clojure/clojure]
