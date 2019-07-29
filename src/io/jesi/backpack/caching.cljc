@@ -1,4 +1,4 @@
-(ns io.jesi.backpack.cache
+(ns io.jesi.backpack.caching
   (:require
     #?(:clj  [clojure.core.cache :as cache]
        :cljs [cljs.cache :as cache])))

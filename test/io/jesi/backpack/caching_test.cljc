@@ -1,19 +1,20 @@
-(ns io.jesi.backpack.cache-test
+(ns io.jesi.backpack.caching-test
   (:require
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
+    [io.jesi.backpack.caching]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.backpack.test.macros :refer [is= async-go]]))
 
-(def ^:private caches #'io.jesi.backpack.cache/caches)
+(def ^:private caches
+  #?(:cljs io.jesi.backpack.caching/caches
+     :clj  (deref #'io.jesi.backpack.caching/caches)))
 
 (deftest cache-test
 
   (testing "cache"
-
-    (reset! @caches nil)
-
+    (reset! caches nil)
     (let [captor (atom nil)
           ttl 100
           threshold 3
@@ -21,7 +22,7 @@
           cached-test-fn (bp/cache {:init-fn #(bp/init-cache (shorthand ttl threshold))} test-fn)]
 
       (testing "the test-fn has no caches on creation"
-        (is (nil? (get @caches test-fn))))
+        (is (nil? (get caches test-fn))))
 
       (testing "first invocation is stored in the cache and result returned"
         (is (fn? cached-test-fn))
@@ -66,12 +67,12 @@
                          (f))))))))))
 
 (deftest keyed-cache-test
-  (reset! @caches nil)
+  (reset! caches nil)
   (let [key :test-key
         identifier (rnd/string)]
 
     (testing "caches are reset"
-      (is (nil? (get @caches key))))
+      (is (nil? (get caches key))))
 
     (testing "returns nil when not exists"
       (is (nil? (bp/keyed-cache key identifier))))

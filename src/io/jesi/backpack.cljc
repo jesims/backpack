@@ -1,7 +1,7 @@
 (ns io.jesi.backpack
   (:refer-clojure :exclude [js->clj clj->js assoc-in])
   (:require
-    [io.jesi.backpack.cache]
+    [io.jesi.backpack.caching]
     [io.jesi.backpack.collection]
     [io.jesi.backpack.fn]
     [io.jesi.backpack.json]
@@ -15,7 +15,7 @@
      (:require [io.jesi.backpack.clojure])))
 
 (import-vars
-  [io.jesi.backpack.cache
+  [io.jesi.backpack.caching
    cache
    init-cache
    keyed-cache]
