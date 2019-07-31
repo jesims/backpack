@@ -17,6 +17,7 @@
 (import-vars
   [io.jesi.backpack.caching
    cache
+   clear-cache
    init-cache
    keyed-cache]
 

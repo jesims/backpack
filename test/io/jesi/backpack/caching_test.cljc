@@ -14,12 +14,12 @@
 (deftest cache-test
 
   (testing "cache"
-    (reset! caches nil)
     (let [captor (atom nil)
           ttl 100
           threshold 3
           test-fn (partial reset! captor)
           cached-test-fn (bp/cache {:init-fn #(bp/init-cache (shorthand ttl threshold))} test-fn)]
+      (bp/clear-cache test-fn)
 
       (testing "the test-fn has no caches on creation"
         (is (nil? (get caches test-fn))))
@@ -67,9 +67,9 @@
                          (f))))))))))
 
 (deftest keyed-cache-test
-  (reset! caches nil)
   (let [key :test-key
         identifier (rnd/string)]
+    (bp/clear-cache key)
 
     (testing "caches are reset"
       (is (nil? (get caches key))))

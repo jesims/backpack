@@ -16,6 +16,9 @@
         (cache/ttl-cache-factory :ttl ttl)
         (cache/lru-cache-factory :threshold threshold))))
 
+(defn clear-cache [key]
+  (swap! caches dissoc key))
+
 (defn- -cache
   ([cache-key k] (-cache nil cache-key k))
   ([{:keys [miss-fn init-fn] :as cache-opts} cache-key k]
