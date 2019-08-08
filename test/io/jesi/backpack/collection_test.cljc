@@ -363,3 +363,30 @@
                (concat [1 2 3])
                (concat [1] [2 3])
                (concat [1] [2] [3])))))))
+
+(deftest update-some-test
+  (let [m {:a 1 :b 2 :c nil :d false}]
+
+    (testing "if the value is already nil, nothing happens"
+      (is (identical? m (bp/update-some m :c inc))))
+
+    (testing "if the value can be false"
+      (is (some? false))
+      (is (= (assoc m :d true)
+             (bp/update-some m :d not))))
+
+    (testing "Updates value at a specified key in the map"
+      (is (= (assoc m :b 3)
+             (bp/update-some m :b inc))))
+
+    (testing "allows extra args where the value is first"
+      (is (= (assoc m :a 6)
+             (bp/update-some m :a (fn [v & args]
+                                    (is= 1 v)
+                                    (is= [2 3] args)
+                                    (apply + v args))
+               2 3))))
+
+    (testing "doesn't append the value if the resulting function is nil"
+      (is (= (dissoc m :b)
+             (bp/update-some m :b (constantly nil)))))))

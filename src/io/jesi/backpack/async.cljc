@@ -119,3 +119,10 @@
     `(ex/throw-if-throwable
        (when-let [ch# ~ch]
          (~<!* ch#)))))
+
+(defmacro go-call
+  "Takes a function and a channel. Takes the value of the chanel using `<?` and applies it to `f`.
+  Returns a channel which contains the result (or exception)."
+  [f chan]
+  `(go-try
+     (~f (<? ~chan))))

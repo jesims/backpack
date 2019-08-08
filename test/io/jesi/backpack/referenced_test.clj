@@ -9,7 +9,8 @@
 (def excluded-ns #{
                    'io.jesi.backpack.async
                    'io.jesi.backpack.exceptions
-                   'io.jesi.backpack.http
+                   'io.jesi.backpack.http.response
+                   'io.jesi.backpack.http.status
                    'io.jesi.backpack.macros
                    'io.jesi.backpack.random
                    'io.jesi.backpack.spy
