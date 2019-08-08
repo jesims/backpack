@@ -157,6 +157,6 @@
                  (async/<? actual)))
           (is (true? (async/closed? actual)))))
 
-      (testing "throws if exception throw in input-channel"
+      (testing "returns exceptions if any thrown"
         (is (instance? ex-type
               (<! (async/go-call string/capitalize (async/go-try (ex))))))))))
