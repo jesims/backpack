@@ -4,7 +4,8 @@
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.test.macros :refer [is=]])
   (:import
-    (java.net URI)))
+    (java.net URI)
+    (java.util HashMap)))
 
 (deftest ->uri-test
   (testing "Converts URI and strings into URI objects"
@@ -37,3 +38,22 @@
     (is= ::and-worked (.val and-worked))
     (is= :LOTS_OF_YELLING (.val lots-of-yelling))
     (is (.loud? lots-of-yelling))))
+
+(deftest java->clj-test
+
+  (testing "converts keys in the maps to keywords"
+    (let [map-1 {"a" 1}
+          expected-1 {:a 1}
+          map-2 {"camelCasedKey" 123
+                 "a"             {"b" {"c" 1}}}
+          expected-2 {:camel-cased-key 123
+                      :a               {:b {:c 1}}}
+          java-map (doto (HashMap.)
+                     (.put "camelCasedKey" 123)
+                     (.put "a" (doto (HashMap.)
+                                 (.put "b" (doto (HashMap.)
+                                             (.put "c" 1))))))]
+      (is= nil (bp/java->clj nil))
+      (is= expected-1 (bp/java->clj map-1))
+      (is= expected-2 (bp/java->clj map-2))
+      (is= expected-2 (bp/java->clj java-map)))))

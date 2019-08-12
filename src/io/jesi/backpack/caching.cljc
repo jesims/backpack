@@ -16,7 +16,9 @@
         (cache/ttl-cache-factory :ttl ttl)
         (cache/lru-cache-factory :threshold threshold))))
 
-(defn clear-cache [key]
+(defn clear-cache
+  "Completely removes a cache by key from the caches"
+  [key]
   (swap! caches dissoc key))
 
 (defn- -cache

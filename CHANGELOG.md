@@ -1,3 +1,8 @@
+2.1.0 / Unreleased
+==================
+
+  * New `clear-cache` function
+  * New `java->clj` function for converting basic Java data structures
 
 2.0.0 / 2019-07-02
 ==================

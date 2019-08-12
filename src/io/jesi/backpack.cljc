@@ -97,7 +97,8 @@
    (import-vars
      [io.jesi.backpack.clojure
       defkw-type
-      ->uri]
+      ->uri
+      java->clj]
 
      [io.jesi.backpack.macros
       macro?])

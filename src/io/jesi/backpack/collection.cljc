@@ -2,7 +2,9 @@
   (:refer-clojure :exclude [assoc-in conj!])
   (:require
     [clojure.core :as clj]
-    [clojure.walk :refer [postwalk]]))
+    [clojure.walk :refer [postwalk prewalk]])
+  (:import
+    #?(:clj (java.util Map))))
 
 (defn distinct-by [key entities]
   (apply distinct? (map key entities)))
@@ -181,7 +183,12 @@
 (defn transform-keys [f coll]
   "Recursively transforms all map keys in coll with f"
   (letfn [(transform [[k v]] [(f k) v])]
-    (postwalk (fn [x] (if (map? x) (into {} (map transform x)) x)) coll)))
+    (prewalk (fn [x]
+               (if (or (map? x)
+                       #?(:clj (instance? Map x)))
+                 (into {} (map transform x))
+                 x))
+      coll)))
 
 (defn update-some
   "Updates a key in a map with a function, only if the key is present and the result of `f` is not nil."
