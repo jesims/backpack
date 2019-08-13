@@ -25,6 +25,7 @@
    assoc-in
    concat!
    contains-any?
+   diff
    dissoc-all
    dissoc-in
    distinct-by
@@ -33,6 +34,8 @@
    filter-values
    first-some
    in?
+   pathed-map
+   pathed-reduce
    remove-empty
    rename-keys!
    safe-empty?

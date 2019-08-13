@@ -2,6 +2,8 @@
   (:refer-clojure :exclude [assoc-in conj!])
   (:require
     [clojure.core :as clj]
+    [com.rpl.specter :as sp]
+    [io.jesi.backpack.specter :refer [path-walker]]
     [clojure.walk :refer [postwalk prewalk]])
   (:import
     #?(:clj (java.util Map))))
@@ -199,3 +201,68 @@
         (assoc m k new-v)
         (dissoc m k))
       m)))
+
+;TODO consolidate with pathed-reduce
+(defn pathed-map [f stay-when m]
+  (map
+    (fn [args]
+      (let [[path val] (if (vector? args)
+                         [(vec (butlast args)) (last args)]
+                         [nil args])]
+        (f path val)))
+    (sp/select (path-walker stay-when) m)))
+
+(defn pathed-reduce [f init stay-when m]
+  (reduce
+    (fn [m args]
+      (let [[path val] (if (vector? args)
+                         [(vec (butlast args)) (last args)]
+                         [nil args])]
+        (f m path val)))
+    init
+    (sp/traverse (path-walker stay-when) m)))
+
+(defn- assoc-non-empty
+  ([m k tcoll]
+   (assoc-non-empty m k identity tcoll))
+  ([m k f tcoll]
+   (if (zero? (count tcoll))
+     m
+     (assoc! m k (f (persistent! tcoll))))))
+
+(defn diff
+  "Returns a map of :added, :changed, :removed, and :same"
+  ([existing updated] (diff nil existing updated))
+  ([stay-when existing updated] (diff stay-when = existing updated))
+  ([stay-when comparator existing updated]
+   (let [added (volatile! (transient {}))
+         changed (volatile! (transient {}))
+         same (volatile! (transient []))
+         removed (volatile! (pathed-reduce
+                              (fn [s path val]
+                                (conj! s path))
+                              (transient #{})
+                              stay-when
+                              existing))
+         reducer (fn [_ path val]
+                   (let [old-val (if path
+                                   (get-in existing path)
+                                   existing)]
+                     (vswap! removed disj! path)
+                     (cond
+                       (or (nil? old-val)
+                           (and (coll? old-val) (empty? old-val)))
+                       (vswap! added assoc! path val)
+
+                       (not (comparator val old-val))
+                       (vswap! changed assoc! path val)
+
+                       (comparator val old-val)
+                       (vswap! same conj! path))))]
+     (pathed-reduce reducer nil stay-when updated)
+     (-> (transient {})
+         (assoc-non-empty :added @added)
+         (assoc-non-empty :changed @changed)
+         (assoc-non-empty :same @same)
+         (assoc-non-empty :removed vec @removed)
+         persistent!))))

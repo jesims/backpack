@@ -390,3 +390,74 @@
     (testing "doesn't append the value if the resulting function is nil"
       (is (= (dissoc m :b)
              (bp/update-some m :b (constantly nil)))))))
+
+(deftest diff-test
+
+  (testing "diff does a nested map diff"
+
+    (testing "taking a stay-when predicate and two maps"
+      (is (= {}
+             (bp/diff :a {} {}))))
+
+    (testing "returns a map that could contain :added, :changed, :removed, and :same"
+      (let [diff (partial bp/diff number?)]
+        (is (= {:added {[:a] 1}}
+               (diff {} {:a 1})))
+        (is (= {:removed [[:a]]}
+               (diff {:a 1} {})))
+        (is (= {:changed {[:a] 2}}
+               (diff {:a 1} {:a 2})))
+        (is (= {:same [[:a]]}
+               (diff {:a 1} {:a 1})))
+        (is (= {:added   {[:b] 1}
+                :changed {[:d] 2}
+                :same    [[:a]]
+                :removed [[:c]]}
+               (diff
+                 {:a 1 :c 1 :d 1}
+                 {:a 1 :b 1 :d 2}))))
+      (is (= {:added {nil {:b 1}}}
+             (bp/diff :b nil {:b 1})
+             (bp/diff :b {} {:b 1})))
+      (is= {:changed {[:a :b 1] 3}
+            :same [[:a :b 0]
+                   [:a :b 2]]}
+           (bp/diff
+             {:a {:b [0 1 2]}}
+             {:a {:b [0 3 2]}})))
+
+    (testing "works with large datasets"
+      (let [stay-when (comp (bp/p= :Feature) :type)
+            old nil
+            leaf {:type :Feature, :geometry [[0 1] [1 2]]}
+            new {"1" {"2" {:marker leaf}
+                      "3" {:marker    leaf
+                           :route     leaf
+                           :waypoints leaf}
+                      "4" {:marker    leaf
+                           :route     leaf
+                           :waypoints leaf}
+                      "5" {:marker    leaf
+                           :route     leaf
+                           :waypoints leaf}
+                      "6" {:marker    leaf
+                           :route     leaf
+                           :waypoints leaf}}}
+            expected (hash-set
+                       ["1" "2" :marker]
+                       ["1" "3" :marker]
+                       ["1" "3" :route]
+                       ["1" "3" :waypoints]
+                       ["1" "4" :marker]
+                       ["1" "4" :route]
+                       ["1" "4" :waypoints]
+                       ["1" "5" :marker]
+                       ["1" "5" :route]
+                       ["1" "5" :waypoints]
+                       ["1" "6" :marker]
+                       ["1" "6" :route]
+                       ["1" "6" :waypoints])
+            actual (keys (:added (bp/diff stay-when old new)))]
+        (is (= (count expected) (count actual)))
+        (is (every? expected actual))))))
+

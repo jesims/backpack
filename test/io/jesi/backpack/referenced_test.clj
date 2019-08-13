@@ -6,6 +6,8 @@
     [clojure.tools.namespace.find :as ns-find]
     [io.jesi.backpack]))
 
+(def excluded-vars #{'io.jesi.backpack.specter/path-walker})
+
 (def excluded-ns #{
                    'io.jesi.backpack.async
                    'io.jesi.backpack.exceptions
@@ -31,8 +33,11 @@
       (is (true? (every? (comp some? find-ns) models-ns))))
 
     (testing "Aliases all public def's and functions into bp"
-      (is (true? (every? some? (->> models-ns
-                                    (map #(ns-publics %))
-                                    (apply merge)
-                                    (keys)
-                                    (map (comp (partial ns-resolve 'io.jesi.backpack) symbol)))))))))
+      (let [ns 'io.jesi.backpack]
+        (doseq [sym (->> models-ns
+                         (map ns-publics)
+                         (apply merge)
+                         (vals)
+                         (map symbol)
+                         (remove excluded-vars))]
+          (is (some? (ns-resolve ns sym)) (str "Could not find symbol: " ns \/ sym)))))))
