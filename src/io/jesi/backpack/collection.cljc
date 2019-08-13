@@ -2,9 +2,9 @@
   (:refer-clojure :exclude [assoc-in conj!])
   (:require
     [clojure.core :as clj]
+    [clojure.walk :refer [postwalk prewalk]]
     [com.rpl.specter :as sp]
-    [io.jesi.backpack.specter :refer [path-walker]]
-    [clojure.walk :refer [postwalk prewalk]])
+    [io.jesi.backpack.specter :refer [path-walker]])
   (:import
     #?(:clj (java.util Map))))
 
