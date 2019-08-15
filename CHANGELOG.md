@@ -3,7 +3,9 @@
 
   * New `clear-cache` function
   * New `java->clj` function for converting basic Java data structures
-  * New `diff` function for diffing data structures
+  * New `diff` function for comparing data structures
+  * New `pathed-map` function for comparing data structures
+  * New `pathed-reduce` function for comparing data structures
 
 2.0.0 / 2019-07-02
 ==================

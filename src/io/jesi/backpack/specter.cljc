@@ -30,7 +30,7 @@
 
 ;From https://github.com/nathanmarz/specter/issues/201
 (def path-walker
-  "A spectre recursive path navigator, that collects all path to the occurrences of leaves that match the given predicate.
+  "A spectre recursive path navigator, that collects all paths to the occurrences of leaves that match the given predicate.
    Does not traverse deeper into the matched structures."
   (sp/recursive-path [stay-when] p
     (if (nil? stay-when)

@@ -132,3 +132,47 @@
     (testing "returns same function if one arg"
       (let [f (constantly "Kangaroos can't fart")]
         (is= f (bp/compr f))))))
+
+(deftest and-fn-test
+
+  (testing "and-fn-test"
+
+    (testing "Throws an exception if no predicates are given"
+      (is (thrown? Exception (bp/and-fn))))
+
+    (testing "Returns a function"
+      (is (fn? (bp/and-fn identity))))
+
+    (testing "Will apply the predicate function when only given one"
+      (let [is-odd? (bp/and-fn odd?)]
+        (is (true? (is-odd? 11)))))
+
+    (testing "Return true if each sub predicate function also returns true"
+      (let [greater-than-ten? (partial < 10)
+            is-odd-and-over-ten? (bp/and-fn greater-than-ten? odd?)]
+
+        (testing "When all are true"
+          (is (true? (is-odd-and-over-ten? 11))))
+
+        (testing "When first predicate is true and second is false"
+          (is (false? (is-odd-and-over-ten? 12))))
+
+        (testing "When s is true and right is false"
+          (is (false? (is-odd-and-over-ten? 8))))
+        (is (false? (is-odd-and-over-ten? 9)))))))
+
+(deftest or-fn-test
+
+    (testing "Throws an exception if no predicates are given"
+      (is (thrown? Exception (bp/or-fn))))
+
+    (testing "Returns a function"
+      (is (fn? (bp/or-fn identity))))
+
+    (testing "Correctly applied each sub predicate function"
+      (let [greater-than-ten? (partial < 10)
+            is-odd-or-over-ten? (bp/or-fn greater-than-ten? odd?)]
+        (is (true? (is-odd-or-over-ten? 11)))
+        (is (true? (is-odd-or-over-ten? 12)))
+        (is (false? (is-odd-or-over-ten? 8)))
+        (is (false? (is-odd-or-over-ten? 9))))))

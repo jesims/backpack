@@ -48,6 +48,7 @@
    update-some]
 
   [io.jesi.backpack.fn
+   and-fn
    apply-when
    call
    compr
@@ -55,6 +56,7 @@
    if-fn
    map-if
    noop
+   or-fn
    p=
    partial-right
    pass

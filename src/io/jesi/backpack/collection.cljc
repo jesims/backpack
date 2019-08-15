@@ -202,25 +202,30 @@
         (dissoc m k))
       m)))
 
-;TODO consolidate with pathed-reduce
-(defn pathed-map [f stay-when m]
-  (map
-    (fn [args]
-      (let [[path val] (if (vector? args)
-                         [(vec (butlast args)) (last args)]
-                         [nil args])]
-        (f path val)))
-    (sp/select (path-walker stay-when) m)))
+(defn- extract-path-and-value
+  [args]
+  (if (vector? args)
+    [(vec (butlast args)) (last args)]
+    [nil args]))
 
-(defn pathed-reduce [f init stay-when m]
+;TODO consolidate with pathed-reduce
+(defn pathed-map [f leaf-pred coll]
+  "Traverses and applies the mapping function to each leaf of a data structure. The mapping function given the path and
+  value at that path"
+  (map
+    (comp (partial apply f) extract-path-and-value)
+    (sp/select (path-walker leaf-pred) coll)))
+
+; Change m to coll if works with vectors
+; overload without leaf-pred
+(defn pathed-reduce [f init leaf-pred coll]
+  "Traverses and reduces a data structure where the reducing function is given an accumulator, vector path and value at that
+  path"
   (reduce
-    (fn [m args]
-      (let [[path val] (if (vector? args)
-                         [(vec (butlast args)) (last args)]
-                         [nil args])]
-        (f m path val)))
+    (fn [acc args]
+      (apply f acc (extract-path-and-value args)))
     init
-    (sp/traverse (path-walker stay-when) m)))
+    (sp/traverse (path-walker leaf-pred) coll)))
 
 (defn- assoc-non-empty
   ([m k tcoll]
@@ -231,10 +236,10 @@
      (assoc! m k (f (persistent! tcoll))))))
 
 (defn diff
-  "Returns a map of :added, :changed, :removed, and :same"
+  "Returns a map of paths which have changed :added, :changed, :removed, and :same"
   ([existing updated] (diff nil existing updated))
-  ([stay-when existing updated] (diff stay-when = existing updated))
-  ([stay-when comparator existing updated]
+  ([leaf-pred existing updated] (diff leaf-pred = existing updated))
+  ([leaf-pred comparator existing updated]
    (let [added (volatile! (transient {}))
          changed (volatile! (transient {}))
          same (volatile! (transient []))
@@ -242,7 +247,7 @@
                               (fn [s path val]
                                 (conj! s path))
                               (transient #{})
-                              stay-when
+                              leaf-pred
                               existing))
          reducer (fn [_ path val]
                    (let [old-val (if path
@@ -259,7 +264,7 @@
 
                        (comparator val old-val)
                        (vswap! same conj! path))))]
-     (pathed-reduce reducer nil stay-when updated)
+     (pathed-reduce reducer nil leaf-pred updated)
      (-> (transient {})
          (assoc-non-empty :added @added)
          (assoc-non-empty :changed @changed)
