@@ -462,42 +462,48 @@
         (is (every? expected actual))))))
 
 
-(deftest pathed-map-test
+(deftest leaf-map-test
 
-  (testing "Applies map over each leaf a data structure"
-    (let [actual-paths (atom [])
-          mapping-fn (fn [path val]
-                       (swap! actual-paths conj path)
-                       (inc val))
-          actual-values (bp/pathed-map mapping-fn nil {:a 1 :b {:c 2 :d 3 :e {:f 4}}})]
+  (testing "leaf-map"
 
-      (is= '(2 3 4 5) actual-values)
-      (is= [[:a] [:b :c] [:b :d] [:b :e :f]] @actual-paths)))
+    (testing "is a function"
+      (is (fn? bp/pathed-map))
 
-  (testing "Traverses over vectors"
-
-    (testing "without a leaf predicate"
       (let [actual-paths (atom [])
             mapping-fn (fn [path val]
                          (swap! actual-paths conj path)
-                         (inc val))
-            actual-values (bp/pathed-map mapping-fn nil [1 [4 5 [6] [8]] 9])]
-        (is= '(2 5 6 7 9 10) actual-values)
-        (is= [[0] [1 0] [1 1] [1 2 0] [1 3 0] [2]] @actual-paths)))
+                         (inc val))]
 
-    (testing "with a leaf predicate"
-      (let [actual-paths (atom [])
-            mapping-fn (fn [path val]
-                         (swap! actual-paths conj path)
-                         (inc val))
-            leaf-pred #(and (number? %) (odd? %))
-            actual-values (bp/pathed-map mapping-fn leaf-pred [1 2 3 [4 5 [6] [7 8]] 9])]
-        (is= '(2 4 6 8 10) actual-values)
-        (is= [[0]
-              [2]
-              [3 1]
-              [3 3 0]
-              [4]] @actual-paths))))
+        (testing "traverses over a collection, applying f to the leaves"
+          (is= '(2 3 4 5)
+               (bp/pathed-map mapping-fn nil {:a 1 :b {:c 2 :d 3 :e {:f 4}}}))
+          (is= [[:a] [:b :c] [:b :d] [:b :e :f]] @actual-paths)
+          (reset! actual-paths [])
+          (is= '(2 5 6 7 9 10)
+               (bp/pathed-map mapping-fn nil [1 [4 5 [6] [8]] 9]))
+          (is= [[0] [1 0] [1 1] [1 2 0] [1 3 0] [2]] @actual-paths))))
+
+    (testing "Traverses over vectors"
+
+      (testing "without a leaf predicate"
+        (let [actual-paths (atom [])
+              mapping-fn (fn [path val]
+                           (swap! actual-paths conj path)
+                           (inc val))]))
+
+      (testing "with a leaf predicate"
+        (let [actual-paths (atom [])
+              mapping-fn (fn [path val]
+                           (swap! actual-paths conj path)
+                           (inc val))
+              leaf-pred #(and (number? %) (odd? %))
+              actual-values (bp/pathed-map mapping-fn leaf-pred [1 2 3 [4 5 [6] [7 8]] 9])]
+          (is= '(2 4 6 8 10) actual-values)
+          (is= [[0]
+                [2]
+                [3 1]
+                [3 3 0]
+                [4]] @actual-paths)))))
 
   (testing "Traverses over maps"
 
@@ -540,4 +546,5 @@
 
 (deftest pathed-reduce-test
 
-  (testing "Traverses over maps"))
+  (testing "Traverses over maps"
+    (is false)))

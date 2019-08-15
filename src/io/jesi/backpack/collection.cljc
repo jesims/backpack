@@ -208,24 +208,25 @@
     [(vec (butlast args)) (last args)]
     [nil args]))
 
-;TODO consolidate with pathed-reduce
-(defn pathed-map [f leaf-pred coll]
-  "Traverses and applies the mapping function to each leaf of a data structure. The mapping function given the path and
+(defn leaf-map
+  "Traverses and applies the mapping function to each leaf of a data structure. The mapping function is given the path and
   value at that path"
-  (map
-    (comp (partial apply f) extract-path-and-value)
-    (sp/select (path-walker leaf-pred) coll)))
+  ([f coll] (leaf-map f nil coll))
+  ([f leaf-pred coll]
+   (map
+     (comp (partial apply f) extract-path-and-value)
+     (sp/select (path-walker leaf-pred) coll))))
 
-; Change m to coll if works with vectors
-; overload without leaf-pred
-(defn pathed-reduce [f init leaf-pred coll]
+(defn leaf-reduce
   "Traverses and reduces a data structure where the reducing function is given an accumulator, vector path and value at that
   path"
-  (reduce
-    (fn [acc args]
-      (apply f acc (extract-path-and-value args)))
-    init
-    (sp/traverse (path-walker leaf-pred) coll)))
+  ([f init coll] (leaf-reduce f init nil coll))
+  ([f init leaf-pred coll]
+   (reduce
+     (fn [acc args]
+       (apply f acc (extract-path-and-value args)))
+     init
+     (sp/traverse (path-walker leaf-pred) coll))))
 
 (defn- assoc-non-empty
   ([m k tcoll]
@@ -243,7 +244,7 @@
    (let [added (volatile! (transient {}))
          changed (volatile! (transient {}))
          same (volatile! (transient []))
-         removed (volatile! (pathed-reduce
+         removed (volatile! (leaf-reduce
                               (fn [s path val]
                                 (conj! s path))
                               (transient #{})
@@ -264,7 +265,7 @@
 
                        (comparator val old-val)
                        (vswap! same conj! path))))]
-     (pathed-reduce reducer nil leaf-pred updated)
+     (leaf-reduce reducer nil leaf-pred updated)
      (-> (transient {})
          (assoc-non-empty :added @added)
          (assoc-non-empty :changed @changed)
