@@ -220,6 +220,7 @@
 (defn leaf-reduce
   "Traverses and reduces a data structure where the reducing function is given an accumulator, vector path and value at that
   path"
+  ([f coll] (leaf-reduce f (first coll) nil (rest coll)))
   ([f init coll] (leaf-reduce f init nil coll))
   ([f init leaf-pred coll]
    (reduce
@@ -236,6 +237,7 @@
      m
      (assoc! m k (f (persistent! tcoll))))))
 
+;TODO rename to `leaf-diff`?
 (defn diff
   "Returns a map of paths which have changed :added, :changed, :removed, and :same"
   ([existing updated] (diff nil existing updated))

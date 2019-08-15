@@ -16,8 +16,8 @@
                      arglists (get meta :arglists)
                      doc (get meta :doc "")]]
            `(
-              (def ~name ~doc ~src)
-              (alter-meta! #'~name assoc :arglists '~arglists))))))
+             (def ~name ~doc ~src)
+             (alter-meta! #'~name assoc :arglists '~arglists))))))
 
 (defmacro if-cljs
   "Return `then` if we are generating cljs code, and `else` for Clojure code"
