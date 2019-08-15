@@ -10,6 +10,7 @@
      :clj
      (:import (clojure.lang IDeref))))
 
+
 (deftest partial-right-test
 
   (testing "partial-right"
@@ -133,16 +134,22 @@
       (let [f (constantly "Kangaroos can't fart")]
         (is= f (bp/compr f))))))
 
+(def ^:const ex-type #?(:clj  Exception
+                        :cljs js/Error))
+
 (deftest and-fn-test
 
   (testing "and-fn"
 
     (testing "throws an exception if no parameters are given"
-      (is (thrown? Exception (bp/and-fn))))
+      ; FIXME fix to use ex-type for evaluating macros
+      ;(is (thrown? #?(:clj Exception :cljs js/Error) (bp/and-fn)))
+      (is (thrown? ex-type (bp/and-fn))))
 
     (testing "returns the predicate function when only given one"
       (is (identical? odd? (bp/and-fn odd?)))
-      (is (identical? true? (bp/and-fn true?))))
+      (is (identical? true? (bp/and-fn true?)))
+      (is false))
 
     (testing "returns a function"
       (is (fn? (bp/and-fn identity)))
@@ -163,7 +170,7 @@
   (testing "or-fn"
 
     (testing "throws an exception if no parameters are given"
-      (is (thrown? Exception (bp/or-fn))))
+      (is (thrown? ex-type (bp/or-fn))))
 
     (testing "returns the predicate function when only given one"
       (is (identical? odd? (bp/or-fn odd?)))
@@ -181,5 +188,5 @@
             (is (false? (is-even-or-under-ten? 11)))))
 
       (testing "that short circuits if any return true"
-        (let [actual (bp/or-fn odd? even? #(throw (Exception. "I am evaluated")))]
+        (let [actual (bp/or-fn odd? even? #(throw (Exception. "I am thrown")))]
           (is (true? (actual 1))))))))
