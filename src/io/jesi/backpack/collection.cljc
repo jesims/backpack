@@ -208,20 +208,20 @@
     [(vec (butlast args)) (last args)]
     [nil args]))
 
-(defn leaf-map
+(defn map-leaves
   "Traverses and applies the mapping function to each leaf of a data structure. The mapping function is given the path and
   value at that path"
-  ([f coll] (leaf-map f nil coll))
+  ([f coll] (map-leaves f nil coll))
   ([f leaf-pred coll]
    (map
      (comp (partial apply f) extract-path-and-value)
      (sp/select (path-walker leaf-pred) coll))))
 
-(defn leaf-reduce
+(defn reduce-leaves
   "Traverses and reduces a data structure where the reducing function is given an accumulator, vector path and value at that
   path"
-  ([f coll] (leaf-reduce f (first coll) nil (rest coll)))
-  ([f init coll] (leaf-reduce f init nil coll))
+  ([f coll] (reduce-leaves f (first coll) nil (rest coll)))
+  ([f init coll] (reduce-leaves f init nil coll))
   ([f init leaf-pred coll]
    (reduce
      (fn [acc args]
@@ -246,7 +246,7 @@
    (let [added (volatile! (transient {}))
          changed (volatile! (transient {}))
          same (volatile! (transient []))
-         removed (volatile! (leaf-reduce
+         removed (volatile! (reduce-leaves
                               (fn [s path val]
                                 (conj! s path))
                               (transient #{})
@@ -267,7 +267,7 @@
 
                        (comparator val old-val)
                        (vswap! same conj! path))))]
-     (leaf-reduce reducer nil leaf-pred updated)
+     (reduce-leaves reducer nil leaf-pred updated)
      (-> (transient {})
          (assoc-non-empty :added @added)
          (assoc-non-empty :changed @changed)

@@ -34,8 +34,8 @@
    filter-values
    first-some
    in?
-   leaf-map
-   leaf-reduce
+   map-leaves
+   reduce-leaves
    remove-empty
    rename-keys!
    safe-empty?

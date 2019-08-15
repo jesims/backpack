@@ -5,8 +5,8 @@ Added:
   * `clear-cache` function
   * `java->clj` function for converting basic Java data structures
   * `diff` function for comparing data structures
-  * `leaf-map` function for comparing data structures
-  * `leaf-reduce` function for comparing data structures
+  * `map-leaves` function for comparing data structures
+  * `reduce-leaves` function for comparing data structures
   * `and-fn` function for composing predicates against an and condition 
   * `or-fn` function for composing predicates against an or condition 
 

@@ -424,7 +424,18 @@
                       [:a :b 2]]}
            (bp/diff
              {:a {:b [0 1 2]}}
-             {:a {:b [0 3 2]}})))
+             {:a {:b [0 3 2]}}))
+      (is= {:added {[:a :b :cheese] [1 2 3]}}
+           (bp/diff
+             {:a {:b {:c 1
+                      :d 4}
+                  :e 3}
+              :d 2}
+             {:a {:b {:c      1
+                      :cheese [1 2 3]
+                      :d      4}
+                  :e 3}
+              :d 2})))
 
     (testing "works with large datasets"
       (let [stay-when (comp (bp/p= :Feature) :type)
@@ -462,44 +473,44 @@
         (is (every? expected actual))))))
 
 
-(deftest leaf-map-test
+(deftest map-leaves-test
 
-  (testing "leaf-map"
+  (testing "map-leaves"
 
     (testing "is a function"
-      (is (fn? bp/leaf-map))
+      (is (fn? bp/map-leaves))
       (let [mapping-fn (comp (juxt first (comp inc second)) vector)]
 
         (testing "that traverses over a collection, applying f to the leaves"
-          (let [leaf-map (partial bp/leaf-map mapping-fn)]
-            (is= [[0] 1] (leaf-map [1]))
+          (let [map-leaves (partial bp/map-leaves mapping-fn)]
+            (is= [[0] 1] (map-leaves [1]))
             (is= [[[:g] 1]
                   [[:a] 2]
                   [[:b :c] 3]
                   [[:b :d] 4]
                   [[:b :e :f] 5]
                   [[:h :f] 23]]
-                 (leaf-map {:g 0
-                            :a 1
-                            :b {:c 2
-                                :d 3
-                                :e {:f 4}}
-                            :h {:f 22}}))
+                 (map-leaves {:g 0
+                              :a 1
+                              :b {:c 2
+                                  :d 3
+                                  :e {:f 4}}
+                              :h {:f 22}}))
             (is= [[[:a] 2]
                   [[:b :c] 3]
                   [[:b :d] 4]
                   [[:b :e :f] 5]]
-                 (leaf-map {:a 1
-                            :b {:c 2
-                                :d 3
-                                :e {:f 4}}}))
+                 (map-leaves {:a 1
+                              :b {:c 2
+                                  :d 3
+                                  :e {:f 4}}}))
             (is= [[[0] 2]
                   [[1 0] 5]
                   [[1 1] 6]
                   [[1 2 0] 7]
                   [[1 3 0] 9]
                   [[2] 10]]
-                 (leaf-map [1 [4 5 [6] [8]] 9])))
+                 (map-leaves [1 [4 5 [6] [8]] 9])))
 
           (testing "with a leaf predicate"
             (is= [[[0] 2]
@@ -507,28 +518,28 @@
                   [[3 1] 6]
                   [[3 3 0] 8]
                   [[4] 10]]
-                 (bp/leaf-map mapping-fn #(and (number? %) (odd? %)) [1 2 3 [4 5 [6] [7 8]] 9]))
+                 (bp/map-leaves mapping-fn #(and (number? %) (odd? %)) [1 2 3 [4 5 [6] [7 8]] 9]))
             (is= [[[:b :e] {:f 4}]
                   [[:h] {:f 22}]]
-                 (bp/leaf-map (partial vector) :f {:g 0
-                                                   :a 1
-                                                   :b {:c 2
-                                                       :d 3
-                                                       :e {:f 4}}
-                                                   :h {:f 22}}))))))))
+                 (bp/map-leaves (partial vector) :f {:g 0
+                                                     :a 1
+                                                     :b {:c 2
+                                                         :d 3
+                                                         :e {:f 4}}
+                                                     :h {:f 22}}))))))))
 
-(deftest leaf-reduce-test
+(deftest reduce-leaves-test
 
-  (testing "leaf-reduce"
+  (testing "reduce-leaves"
 
     (testing "is a function"
-      (is (fn? bp/leaf-reduce))
+      (is (fn? bp/reduce-leaves))
 
       (testing "that traverses over a collection, reducing over the leaves"
         (is= 6
-             (bp/leaf-reduce + [1])
-             (bp/leaf-reduce + [1 2 3])
-             (bp/leaf-reduce + [1 [2 [3]]]))
+             (bp/reduce-leaves + [1])
+             (bp/reduce-leaves + [1 2 3])
+             (bp/reduce-leaves + [1 [2 [3]]]))
 
         (testing "with an init"
           (is false))
