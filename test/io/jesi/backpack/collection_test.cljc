@@ -395,7 +395,7 @@
 
   (testing "diff does a nested map diff"
 
-    (testing "taking a stay-when predicate and two maps"
+    (testing "taking a left predicate and two maps"
       (is (= {}
              (bp/diff :a {} {}))))
 
@@ -467,84 +467,71 @@
   (testing "leaf-map"
 
     (testing "is a function"
-      (is (fn? bp/pathed-map))
+      (is (fn? bp/leaf-map))
+      (let [mapping-fn (comp (juxt first (comp inc second)) vector)]
 
-      (let [actual-paths (atom [])
-            mapping-fn (fn [path val]
-                         (swap! actual-paths conj path)
-                         (inc val))]
+        (testing "that traverses over a collection, applying f to the leaves"
+          (let [leaf-map (partial bp/leaf-map mapping-fn)]
+            (is= [[0] 1] (leaf-map [1]))
+            (is= [[[:g] 1]
+                  [[:a] 2]
+                  [[:b :c] 3]
+                  [[:b :d] 4]
+                  [[:b :e :f] 5]
+                  [[:h :f] 23]]
+                 (leaf-map {:g 0
+                            :a 1
+                            :b {:c 2
+                                :d 3
+                                :e {:f 4}}
+                            :h {:f 22}}))
+            (is= [[[:a] 2]
+                  [[:b :c] 3]
+                  [[:b :d] 4]
+                  [[:b :e :f] 5]]
+                 (leaf-map {:a 1
+                            :b {:c 2
+                                :d 3
+                                :e {:f 4}}}))
+            (is= [[[0] 2]
+                  [[1 0] 5]
+                  [[1 1] 6]
+                  [[1 2 0] 7]
+                  [[1 3 0] 9]
+                  [[2] 10]]
+                 (leaf-map [1 [4 5 [6] [8]] 9])))
 
-        (testing "traverses over a collection, applying f to the leaves"
-          (is= '(2 3 4 5)
-               (bp/pathed-map mapping-fn nil {:a 1 :b {:c 2 :d 3 :e {:f 4}}}))
-          (is= [[:a] [:b :c] [:b :d] [:b :e :f]] @actual-paths)
-          (reset! actual-paths [])
-          (is= '(2 5 6 7 9 10)
-               (bp/pathed-map mapping-fn nil [1 [4 5 [6] [8]] 9]))
-          (is= [[0] [1 0] [1 1] [1 2 0] [1 3 0] [2]] @actual-paths))))
+          (testing "with a leaf predicate"
+            (is= [[[0] 2]
+                  [[2] 4]
+                  [[3 1] 6]
+                  [[3 3 0] 8]
+                  [[4] 10]]
+                 (bp/leaf-map mapping-fn #(and (number? %) (odd? %)) [1 2 3 [4 5 [6] [7 8]] 9]))
+            (is= [[[:b :e] {:f 4}]
+                  [[:h] {:f 22}]]
+                 (bp/leaf-map (partial vector) :f {:g 0
+                                                   :a 1
+                                                   :b {:c 2
+                                                       :d 3
+                                                       :e {:f 4}}
+                                                   :h {:f 22}}))))))))
 
-    (testing "Traverses over vectors"
+(deftest leaf-reduce-test
 
-      (testing "without a leaf predicate"
-        (let [actual-paths (atom [])
-              mapping-fn (fn [path val]
-                           (swap! actual-paths conj path)
-                           (inc val))]))
+  (testing "leaf-reduce"
 
-      (testing "with a leaf predicate"
-        (let [actual-paths (atom [])
-              mapping-fn (fn [path val]
-                           (swap! actual-paths conj path)
-                           (inc val))
-              leaf-pred #(and (number? %) (odd? %))
-              actual-values (bp/pathed-map mapping-fn leaf-pred [1 2 3 [4 5 [6] [7 8]] 9])]
-          (is= '(2 4 6 8 10) actual-values)
-          (is= [[0]
-                [2]
-                [3 1]
-                [3 3 0]
-                [4]] @actual-paths)))))
+    (testing "is a function"
+      (is (fn? bp/leaf-reduce))
 
-  (testing "Traverses over maps"
+      (testing "that traverses over a collection, reducing over the leaves"
+        (is= 6
+             (bp/leaf-reduce + [1])
+             (bp/leaf-reduce + [1 2 3])
+             (bp/leaf-reduce + [1 [2 [3]]]))
 
-    (testing "without a lead-pred"
-      (let [actual-paths (atom [])
-            mapping-fn (fn [path val]
-                         (swap! actual-paths conj path)
-                         val)
-            actual-values (bp/pathed-map mapping-fn nil {:g 0
-                                                         :a 1
-                                                         :b {:c 2
-                                                             :d 3
-                                                             :e {:f 4}}
-                                                         :h {:f 22}})]
+        (testing "with an init"
+          (is false))
 
-        (is= '(0 1 2 3 4 22) actual-values)
-        (is= [[:g]
-              [:a]
-              [:b :c]
-              [:b :d]
-              [:b :e :f]
-              [:h :f]]
-             @actual-paths)))
-
-    (testing "with a leaf-pred"
-      (let [actual-paths (atom [])
-            mapping-fn (fn [path val]
-                         (swap! actual-paths conj path)
-                         val)
-            leaf-pred :f
-            actual-values (bp/pathed-map mapping-fn leaf-pred {:g 0
-                                                               :a 1
-                                                               :b {:c 2
-                                                                   :d 3
-                                                                   :e {:f 4}}
-                                                               :h {:f 22}})]
-
-        (is= '({:f 4} {:f 22}) actual-values)
-        (is= [[:b :e] [:h]] @actual-paths)))))
-
-(deftest pathed-reduce-test
-
-  (testing "Traverses over maps"
-    (is false)))
+        (testing "with a leaf predicate"
+          (is false))))))
