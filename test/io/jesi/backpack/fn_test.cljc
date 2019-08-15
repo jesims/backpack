@@ -135,44 +135,51 @@
 
 (deftest and-fn-test
 
-  (testing "and-fn-test"
+  (testing "and-fn"
 
-    (testing "Throws an exception if no predicates are given"
+    (testing "throws an exception if no parameters are given"
       (is (thrown? Exception (bp/and-fn))))
 
-    (testing "Returns a function"
-      (is (fn? (bp/and-fn identity))))
+    (testing "returns the predicate function when only given one"
+      (is (identical? odd? (bp/and-fn odd?)))
+      (is (identical? true? (bp/and-fn true?))))
 
-    (testing "Will apply the predicate function when only given one"
-      (let [is-odd? (bp/and-fn odd?)]
-        (is (true? (is-odd? 11)))))
+    (testing "returns a function"
+      (is (fn? (bp/and-fn identity)))
 
-    (testing "Return true if each sub predicate function also returns true"
-      (let [greater-than-ten? (partial < 10)
-            is-odd-and-over-ten? (bp/and-fn greater-than-ten? odd?)]
+      (testing "that returns true if ALL predicate functions evaluate to true for the given value"
+        (let [actual (bp/and-fn (partial < 10) odd?)]
+          (is (true? (actual 11)))
+          (is (false? (actual 12)))
+          (is (false? (actual 8)))
+          (is (false? (actual 9)))))
 
-        (testing "When all are true"
-          (is (true? (is-odd-and-over-ten? 11))))
-
-        (testing "When first predicate is true and second is false"
-          (is (false? (is-odd-and-over-ten? 12))))
-
-        (testing "When s is true and right is false"
-          (is (false? (is-odd-and-over-ten? 8))))
-        (is (false? (is-odd-and-over-ten? 9)))))))
+      (testing "that short circuits if any return false"
+        (let [actual (bp/and-fn odd? even? #(throw (Exception. "I am evaluated")))]
+          (is (false? (actual 2))))))))
 
 (deftest or-fn-test
 
-    (testing "Throws an exception if no predicates are given"
+  (testing "or-fn"
+
+    (testing "throws an exception if no parameters are given"
       (is (thrown? Exception (bp/or-fn))))
 
-    (testing "Returns a function"
-      (is (fn? (bp/or-fn identity))))
+    (testing "returns the predicate function when only given one"
+      (is (identical? odd? (bp/or-fn odd?)))
+      (is (identical? true? (bp/or-fn true?))))
 
-    (testing "Correctly applied each sub predicate function"
-      (let [greater-than-ten? (partial < 10)
-            is-odd-or-over-ten? (bp/or-fn greater-than-ten? odd?)]
-        (is (true? (is-odd-or-over-ten? 11)))
-        (is (true? (is-odd-or-over-ten? 12)))
-        (is (false? (is-odd-or-over-ten? 8)))
-        (is (false? (is-odd-or-over-ten? 9))))))
+    (testing "returns a function"
+      (is (fn? (bp/or-fn identity)))
+
+      (testing "that returns true if ANY predicate function evaluate to true for the given value"
+        (let [less-than-ten? (partial > 10)
+              is-even-or-under-ten? (bp/or-fn less-than-ten? even?)]
+            (is (true? (is-even-or-under-ten? 8)))
+            (is (true? (is-even-or-under-ten? 9)))
+            (is (true? (is-even-or-under-ten? 12)))
+            (is (false? (is-even-or-under-ten? 11)))))
+
+      (testing "that short circuits if any return true"
+        (let [actual (bp/or-fn odd? even? #(throw (Exception. "I am evaluated")))]
+          (is (true? (actual 1))))))))

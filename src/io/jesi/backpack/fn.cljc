@@ -87,11 +87,11 @@
     pred))
 
 (def and-fn
-  "Takes any number of predicates and will return predicate which returns true if all individual predicates return true,
-  else returns false"
+  "Takes any number of predicates and will return a predicate which returns true if all individual predicates return true,
+  else return false"
   (partial apply-predicates every?))
 
 (def or-fn
-  "Takes any number of predicates and will return predicate which returns true if any of the individual predicates
-  return true, else returns false"
+  "Takes any number of predicates and will return a predicate which returns true if any of the individual predicates
+  return true, else return false"
   (partial apply-predicates (comp boolean some)))

@@ -34,8 +34,8 @@
    filter-values
    first-some
    in?
-   pathed-map
-   pathed-reduce
+   leaf-map
+   leaf-reduce
    remove-empty
    rename-keys!
    safe-empty?
