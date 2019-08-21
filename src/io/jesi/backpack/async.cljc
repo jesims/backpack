@@ -121,8 +121,8 @@
          (~<!* ch#)))))
 
 (defmacro go-call
-  "Takes a function and a channel, and returns a channel which contains the
-  value produced by applying f result of the given chanel."
+  "Takes a function and a channel. Takes the value of the chanel using `<?` and applies it to `f`.
+  Returns a channel which contains the result (or exception)."
   [f chan]
   `(go-try
      (~f (<? ~chan))))
