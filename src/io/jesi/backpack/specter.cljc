@@ -4,9 +4,8 @@
 
 (def map-walker (sp/recursive-path [] m (sp/if-path map? (sp/continue-then-stay sp/MAP-VALS m))))
 
-; Taken from io.jesi.backpack.collection/in?
-(defn- in?
-  [col el]
+;Taken from io.jesi.backpack.collection/in?
+(defn- in? [col el]
   (contains? (set col) el))
 
 (def map-key-walker

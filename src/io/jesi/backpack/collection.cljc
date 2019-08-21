@@ -239,7 +239,7 @@
 
 (def default-comparator =)
 
-(def default-changed-merger second)
+(def default-changed-merger (fn [old new] new))
 
 ;TODO rename to `diff-leaves`?
 (defn diff
