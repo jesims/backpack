@@ -5,10 +5,8 @@
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as random]
     [io.jesi.backpack.test.macros :refer [is=]])
-  #?(:cljs
-     (:require [cljs.core :refer [IDeref]])
-     :clj
-     (:import (clojure.lang IDeref))))
+  #?(:cljs (:require [cljs.core :refer [IDeref]])
+     :clj  (:import (clojure.lang IDeref ArityException))))
 
 
 (deftest partial-right-test
@@ -134,20 +132,16 @@
       (let [f (constantly "Kangaroos can't fart")]
         (is= f (bp/compr f))))))
 
-(def ^:const ex-type #?(:clj  Exception
-                        :cljs js/Error))
-
 (deftest and-fn-test
 
   (testing "and-fn"
 
     (testing "throws an exception if no parameters are given"
-      (is (thrown? ex-type (bp/and-fn))))
+      (is (thrown? #?(:clj ArityException :cljs js/Error) (bp/and-fn))))
 
     (testing "returns the predicate function when only given one"
       (is (identical? odd? (bp/and-fn odd?)))
-      (is (identical? true? (bp/and-fn true?)))
-      (is false))
+      (is (identical? true? (bp/and-fn true?))))
 
     (testing "returns a function"
       (is (fn? (bp/and-fn identity)))
@@ -168,7 +162,7 @@
   (testing "or-fn"
 
     (testing "throws an exception if no parameters are given"
-      (is (thrown? ex-type (bp/or-fn))))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/or-fn))))
 
     (testing "returns the predicate function when only given one"
       (is (identical? odd? (bp/or-fn odd?)))

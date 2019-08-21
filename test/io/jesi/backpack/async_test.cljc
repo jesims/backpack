@@ -59,9 +59,6 @@
 (defn ex []
   (ex-info "Exceptional" {}))
 
-(def ^:const ex-type #?(:clj  Exception
-                        :cljs js/Error))
-
 (def list-walker (sp/recursive-path [] l (sp/if-path list? (sp/continue-then-stay sp/ALL l))))
 
 (defn transform-to-env [env quoted-form]
@@ -96,10 +93,10 @@
           (is= value (async/<? (async/go-retry {} value)))
 
           (testing "that bubbles exceptions"
-            (is (thrown? ex-type (async/<? (async/go-retry
-                                             {:retries 1
-                                              :delay   0}
-                                             (throw (ex)))))))
+            (is (thrown? #?(:clj Exception :cljs js/Error) (async/<? (async/go-retry
+                                                                       {:retries 1
+                                                                        :delay   0}
+                                                                       (throw (ex)))))))
 
           (testing "that retries based on"
 
@@ -115,10 +112,10 @@
 
             (testing "retries value"
               (let [times (atom 0)]
-                (is (thrown? ex-type (async/<? (async/go-retry
-                                                 {:delay 0}
-                                                 (swap! times inc)
-                                                 (throw (ex))))))
+                (is (thrown? #?(:clj Exception :cljs js/Error) (async/<? (async/go-retry
+                                                                           {:delay 0}
+                                                                           (swap! times inc)
+                                                                           (throw (ex))))))
                 (is (= 6 @times)))
               (let [times (atom 0)]
                 (is= value (async/<? (async/go-retry
@@ -131,7 +128,7 @@
           (testing "can have a delay between retires"
             (let [delay 1
                   now #?(:cljs #(js/Date.now)
-                         :clj  #(System/currentTimeMillis))
+                         :clj #(System/currentTimeMillis))
                   start (now)]
               (<! (async/go-retry {:delay           1
                                    :should-retry-fn (constantly true)
@@ -158,5 +155,6 @@
           (is (true? (async/closed? actual)))))
 
       (testing "returns exceptions if any thrown"
-        (is (instance? ex-type
+        (is (instance?
+              #?(:clj Exception :cljs js/Error)
               (<! (async/go-call string/capitalize (async/go-try (ex))))))))))
