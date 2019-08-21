@@ -25,6 +25,7 @@
    assoc-in
    concat!
    contains-any?
+   diff
    dissoc-all
    dissoc-in
    distinct-by
@@ -33,6 +34,8 @@
    filter-values
    first-some
    in?
+   map-leaves
+   reduce-leaves
    remove-empty
    rename-keys!
    safe-empty?
@@ -45,6 +48,7 @@
    update-some]
 
   [io.jesi.backpack.fn
+   and-fn
    apply-when
    call
    compr
@@ -52,6 +56,7 @@
    if-fn
    map-if
    noop
+   or-fn
    p=
    partial-right
    pass

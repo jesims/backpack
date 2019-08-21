@@ -173,6 +173,26 @@ release () {
 	fi
 }
 
+compare-file-from-master() {
+	local branch;
+	if [[ -n $CIRCLE_BRANCH ]];then
+		branch=$CIRCLE_BRANCH
+	else
+		branch=$(git rev-parse --abbrev-ref HEAD)
+	fi
+  echo $(git --no-pager diff --name-only $branch..origin/master -- $1)
+}
+
+check-docs () {
+	local changelog_changed=$(compare-file-from-master CHANGELOG.md)
+	local version_changed=$(compare-file-from-master VERSION)
+	echo "$changelog_changed"
+	if [[ -n "$version_changed" && -z "$changelog_changed" ]];then
+		echo_error "Version has changed without updating CHANGELOG.md"
+		exit 1
+	fi
+}
+
 ## test-docs:
 ## Checks that the committed api documentation is up to date with the latest code
 test-docs () {

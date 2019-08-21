@@ -68,7 +68,7 @@
   ([] identity)
   ([f] f)
   ([f g]
-    ;TODO optimize by not always using apply
+   ;TODO optimize by not always using apply
    (fn [& args]
      (g (apply f args))))
   ([f g & more]
@@ -78,3 +78,20 @@
   "Calls the function `f` with a value `v`"
   [f v]
   (f v))
+
+(defn- apply-predicates
+  [op pred & more]
+  (if more
+    (fn [x]
+      (op #(% x) (cons pred more)))
+    pred))
+
+(def and-fn
+  "Takes any number of predicates and will return a predicate which returns true if all individual predicates return true,
+  else return false"
+  (partial apply-predicates every?))
+
+(def or-fn
+  "Takes any number of predicates and will return a predicate which returns true if any of the individual predicates
+  return true, else return false"
+  (partial apply-predicates (comp boolean some)))

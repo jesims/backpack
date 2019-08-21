@@ -1,8 +1,14 @@
 2.1.0 / Unreleased
 ==================
 
-  * New `clear-cache` function
-  * New `java->clj` function for converting basic Java data structures
+Added:
+  * `clear-cache` function
+  * `java->clj` function for converting basic Java data structures
+  * `diff` function for comparing data structures
+  * `map-leaves` function for comparing data structures
+  * `reduce-leaves` function for comparing data structures
+  * `and-fn` function for composing predicates against an and condition 
+  * `or-fn` function for composing predicates against an or condition 
 
 2.0.0 / 2019-07-02
 ==================
