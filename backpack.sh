@@ -43,6 +43,7 @@ stop () {
 	pkill -f 'karma ' &>/dev/null
 }
 
+#TODO split into test and test-refresh
 _unit-test () {
 	refresh=$1
 	clean
@@ -64,7 +65,7 @@ test () {
 		-r)
 			_unit-test true ${@:2};;
 		*)
-			_unit-test;;
+			_unit-test false ${@:2};;
 	esac
 }
 

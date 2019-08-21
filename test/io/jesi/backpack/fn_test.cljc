@@ -142,8 +142,6 @@
   (testing "and-fn"
 
     (testing "throws an exception if no parameters are given"
-      ; FIXME fix to use ex-type for evaluating macros
-      ;(is (thrown? #?(:clj Exception :cljs js/Error) (bp/and-fn)))
       (is (thrown? ex-type (bp/and-fn))))
 
     (testing "returns the predicate function when only given one"
@@ -182,10 +180,10 @@
       (testing "that returns true if ANY predicate function evaluate to true for the given value"
         (let [less-than-ten? (partial > 10)
               is-even-or-under-ten? (bp/or-fn less-than-ten? even?)]
-            (is (true? (is-even-or-under-ten? 8)))
-            (is (true? (is-even-or-under-ten? 9)))
-            (is (true? (is-even-or-under-ten? 12)))
-            (is (false? (is-even-or-under-ten? 11)))))
+          (is (true? (is-even-or-under-ten? 8)))
+          (is (true? (is-even-or-under-ten? 9)))
+          (is (true? (is-even-or-under-ten? 12)))
+          (is (false? (is-even-or-under-ten? 11)))))
 
       (testing "that short circuits if any return true"
         (let [actual (bp/or-fn odd? even? #(throw (Exception. "I am thrown")))]
