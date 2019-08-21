@@ -267,10 +267,10 @@
                            (and (coll? old-val) (empty? old-val)))
                        (vswap! added assoc! path val)
 
-                       (not (comparator val old-val))
+                       (not (comparator old-val val))
                        (vswap! changed assoc! path (changed-merger old-val val))
 
-                       (comparator val old-val)
+                       :else
                        (vswap! same conj! path))))]
      (reduce-leaves reducer nil leaf-pred updated)
      (-> (transient {})
