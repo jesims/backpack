@@ -470,8 +470,13 @@
                        ["1" "6" :waypoints])
             actual (keys (:added (bp/diff stay-when old new)))]
         (is (= (count expected) (count actual)))
-        (is (every? expected actual))))))
+        (is (every? expected actual))))
 
+    (testing "takes a custom comparator"
+      (is false))
+
+    (testing "takes a changed-merger"
+      (is false))))
 
 (deftest map-leaves-test
 

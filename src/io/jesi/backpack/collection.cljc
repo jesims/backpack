@@ -237,12 +237,17 @@
      m
      (assoc! m k (f (persistent! tcoll))))))
 
-;TODO rename to `leaf-diff`?
+(def default-comparator =)
+
+(def default-changed-merger second)
+
+;TODO rename to `diff-leaves`?
 (defn diff
   "Returns a map of paths which have changed :added, :changed, :removed, and :same"
   ([existing updated] (diff nil existing updated))
-  ([leaf-pred existing updated] (diff leaf-pred = existing updated))
-  ([leaf-pred comparator existing updated]
+  ([leaf-pred existing updated] (diff leaf-pred default-comparator existing updated))
+  ([leaf-pred comparator existing updated] (diff leaf-pred comparator default-changed-merger existing updated))
+  ([leaf-pred comparator changed-merger existing updated]
    (let [added (volatile! (transient {}))
          changed (volatile! (transient {}))
          same (volatile! (transient []))
@@ -263,7 +268,7 @@
                        (vswap! added assoc! path val)
 
                        (not (comparator val old-val))
-                       (vswap! changed assoc! path val)
+                       (vswap! changed assoc! path (changed-merger old-val val))
 
                        (comparator val old-val)
                        (vswap! same conj! path))))]
