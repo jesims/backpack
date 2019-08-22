@@ -154,7 +154,7 @@
           (is (false? (actual 9)))))
 
       (testing "that short circuits if any return false"
-        (let [actual (bp/and-fn odd? even? #(throw (Exception. "I am evaluated")))]
+        (let [actual (bp/and-fn odd? even? #(throw (ex-info "I am evaluated" {})))]
           (is (false? (actual 2))))))))
 
 (deftest or-fn-test
@@ -180,5 +180,5 @@
           (is (false? (is-even-or-under-ten? 11)))))
 
       (testing "that short circuits if any return true"
-        (let [actual (bp/or-fn odd? even? #(throw (Exception. "I am thrown")))]
+        (let [actual (bp/or-fn odd? even? #(throw (ex-info "I am thrown" {})))]
           (is (true? (actual 1))))))))

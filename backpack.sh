@@ -51,7 +51,7 @@ _unit-test () {
 	if [[ "${refresh}" = true ]];then
 		lein test-refresh ${@:2}
 	else
-		lein test
+		lein test ${@:2}
 	fi
 	abort_on_error 'Clojure tests failed'
 }
