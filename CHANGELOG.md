@@ -9,6 +9,7 @@ Added:
   * `reduce-leaves` function for comparing data structures
   * `and-fn` function for composing predicates against an and condition 
   * `or-fn` function for composing predicates against an or condition 
+  * `random/character` function
 
 2.0.0 / 2019-07-02
 ==================
