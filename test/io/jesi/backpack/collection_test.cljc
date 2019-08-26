@@ -3,7 +3,8 @@
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.macros :refer [is=]]))
+    [io.jesi.backpack.test.macros :refer [is=]]
+    [io.jesi.backpack.spy :as spy]))
 
 (deftest safe-empty?-test
 
@@ -473,11 +474,33 @@
         (is (= (count expected) (count actual)))
         (is (every? expected actual))))
 
-    (testing "takes a custom comparator")
-      ;TODO
+    (testing "takes a custom comparator"
+      (let [existing {:a 0 :b 1 :c 2 :d 3}
+            updated {:a 0.0 :b 1.0 :c 2.0 :d 3}]
 
-    (testing "takes a changed-merger")))
-      ;TODO
+        (testing "Equivalent equality"
+          (let [expected {:changed {[:a] 0.0 [:b] 1.0 [:c] 2.0} :same [[:d]]}
+                actual (bp/diff nil = existing updated)]
+            (is= expected actual)))
+
+        (testing "Value equality"
+          (let [expected {:same [[:a] [:b] [:c] [:d]]}
+                actual (bp/diff nil == existing updated)]
+            (is= expected actual)))))
+
+    (testing "takes a changed-merger"
+
+      (let [existing {:a 0 :b 2 :c 4 :d 8}
+            updated {:a 0.0 :b 1.0 :c 5 :d 2}
+            expected {:changed {[:a] 0.0 [:b] 2 [:c] 5 [:d] 8}}
+            actual (bp/diff
+                     nil
+                     =
+                     max
+                     existing
+                     updated)]
+
+        (is= expected actual)))))
 
 (deftest map-leaves-test
 
@@ -544,8 +567,54 @@
 
       (testing "that traverses over a collection, reducing over the leaves"
 
-        (testing "with an init")
-          ;TODO
+          (testing "with an init when traversing"
 
-        (testing "with a leaf predicate")))))
-          ;TODO
+            (testing "vectors"
+              (let [test-coll [1 2 3 4]
+                    actual (bp/reduce-leaves
+                             (fn [acc _ val]
+                               (+ acc val))
+                             10
+                             test-coll)
+                    expected 20]
+
+                (is= expected actual)))
+
+            (testing "maps"
+              (let [test-coll {:a {:b 1 :c 2}}
+                    actual (bp/reduce-leaves
+                             (fn [acc _ val]
+                               (+ acc val))
+                             10
+                             test-coll)
+                    expected 13]
+
+                (is= expected actual)))))
+
+      (testing "with a leaf predicate"
+
+        (testing "vectors"
+          (let [sentinel :stop
+                test-coll [1 [sentinel :some 2] [3 [sentinel]]]
+                actual (bp/reduce-leaves
+                         (fn [acc _ value]
+                           (conj acc value))
+                         []
+                         (fn [val]
+                           (if (coll? val)
+                             (some? (first (filter (partial = sentinel)  val)))
+                             (= sentinel val)))
+                         test-coll)
+                expected [[sentinel :some 2] [sentinel]]]
+            (is= expected actual)))
+
+        (testing "maps"
+          (let [test-coll {:a {:b 20}}
+                actual (bp/reduce-leaves
+                         (fn [acc _ {val :b}]
+                           (+ acc val))
+                         10
+                         (bp/partial-right contains? :b)
+                         test-coll)
+                expected 30]
+            (is= expected actual)))))))

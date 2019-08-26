@@ -220,7 +220,7 @@
 (defn reduce-leaves
   "Traverses and reduces a data structure where the reducing function is given an accumulator, vector path and value at that
   path"
-  ([f coll] (reduce-leaves f (first coll) nil (rest coll)))
+  ([f coll] (reduce-leaves f (first coll) (rest coll)))
   ([f init coll] (reduce-leaves f init nil coll))
   ([f init leaf-pred coll]
    (reduce

@@ -36,8 +36,10 @@
       (sp/cond-path
         map? [INDEXED p]
         vector? [INDEXED-SEQ p]
+        seq? [INDEXED-SEQ p]
         :else sp/STAY)
       (sp/cond-path
         (sp/pred stay-when) sp/STAY
         map? [INDEXED p]
-        vector? [INDEXED-SEQ p]))))
+        vector? [INDEXED-SEQ p]
+        seq? [INDEXED-SEQ p]))))
