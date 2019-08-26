@@ -3,8 +3,7 @@
     [clojure.test :refer [deftest testing is]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.macros :refer [is=]]
-    [io.jesi.backpack.spy :as spy]))
+    [io.jesi.backpack.test.macros :refer [is=]]))
 
 (deftest safe-empty?-test
 
