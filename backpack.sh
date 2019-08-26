@@ -181,7 +181,7 @@ compare-file-from-master() {
 	else
 		branch=$(git rev-parse --abbrev-ref HEAD)
 	fi
-  echo $(git --no-pager diff --name-only $branch..origin/master -- $1)
+	echo $(git --no-pager diff --name-only $branch..origin/master -- $1)
 }
 
 check-docs () {
