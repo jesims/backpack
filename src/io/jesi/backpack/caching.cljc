@@ -10,8 +10,20 @@
                          :seed      {}
                          :threshold 50})
 
-(defn init-cache [& [{:keys [threshold ttl seed] :as opts}]]
+(defn init-cache
+  "Creates a cache with the options:
+
+  :ttl
+  time in milliseconds that entries are allowed to reside in the cache
+  (default 12 hours)
+
+  :threshold
+  the maximum number of elements in the cache before the LRU semantics apply
+  (default 50)"
+  [& [{:keys [threshold ttl seed] :as opts}]]
   (let [{:keys [seed threshold ttl]} (merge defaults opts)]
+    ;TODO make ttl and threshold nilable
+    ;TODO create soft reference cache
     (-> seed
         (cache/ttl-cache-factory :ttl ttl)
         (cache/lru-cache-factory :threshold threshold))))
@@ -41,23 +53,29 @@
   (cache/miss cache k result))
 
 (defn cache
-  [{:as cache-opts} f]
-  (fn [& args]
-    (-cache
-      (merge {:miss-fn (fn cached-missed-fn [vres cache]
-                         (miss vres cache args (apply f args)))}
-        cache-opts)
-      f
-      args)))
+  "Creates a generic cache function that takes any number of `args`,
+  returning the value of applying `args` to `f`.
+  Values are remembered according to the cache from `init-cache`."
+  ;FIXME should cache-opts really be passed in or should it be the init-cache opts. `miss-fn` should not be overridden
+  ([f] (cache nil f))
+  ([{:as cache-opts} f]
+   (fn [& args]
+     (-cache
+       (merge {:miss-fn (fn cached-missed-fn [vres cache]
+                          (miss vres cache args (apply f args)))}
+         cache-opts)
+       f
+       args))))
 
+;FIXME docstring
 (defn keyed-cache
+  ;TODO accept cache-opts
   ([cache-key k]
    (-cache cache-key k))
 
   ([cache-key k result]
    (-cache
-     {:init-fn init-cache
-      :miss-fn (fn [vres cache]
+     {:miss-fn (fn [vres cache]
                  (miss vres cache k result))}
      cache-key
      k)))

@@ -14,8 +14,9 @@ Takes any number of predicates and returns a function that takes a value
 and returns true if ALL individual predicates return true, else return false.</pre></div></div><div class="public anchor" id="var-apply-when"><h3>apply-when</h3><div class="usage"><code>(apply-when f v)</code></div><div class="doc"><pre class="plaintext">Invokes f when it's truthy
 </pre></div></div><div class="public anchor" id="var-assoc-changed.21"><h3>assoc-changed!</h3><div class="usage"><code>(assoc-changed! atom &amp; kvs)</code></div><div class="doc"><pre class="plaintext">assoc(-in) the atom when the value has changed
 </pre></div></div><div class="public anchor" id="var-assoc-in"><h3>assoc-in</h3><div class="usage"><code>(assoc-in m &amp; kvs)</code></div><div class="doc"><pre class="plaintext">
-</pre></div></div><div class="public anchor" id="var-cache"><h3>cache</h3><div class="usage"><code>(cache {:as cache-opts} f)</code></div><div class="doc"><pre class="plaintext">
-</pre></div></div><div class="public anchor" id="var-call"><h3>call</h3><div class="usage"><code>(call f v)</code></div><div class="doc"><pre class="plaintext">Calls the function `f` with a value `v`
+</pre></div></div><div class="public anchor" id="var-cache"><h3>cache</h3><div class="usage"><code>(cache f)</code><code>(cache {:as cache-opts} f)</code></div><div class="doc"><pre class="plaintext">Creates a generic cache function that takes any number of `args`,
+returning the value of applying `args` to `f`.
+Values are remembered according to the cache from `init-cache`.</pre></div></div><div class="public anchor" id="var-call"><h3>call</h3><div class="usage"><code>(call f v)</code></div><div class="doc"><pre class="plaintext">Calls the function `f` with a value `v`
 </pre></div></div><div class="public anchor" id="var-clear-cache"><h3>clear-cache</h3><div class="usage"><code>(clear-cache key)</code></div><div class="doc"><pre class="plaintext">Completely removes a cache by key from the caches
 </pre></div></div><div class="public anchor" id="var-clj-.3Ejson"><h3>clj-&gt;json</h3><div class="usage"><code>(clj-&gt;json o)</code><code>(clj-&gt;json o key-fn)</code></div><div class="doc"><pre class="plaintext">
 </pre></div></div><div class="public anchor" id="var-cljs-env.3F"><h3>cljs-env?</h3><div class="usage"><code>(cljs-env? env)</code></div><div class="doc"><pre class="plaintext">Take the &amp;env from a macro, and tell whether we are expanding into cljs.
@@ -38,8 +39,15 @@ Any empty maps produced will be removed</pre></div></div><div class="public anch
 Takes a predicate (`pred`), calling `then` or (optionally) `else` based on the predicate.
 Returns nil if no `else` defined.</pre></div></div><div class="public anchor" id="var-in.3F"><h3>in?</h3><div class="usage"><code>(in? col el)</code></div><div class="doc"><pre class="plaintext">
 </pre></div></div><div class="public anchor" id="var-infinity"><h3>infinity</h3><div class="usage"></div><div class="doc"><pre class="plaintext">Java's Integer/MAX_VALUE for consistence use in Clojure(Script) projects
-</pre></div></div><div class="public anchor" id="var-init-cache"><h3>init-cache</h3><div class="usage"><code>(init-cache &amp; [{:keys [threshold ttl seed], :as opts}])</code></div><div class="doc"><pre class="plaintext">
-</pre></div></div><div class="public anchor" id="var-java-.3Eclj"><h3>java-&gt;clj</h3><div class="usage"><code>(java-&gt;clj j)</code><code>(java-&gt;clj j key-fn)</code></div><div class="doc"><pre class="plaintext">Transforms Java to Clojure. Converting keys to kebab-case keywords by default
+</pre></div></div><div class="public anchor" id="var-init-cache"><h3>init-cache</h3><div class="usage"><code>(init-cache &amp; [{:keys [threshold ttl seed], :as opts}])</code></div><div class="doc"><pre class="plaintext">Creates a cache with the options:
+
+:ttl
+time in milliseconds that entries are allowed to reside in the cache
+(default 12 hours)
+
+:threshold
+the maximum number of elements in the cache before the LRU semantics apply
+(default 50)</pre></div></div><div class="public anchor" id="var-java-.3Eclj"><h3>java-&gt;clj</h3><div class="usage"><code>(java-&gt;clj j)</code><code>(java-&gt;clj j key-fn)</code></div><div class="doc"><pre class="plaintext">Transforms Java to Clojure. Converting keys to kebab-case keywords by default
 </pre></div></div><div class="public anchor" id="var-json-.3Eclj"><h3>json-&gt;clj</h3><div class="usage"><code>(json-&gt;clj s)</code><code>(json-&gt;clj s key-fn)</code></div><div class="doc"><pre class="plaintext">
 </pre></div></div><div class="public anchor" id="var-keyed-cache"><h3>keyed-cache</h3><div class="usage"><code>(keyed-cache cache-key k)</code><code>(keyed-cache cache-key k result)</code></div><div class="doc"><pre class="plaintext">
 </pre></div></div><div class="public anchor" id="var-macro.3F"><h3>macro?</h3><div class="usage"><code>(macro? sym)</code></div><div class="doc"><pre class="plaintext">
