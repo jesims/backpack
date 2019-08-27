@@ -6,7 +6,6 @@ bldgrn=${txtbld}$(tput setaf 2 2>/dev/null) # Bold Green
 bldred=${txtbld}$(tput setaf 1 2>/dev/null) # Bold Red
 txtrst=$(tput sgr0 2>/dev/null)             # Reset
 
-cd $(realpath $(dirname $0))
 script_name=$(basename $0)
 
 echo_message () {
