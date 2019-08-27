@@ -425,7 +425,7 @@
            (bp/diff
              {:a {:b [0 1 2]}}
              {:a {:b [0 3 2]}}))
-      ;FIXME do we want the nill leaf-pred to do this?:
+      ;FIXME do we want the nil leaf-pred to do this?:
       (comment (is= {:added {[:a :b :cheese] [1 2 3]}}
                     (bp/diff
                       {:a {:b {:c 1
@@ -474,27 +474,30 @@
         (is (every? expected actual))))
 
     (testing "takes a custom comparator"
-      (let [existing {:a 0 :b 1 :c 2 :d 3}
-            updated {:a 0.0 :b 1.0 :c 2.0 :d 3}]
+      (let [existing {:a "a" :d "abcd"}
+            updated {:a "a" :d "dcba"}]
 
-        (testing "Equivalent equality"
-          (let [expected {:changed {[:a] 0.0 [:b] 1.0 [:c] 2.0} :same [[:d]]}
+        (testing "value equality"
+          (let [expected {:changed {[:d] "dcba"}
+                          :same    [[:a]]}
                 actual (bp/diff nil = existing updated)]
             (is= expected actual)))
 
-        (testing "Value equality"
-          (let [expected {:same [[:a] [:b] [:c] [:d]]}
-                actual (bp/diff nil == existing updated)]
+        (testing "comparator equality"
+          (let [expected {:same [[:a] [:d]]}
+                actual (bp/diff nil #(compare (count %1) (count %2)) existing updated)]
             (is= expected actual)))))
 
     (testing "takes a changed-merger"
-
       (let [existing {:a 0 :b 2 :c 4 :d 8}
             updated {:a 0.0 :b 1.0 :c 5 :d 2}
-            expected {:changed {[:a] 0.0 [:b] 2 [:c] 5 [:d] 8}}
+            expected {:changed {[:b] 2
+                                [:c] 5
+                                [:d] 8}
+                      :same    [[:a]]}
             actual (bp/diff
                      nil
-                     =
+                     ==
                      max
                      existing
                      updated)]
@@ -566,29 +569,29 @@
 
       (testing "that traverses over a collection, reducing over the leaves"
 
-          (testing "with an init when traversing"
+        (testing "with an init when traversing"
 
-            (testing "vectors"
-              (let [test-coll [1 2 3 4]
-                    actual (bp/reduce-leaves
-                             (fn [acc _ val]
-                               (+ acc val))
-                             10
-                             test-coll)
-                    expected 20]
+          (testing "vectors"
+            (let [test-coll [1 2 3 4]
+                  actual (bp/reduce-leaves
+                           (fn [acc _ val]
+                             (+ acc val))
+                           10
+                           test-coll)
+                  expected 20]
 
-                (is= expected actual)))
+              (is= expected actual)))
 
-            (testing "maps"
-              (let [test-coll {:a {:b 1 :c 2}}
-                    actual (bp/reduce-leaves
-                             (fn [acc _ val]
-                               (+ acc val))
-                             10
-                             test-coll)
-                    expected 13]
+          (testing "maps"
+            (let [test-coll {:a {:b 1 :c 2}}
+                  actual (bp/reduce-leaves
+                           (fn [acc _ val]
+                             (+ acc val))
+                           10
+                           test-coll)
+                  expected 13]
 
-                (is= expected actual)))))
+              (is= expected actual)))))
 
       (testing "with a leaf predicate"
 
@@ -601,7 +604,7 @@
                          []
                          (fn [val]
                            (if (coll? val)
-                             (some? (first (filter (partial = sentinel)  val)))
+                             (some? (first (filter (partial = sentinel) val)))
                              (= sentinel val)))
                          test-coll)
                 expected [[sentinel :some 2] [sentinel]]]
