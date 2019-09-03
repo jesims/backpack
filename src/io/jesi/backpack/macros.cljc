@@ -4,6 +4,7 @@
   (:require
     [io.jesi.backpack.fn :refer [noop]]
     [io.jesi.backpack.miscellaneous :refer [cljs-env?]])
+  #?(:cljs (:require [cljs.core :refer [IFn]]))
   #?(:clj
      (:import
        (clojure.lang IFn))))
@@ -117,15 +118,20 @@
 (defmacro reify-ifn
   "Defines IFn invoke implementations to call as `(invoke-fn this [args])`"
   [invoke-fn & more]
-  (let [arg (comp symbol (partial str "arg"))]
+  (let [arg (comp symbol (partial str "arg"))
+        cljs? (cljs-env? &env)
+        sym (if cljs? '-invoke 'invoke)
+        protocol (if cljs? 'IFn 'clojure.lang.IFn)]
     `(reify
-       IFn
-       ;What arity for CLJS?
+       ~protocol
        ~@(for [arity (range 1 20)
                :let [args (mapv arg (range arity))]]
-           `(~'invoke [this# ~@args]
+           `(~sym [this# ~@args]
               (~invoke-fn this# ~args)))
        ~(let [args (mapv arg (range 19))]
-          `(~'invoke [this# ~@args & more#]
-             (~invoke-fn this# (list* ~@args more#))))
+          (if cljs?
+            `(~sym [this# ~@args more#]
+               (~invoke-fn this# (list* ~@args more#)))
+            `(~sym [this# ~@args & more#]
+               (~invoke-fn this# (list* ~@args more#)))))
        ~@more)))
