@@ -3,7 +3,10 @@
   #?(:cljs (:require-macros [io.jesi.backpack.macros]))
   (:require
     [io.jesi.backpack.fn :refer [noop]]
-    [io.jesi.backpack.miscellaneous :refer [cljs-env?]]))
+    [io.jesi.backpack.miscellaneous :refer [cljs-env?]])
+  #?(:clj
+     (:import
+       (clojure.lang IFn))))
 
 (defmacro import-vars
   [& imports]
@@ -110,3 +113,19 @@
     `(when ~(vary-meta 'js/goog.DEBUG assoc :tag 'boolean)
        ~body)
     body))
+
+(defmacro reify-ifn
+  "Defines IFn invoke implementations to call as `(invoke-fn this [args])`"
+  [invoke-fn & more]
+  (let [arg (comp symbol (partial str "arg"))]
+    `(reify
+       IFn
+       ;What arity for CLJS?
+       ~@(for [arity (range 1 20)
+               :let [args (mapv arg (range arity))]]
+           `(~'invoke [this# ~@args]
+              (~invoke-fn this# ~args)))
+       ~(let [args (mapv arg (range 19))]
+          `(~'invoke [this# ~@args & more#]
+             (~invoke-fn this# (list* ~@args more#))))
+       ~@more)))
