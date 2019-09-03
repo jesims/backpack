@@ -6,13 +6,13 @@ Added:
   * `cache/create-default`
   * `cache/->Simple`
   * `macros/reify-ifn`
-  * `java->clj` function for converting basic Java data structures
-  * `diff` function for comparing data structures
-  * `map-leaves` function for comparing data structures
-  * `reduce-leaves` function for comparing data structures
-  * `and-fn` function for composing predicates against an and condition 
-  * `or-fn` function for composing predicates against an or condition 
-  * `random/character` function
+  * `java->clj`
+  * `diff`
+  * `map-leaves`
+  * `reduce-leaves`
+  * `and-fn`
+  * `or-fn`
+  * `random/character`
   
 Removed:
   * `cache`
@@ -20,10 +20,12 @@ Removed:
 
 # 2.0.0 
 
-  * async/go-call for invoking f with the result of chan
+Added:
+  * `async/go-call`
+  * `update-some`
+  
+Changed:
   * Split `http` namespace into `status` and `response`
-  * New `update-some` utility
 
 # 0.0.17
-
   * Initial public release of Backpack

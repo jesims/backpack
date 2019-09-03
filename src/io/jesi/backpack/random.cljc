@@ -26,7 +26,9 @@
 
 (def ^:private char-range (range 97 123))                   ;a-z
 
-(defn character []
+(defn character
+  {:added "3.0.0"}
+  []
   (char (rand-nth char-range)))
 
 (def ^:private basic-chars

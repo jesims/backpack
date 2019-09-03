@@ -18,6 +18,7 @@
 
 (defn java->clj
   "Transforms Java to Clojure. Converting keys to kebab-case keywords by default"
+  {:added "3.0.0"}
   ([j]
    (java->clj j ->kebab-case-key))
   ([j key-fn]
