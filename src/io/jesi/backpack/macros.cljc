@@ -117,7 +117,6 @@
 
 (defmacro reify-ifn
   "Defines IFn invoke implementations to call as `(invoke-fn this [args])`"
-  {:added "3.0.0"}
   [invoke-fn & more]
   (let [arg (comp symbol (partial str "arg"))
         cljs? (cljs-env? &env)

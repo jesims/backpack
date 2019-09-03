@@ -211,7 +211,6 @@
 (defn map-leaves
   "Traverses and applies the mapping function to each leaf of a data structure. The mapping function is given the path and
   value at that path"
-  {:added "3.0.0"}
   ([f coll] (map-leaves f nil coll))
   ([f leaf-pred coll]
    (map
@@ -221,7 +220,6 @@
 (defn reduce-leaves
   "Traverses and reduces a data structure where the reducing function is given an accumulator, vector path and value at that
   path"
-  {:added "3.0.0"}
   ([f coll] (reduce-leaves f (first coll) (rest coll)))
   ([f init coll] (reduce-leaves f init nil coll))
   ([f init leaf-pred coll]
@@ -246,7 +244,6 @@
 ;TODO rename to `diff-leaves`?
 (defn diff
   "Returns a map of paths which have changed :added, :changed, :removed, and :same"
-  {:added "3.0.0"}
   ([existing updated] (diff nil existing updated))
   ([leaf-pred existing updated] (diff leaf-pred default-comparator existing updated))
   ([leaf-pred comparator existing updated] (diff leaf-pred comparator default-changed-merger existing updated))

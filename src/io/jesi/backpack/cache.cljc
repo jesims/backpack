@@ -16,7 +16,6 @@
 
 (defn ^CacheProtocol create-ttl
   "Creates a Time To Live cache with an initial seed (default {}) and maximum TTL in milliseconds (default 12 hours)"
-  {:added "3.0.0"}
   ([] (create-ttl t-12h default-seed))
   ([seed] (create-ttl t-12h seed))
   ([ttl seed]
@@ -24,7 +23,6 @@
 
 (defn ^CacheProtocol create-lru
   "Creates a Least Recently Used cache with an initial seed (default {}) and maximum value threshold (default 50)."
-  {:added "3.0.0"}
   ([] (create-lru default-lru-threshold default-seed))
   ([seed] (create-lru default-lru-threshold seed))
   ([threshold seed]
@@ -32,7 +30,6 @@
 
 (defn ^CacheProtocol create-default
   "Creates a TTL/LRU combination cache with default values and in initial seed (default {})"
-  {:added "3.0.0"}
   ([] (create-default {}))
   ([seed] (->> seed create-ttl create-lru)))
 
@@ -62,7 +59,6 @@
 (defn ->Simple
   "Converts a `CacheProtocol` into a `SimpleCache`. The `miss` function will be invoked with the entry to determine
   and set the value if not found. Implements IFn as an alternative to invoking `SimpleCache/get`"
-  {:added "3.0.0"}
   ([^CacheProtocol impl] (->Simple impl nil))
   ([^CacheProtocol impl miss]
    (let [cache (atom impl)]

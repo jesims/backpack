@@ -92,8 +92,7 @@
 (def ^{:arglists '([pred & more])
        :doc      "Higher order `and`.
        Takes any number of predicates and returns a function that takes a value
-       and returns true if ALL individual predicates return true, else return false."
-       :added    "3.0.0"}
+       and returns true if ALL individual predicates return true, else return false."}
   and-fn
   (partial apply-predicates every?))
 
@@ -101,7 +100,6 @@
   ^{:arglists '([pred & more])
     :doc      "Higher order `or`.
        Takes any number of predicates and returns a function that takes a value
-       and returns true if ANY individual predicates return true, else return false."
-    :added    "3.0.0"}
+       and returns true if ANY individual predicates return true, else return false."}
   or-fn
   (partial apply-predicates (comp boolean some)))
