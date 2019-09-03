@@ -30,7 +30,10 @@
   ;FIXME generate docs for cljc, clj and cljs
   :codox {:output-path "docs"
           :namespaces  [io.jesi.backpack
-                        io.jesi.backpack.http
+                        io.jesi.backpack.http.codes
+                        io.jesi.backpack.http.response
+                        io.jesi.backpack.http.status
+                        io.jesi.backpack.cache
                         io.jesi.backpack.macros
                         io.jesi.backpack.random]}
   :aliases {"test-refresh" ["auto" "do" ["shell" "clear"] "test"]})
