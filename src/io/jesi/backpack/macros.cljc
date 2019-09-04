@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [when-let])
   #?(:cljs (:require-macros [io.jesi.backpack.macros]))
   (:require
+    [clojure.core]
     [io.jesi.backpack.fn :refer [noop]]
     [io.jesi.backpack.miscellaneous :refer [cljs-env?]])
   #?(:cljs (:require [cljs.core :refer [IFn]]))
@@ -124,14 +125,13 @@
         protocol (if cljs? 'IFn 'clojure.lang.IFn)]
     `(reify
        ~protocol
-       ~@(for [arity (range 1 20)
+       ~@(for [arity (range 1 21)
                :let [args (mapv arg (range arity))]]
            `(~sym [this# ~@args]
               (~invoke-fn this# ~args)))
-       ~(let [args (mapv arg (range 19))]
-          (if cljs?
-            `(~sym [this# ~@args more#]
-               (~invoke-fn this# (list* ~@args more#)))
-            `(~sym [this# ~@args & more#]
-               (~invoke-fn this# (list* ~@args more#)))))
+       ~(let [args (mapv arg (range 1 21))]
+          `(~sym [this# ~@args more#]
+             (~invoke-fn this# (list* ~@args more#))))
+       (applyTo [this# args#]
+         (~invoke-fn this# args#))
        ~@more)))
