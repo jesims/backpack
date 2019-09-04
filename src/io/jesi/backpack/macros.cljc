@@ -132,10 +132,17 @@
                        (~invoke-fn this# ~args)))
                 ~(let [args (mapv arg (range 1 21))]
                    (if cljs?
+                     ; ShadowCLJS warns if using & to define more. But more than 20 args can be used
+                     ; CLJS throws invocation exceptions if invoking with more than 20 args
+                     ; See:
+                     ; - https://clojure.atlassian.net/browse/CLJS-364
+                     ; - https://github.com/hoplon/hoplon/issues/192
+                     ; - https://github.com/reagent-project/reagent/issues/358
+                     ; - https://clojure.atlassian.net/browse/CLJS-2710
                      `(~sym [this# ~@args more#]
                         (if (seq? more#)
                           (~invoke-fn this# (list* ~@args more#))
-                          (~invoke-fn this# (conj ~args more#))))
+                          (~invoke-fn this# (concat ~args (list more#)))))
                      `(~sym [this# ~@args more#]
                         (~invoke-fn this# (list* ~@args more#))))))]
     (if cljs?

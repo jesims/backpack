@@ -58,7 +58,9 @@
 
 (defn ->Simple
   "Converts a `CacheProtocol` into a `SimpleCache`. The `miss` function will be invoked with the entry to determine
-  and set the value if not found. Implements IFn as an alternative to invoking `SimpleCache/get`"
+  and set the value if not found. Implements IFn as an alternative to invoking `SimpleCache/get`
+
+  WARNING: CLJS has a IFn argument limit of 20 args for both Apply and Invoke"
   ([^CacheProtocol impl] (->Simple impl nil))
   ([^CacheProtocol impl miss]
    (let [cache (atom impl)]
