@@ -69,7 +69,8 @@
 
     (testing "can be applied to"
       (let [cached-sum (cache/->Simple (cache/create-default) +)]
-        (doseq [v (range 1 100)]
+        (doseq [v (range 1 #?(:clj 100
+                              :cljs 21))]
           (let [args (range v)
                 expected (apply + args)
                 actual (apply cached-sum args)]
@@ -79,6 +80,7 @@
           ;FIXME. Would be nice to have a macro, but I can't get it to spread local args (i.e. args defined with let)
           (comment (defmacro spread [sym args]
                      (cons sym (eval args))))
+
           (is= 1 (cached-sum 1))
           (is= 2 (cached-sum 1 1))
           (is= 3 (cached-sum 1 1 1))
@@ -99,9 +101,12 @@
           (is= 18 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1))
           (is= 19 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1))
           (is= 20 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1))
-          (is= 21 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1))
-          (is= 22 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1))
-          (is= 23 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)))))
+          ;CLJS does not support arity over 21
+          #?(:clj
+             (do
+               (is= 21 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1))
+               (is= 22 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1))
+               (is= 23 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)))))))
 
     (testing "without miss fn"
       (let [simple-cache (cache/->Simple (cache/create-lru 3 {}))]

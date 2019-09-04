@@ -122,16 +122,24 @@
   (let [arg (comp symbol (partial str "arg"))
         cljs? (cljs-env? &env)
         sym (if cljs? '-invoke 'invoke)
-        protocol (if cljs? 'IFn 'clojure.lang.IFn)]
-    `(reify
-       ~protocol
-       ~@(for [arity (range 1 21)
-               :let [args (mapv arg (range arity))]]
-           `(~sym [this# ~@args]
-              (~invoke-fn this# ~args)))
-       ~(let [args (mapv arg (range 1 21))]
-          `(~sym [this# ~@args more#]
-             (~invoke-fn this# (list* ~@args more#))))
-       (applyTo [this# args#]
-         (~invoke-fn this# args#))
-       ~@more)))
+        protocol (if cljs? 'IFn 'clojure.lang.IFn)
+        code `(reify
+                ~@more
+                ~protocol
+                ~@(for [arity (range 1 21)
+                        :let [args (mapv arg (range arity))]]
+                    `(~sym [this# ~@args]
+                       (~invoke-fn this# ~args)))
+                ~(let [args (mapv arg (range 1 21))]
+                   (if cljs?
+                     `(~sym [this# ~@args more#]
+                        (if (seq? more#)
+                          (~invoke-fn this# (list* ~@args more#))
+                          (~invoke-fn this# (conj ~args more#))))
+                     `(~sym [this# ~@args more#]
+                        (~invoke-fn this# (list* ~@args more#))))))]
+    (if cljs?
+      code
+      (concat code `(
+                     (applyTo [this# args#]
+                       (~invoke-fn this# args#)))))))
