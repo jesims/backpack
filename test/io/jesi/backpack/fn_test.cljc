@@ -5,10 +5,9 @@
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as random]
     [io.jesi.backpack.test.macros :refer [is=]])
-  #?(:cljs
-     (:require [cljs.core :refer [IDeref]])
-     :clj
-     (:import (clojure.lang IDeref))))
+  #?(:cljs (:require [cljs.core :refer [IDeref]])
+     :clj  (:import (clojure.lang IDeref ArityException))))
+
 
 (deftest partial-right-test
 
@@ -132,3 +131,54 @@
     (testing "returns same function if one arg"
       (let [f (constantly "Kangaroos can't fart")]
         (is= f (bp/compr f))))))
+
+(deftest and-fn-test
+
+  (testing "and-fn"
+
+    (testing "throws an exception if no parameters are given"
+      (is (thrown? #?(:clj ArityException :cljs js/Error) (bp/and-fn))))
+
+    (testing "returns the predicate function when only given one"
+      (is (identical? odd? (bp/and-fn odd?)))
+      (is (identical? true? (bp/and-fn true?))))
+
+    (testing "returns a function"
+      (is (fn? (bp/and-fn identity)))
+
+      (testing "that returns true if ALL predicate functions evaluate to true for the given value"
+        (let [actual (bp/and-fn (partial < 10) odd?)]
+          (is (true? (actual 11)))
+          (is (false? (actual 12)))
+          (is (false? (actual 8)))
+          (is (false? (actual 9)))))
+
+      (testing "that short circuits if any return false"
+        (let [actual (bp/and-fn odd? even? #(throw (ex-info "I am evaluated" {})))]
+          (is (false? (actual 2))))))))
+
+(deftest or-fn-test
+
+  (testing "or-fn"
+
+    (testing "throws an exception if no parameters are given"
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/or-fn))))
+
+    (testing "returns the predicate function when only given one"
+      (is (identical? odd? (bp/or-fn odd?)))
+      (is (identical? true? (bp/or-fn true?))))
+
+    (testing "returns a function"
+      (is (fn? (bp/or-fn identity)))
+
+      (testing "that returns true if ANY predicate function evaluate to true for the given value"
+        (let [less-than-ten? (partial > 10)
+              is-even-or-under-ten? (bp/or-fn less-than-ten? even?)]
+          (is (true? (is-even-or-under-ten? 8)))
+          (is (true? (is-even-or-under-ten? 9)))
+          (is (true? (is-even-or-under-ten? 12)))
+          (is (false? (is-even-or-under-ten? 11)))))
+
+      (testing "that short circuits if any return true"
+        (let [actual (bp/or-fn odd? even? #(throw (ex-info "I am thrown" {})))]
+          (is (true? (actual 1))))))))

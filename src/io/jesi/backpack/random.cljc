@@ -24,10 +24,15 @@
   "Generates a random UUID string"
   [] (str (uuid)))
 
+(def ^:private char-range (range 97 123))                   ;a-z
+
+(defn character []
+  (char (rand-nth char-range)))
+
 (def ^:private basic-chars
   (->> (concat
          (range 65 91)                                      ;A-Z
-         (range 97 123)                                     ;a-z
+         char-range
          (range 48 58))                                     ;0-9
        (map char)
        (apply str)))

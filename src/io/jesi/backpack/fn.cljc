@@ -68,7 +68,7 @@
   ([] identity)
   ([f] f)
   ([f g]
-    ;TODO optimize by not always using apply
+   ;TODO optimize by not always using apply
    (fn [& args]
      (g (apply f args))))
   ([f g & more]
@@ -78,3 +78,27 @@
   "Calls the function `f` with a value `v`"
   [f v]
   (f v))
+
+(defn- apply-predicates
+  [op pred & more]
+  (let [more (seq more)]
+    (when (and (nil? pred) (nil? more))
+      (throw (ex-info "Invalid arity 0" {})))
+    (if more
+      (fn [x]
+        (op #(% x) (cons pred more)))
+      pred)))
+
+(def ^{:arglists '([pred & more])
+       :doc      "Higher order `and`.
+       Takes any number of predicates and returns a function that takes a value
+       and returns true if ALL individual predicates return true, else return false."}
+  and-fn
+  (partial apply-predicates every?))
+
+(def ^{:arglists '([pred & more])
+       :doc      "Higher order `or`.
+       Takes any number of predicates and returns a function that takes a value
+       and returns true if ANY individual predicates return true, else return false."}
+  or-fn
+  (partial apply-predicates (comp boolean some)))

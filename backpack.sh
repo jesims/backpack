@@ -43,6 +43,7 @@ stop () {
 	pkill -f 'karma ' &>/dev/null
 }
 
+#TODO split into test and test-refresh
 _unit-test () {
 	refresh=$1
 	clean
@@ -50,7 +51,7 @@ _unit-test () {
 	if [[ "${refresh}" = true ]];then
 		lein test-refresh ${@:2}
 	else
-		lein test
+		lein test ${@:2}
 	fi
 	abort_on_error 'Clojure tests failed'
 }
@@ -64,7 +65,7 @@ test () {
 		-r)
 			_unit-test true ${@:2};;
 		*)
-			_unit-test;;
+			_unit-test false ${@:2};;
 	esac
 }
 
@@ -169,6 +170,26 @@ release () {
 		deploy
 	else
 		echo_message 'SNAPSHOT suffix already defined... Aborting'
+		exit 1
+	fi
+}
+
+compare-file-from-master() {
+	local branch;
+	if [[ -n $CIRCLE_BRANCH ]];then
+		branch=$CIRCLE_BRANCH
+	else
+		branch=$(git rev-parse --abbrev-ref HEAD)
+	fi
+	echo $(git --no-pager diff --name-only $branch..origin/master -- $1)
+}
+
+check-docs () {
+	local changelog_changed=$(compare-file-from-master CHANGELOG.md)
+	local version_changed=$(compare-file-from-master VERSION)
+	echo "$changelog_changed"
+	if [[ -n "$version_changed" && -z "$changelog_changed" ]];then
+		echo_error "Version has changed without updating CHANGELOG.md"
 		exit 1
 	fi
 }

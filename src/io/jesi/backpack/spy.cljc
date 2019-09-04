@@ -4,7 +4,7 @@
      :cljs (:refer-clojure :exclude [prn -name peek]))
   #?(:cljs (:require-macros [io.jesi.backpack.spy :refer [prn pprint]]))
   (:require
-    [io.jesi.backpack :as bp]
+    [io.jesi.backpack.collection :refer [trans-reduce]]
     [io.jesi.backpack.macros :refer [when-not= if-cljs when-debug]]
     [io.jesi.backpack.test.util :refer [pprint-str]]))
 
@@ -34,7 +34,7 @@
   `(when-debug
      (when *enabled*
        (println ~@(let [line (line-number file form)]
-                    (bp/trans-reduce
+                    (trans-reduce
                       (fn [col form]
                         (doto col
                           (conj! (str (-name form) \:))

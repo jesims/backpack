@@ -2,7 +2,11 @@
   (:refer-clojure :exclude [assoc-in conj!])
   (:require
     [clojure.core :as clj]
-    [clojure.walk :refer [postwalk]]))
+    [clojure.walk :refer [postwalk prewalk]]
+    [com.rpl.specter :as sp]
+    [io.jesi.backpack.specter :refer [path-walker]])
+  (:import
+    #?(:clj (java.util Map))))
 
 (defn distinct-by [key entities]
   (apply distinct? (map key entities)))
@@ -181,7 +185,12 @@
 (defn transform-keys [f coll]
   "Recursively transforms all map keys in coll with f"
   (letfn [(transform [[k v]] [(f k) v])]
-    (postwalk (fn [x] (if (map? x) (into {} (map transform x)) x)) coll)))
+    (prewalk (fn [x]
+               (if (or (map? x)
+                       #?(:clj (instance? Map x)))
+                 (into {} (map transform x))
+                 x))
+      coll)))
 
 (defn update-some
   "Updates a key in a map with a function, only if the key is present and the result of `f` is not nil."
@@ -192,3 +201,81 @@
         (assoc m k new-v)
         (dissoc m k))
       m)))
+
+(defn- extract-path-and-value
+  [args]
+  (if (vector? args)
+    [(vec (butlast args)) (last args)]
+    [nil args]))
+
+(defn map-leaves
+  "Traverses and applies the mapping function to each leaf of a data structure. The mapping function is given the path and
+  value at that path"
+  ([f coll] (map-leaves f nil coll))
+  ([f leaf-pred coll]
+   (map
+     (comp (partial apply f) extract-path-and-value)
+     (sp/select (path-walker leaf-pred) coll))))
+
+(defn reduce-leaves
+  "Traverses and reduces a data structure where the reducing function is given an accumulator, vector path and value at that
+  path"
+  ([f coll] (reduce-leaves f (first coll) (rest coll)))
+  ([f init coll] (reduce-leaves f init nil coll))
+  ([f init leaf-pred coll]
+   (reduce
+     (fn [acc args]
+       (apply f acc (extract-path-and-value args)))
+     init
+     (sp/traverse (path-walker leaf-pred) coll))))
+
+(defn- assoc-non-empty
+  ([m k tcoll]
+   (assoc-non-empty m k identity tcoll))
+  ([m k f tcoll]
+   (if (zero? (count tcoll))
+     m
+     (assoc! m k (f (persistent! tcoll))))))
+
+(def default-comparator =)
+
+(def default-changed-merger (fn [old new] new))
+
+;TODO rename to `diff-leaves`?
+(defn diff
+  "Returns a map of paths which have changed :added, :changed, :removed, and :same"
+  ([existing updated] (diff nil existing updated))
+  ([leaf-pred existing updated] (diff leaf-pred default-comparator existing updated))
+  ([leaf-pred comparator existing updated] (diff leaf-pred comparator default-changed-merger existing updated))
+  ([leaf-pred comparator changed-merger existing updated]
+   (let [added (volatile! (transient {}))
+         changed (volatile! (transient {}))
+         same (volatile! (transient []))
+         removed (volatile! (reduce-leaves
+                              (fn [s path val]
+                                (conj! s path))
+                              (transient #{})
+                              leaf-pred
+                              existing))
+         reducer (fn [_ path val]
+                   (let [old-val (if path
+                                   (get-in existing path)
+                                   existing)]
+                     (vswap! removed disj! path)
+                     (cond
+                       (or (nil? old-val)
+                           (and (coll? old-val) (empty? old-val)))
+                       (vswap! added assoc! path val)
+
+                       (not (comparator old-val val))
+                       (vswap! changed assoc! path (changed-merger old-val val))
+
+                       :else
+                       (vswap! same conj! path))))]
+     (reduce-leaves reducer nil leaf-pred updated)
+     (-> (transient {})
+         (assoc-non-empty :added @added)
+         (assoc-non-empty :changed @changed)
+         (assoc-non-empty :same @same)
+         (assoc-non-empty :removed vec @removed)
+         persistent!))))
