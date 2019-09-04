@@ -96,9 +96,8 @@
   and-fn
   (partial apply-predicates every?))
 
-(def
-  ^{:arglists '([pred & more])
-    :doc      "Higher order `or`.
+(def ^{:arglists '([pred & more])
+       :doc      "Higher order `or`.
        Takes any number of predicates and returns a function that takes a value
        and returns true if ANY individual predicates return true, else return false."}
   or-fn
