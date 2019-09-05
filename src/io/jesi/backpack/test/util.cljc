@@ -39,9 +39,9 @@
 #?(:clj
    (defn wait-for
      "Waits for a `f` to resolve or truthy, checking every `interval` (in milliseconds; default 1s) or until a
-          `timeout` (in milliseconds; default 10s) has expired.
+      `timeout` (in milliseconds; default 10s) has expired.
 
-          WARNING: Involves thread sleeping. Should NOT be used in production"
+      WARNING: Involves thread sleeping. Should NOT be used in production"
      ([f] (wait-for f 1000))
      ([f interval] (wait-for f interval 10000))
      ([f interval timeout]
