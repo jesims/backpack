@@ -1,6 +1,6 @@
 (ns io.jesi.backpack.test.util-test
   (:require
-    [clojure.test :refer :all]
+    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack.test.macros :refer [is=]]
     [io.jesi.backpack.test.util :as util]))
 
