@@ -32,6 +32,9 @@
         expected (pprint-str-code expected)]
     (is= expected actual)))
 
+(defn- ^:dynamic *sleep* [ms-duration]
+  (Thread/sleep ms-duration))
+
 #?(:clj (defn wait-for
           "Waits for a `f` to resolve or truthy, checking every `interval` (in milliseconds; default 1s) or until a
           `timeout` (in milliseconds; default 10s) has expired.
@@ -47,5 +50,5 @@
                  (if-let [result (f)]
                    result
                    (do
-                     (Thread/sleep interval)
+                     (*sleep* interval)
                      (recur)))))))))
