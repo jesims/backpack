@@ -1,3 +1,8 @@
+# 3.1.0
+
+Added:
+  * `test.util/wait-for` (clj only)
+  
 # 3.0.0
 
 Added:
