@@ -33,9 +33,11 @@
     (testing "when non 0"
       (is= 4M (bp/mod 10 6))
       (is= 6M (bp/mod 6 10))
-      (is= 0.1M (bp/mod 5.3 1.3)))
+      (is= 0.1M (bp/mod 5.3 1.3))
+      (is= 0.1M (bp/mod 0.1 0.3)))
 
     (testing "when 0"
       (is= 0M (bp/mod 1.0 1.0))
       (is= 0M (bp/mod 18 1.5))
-      (is= 0M (bp/mod 5.2 1.3)))))
+      (is= 0M (bp/mod 5.2 1.3))
+      (is= 0M (bp/mod 0.3 0.1)))))
