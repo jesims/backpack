@@ -1,4 +1,5 @@
 (ns io.jesi.backpack.number
+  (:refer-clojure :exclude [mod])
   (:require
     [clojure.string :as str]))
 

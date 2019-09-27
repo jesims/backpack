@@ -1,3 +1,8 @@
+# 3.2.1
+
+Misc:
+  * exclude `clojure.core/mod` to suppress warning
+  
 # 3.2.0
 
 Added:
