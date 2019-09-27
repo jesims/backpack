@@ -66,7 +66,8 @@
 
   [io.jesi.backpack.number
    infinity
-   round-to]
+   round-to
+   mod]
 
   [io.jesi.backpack.specter
    map-walker

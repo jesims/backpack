@@ -25,3 +25,16 @@
     (is= 1233.668 (bp/round-to 3 1233.667890))
     (is= 1233.7 (bp/round-to 1 1233.667890))
     (is= 1234.0 (bp/round-to 0 1233.667890))))
+
+(deftest mod-test
+
+  (testing "returns modulus of value"
+
+    (testing "When it's not 0"
+      (is= 4M (bp/mod 10 6))
+      (is= 6M (bp/mod 6 10))
+      (is= 1.0M (bp/mod 19 1.5))))
+
+  (testing "When it's 0"
+    (is= 0M (bp/mod 1.0 1.0))
+    (is= 0M (bp/mod 18 1.5))))
