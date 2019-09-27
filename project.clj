@@ -8,7 +8,7 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.6"]]
-  :parent-project {:coords  [io.jesi/parent "0.0.21"]
+  :parent-project {:coords  [io.jesi/parent "0.0.24"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh]}
   :dependencies [[thheller/shadow-cljs :scope "provided"]
                  [org.clojure/clojure]
