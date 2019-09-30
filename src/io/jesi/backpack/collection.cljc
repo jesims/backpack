@@ -285,10 +285,9 @@
   ([coll] (sorted? compare coll))
   ([comp coll]
    (let [coll (seq coll)]
-     (or
-       (< (count coll) 2)
-       (let [results (map (partial apply comp) (partition 2 1 coll))
-             pred (if (boolean? (first results))
-                    true?
-                    (complement pos?))]
-         (every? pred results))))))
+     (or (< (count coll) 2)
+         (let [results (map (partial apply comp) (partition 2 1 coll))
+               pred (if (boolean? (first results))
+                      true?
+                      (complement pos?))]
+           (every? pred results))))))
