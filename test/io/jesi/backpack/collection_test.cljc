@@ -635,12 +635,16 @@
       (is (false? (bp/sorted? > [1 2 3 4 5])))
       (is (true? (bp/sorted? <= [1 1 2 2 3 3]))))
 
+    (testing "allows natural compare"
+      (is (true? (bp/sorted? compare [1 2 3 4 5])))
+      (is (false? (bp/sorted? compare [5 4 3 2 1]))))
+
     (let [char-code #?(:clj int
                        :cljs cljs.pprint/char-code)]
 
       (testing "allows 3-way integer returning comparators"
         (let [comp (fn [left-char right-char]
-                     (- (char-code right-char) (char-code left-char)))]
+                     (- (char-code left-char) (char-code right-char)))]
           (is (true? (bp/sorted? comp "abcde")))
           (is (false? (bp/sorted? comp "edcba")))))
 
@@ -648,6 +652,6 @@
         (let [last-right-char (atom nil)
               comp (fn [left-char right-char]
                      (reset! last-right-char right-char)
-                     (- (char-code right-char) (char-code left-char)))]
+                     (- (char-code left-char) (char-code right-char)))]
           (is (false? (bp/sorted? comp "adbc")))
           (is= \b @last-right-char))))))

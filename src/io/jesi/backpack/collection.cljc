@@ -295,5 +295,5 @@
       (let [results (map (partial apply comp) (partition 2 1 coll))
             pred (if (boolean? (first results))
                    true?
-                   (complement neg?))]
+                   (complement pos?))]
         (every? pred results)))))
