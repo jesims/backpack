@@ -1,5 +1,5 @@
 (ns io.jesi.backpack
-  (:refer-clojure :exclude [js->clj clj->js assoc-in mod])
+  (:refer-clojure :exclude [js->clj clj->js assoc-in mod sorted?])
   (:require
     [io.jesi.backpack.collection]
     [io.jesi.backpack.fn]
@@ -33,6 +33,7 @@
    rename-keys!
    safe-empty?
    select-non-nil-keys
+   sorted?
    trans-reduce
    trans-reduce-kv
    transform-keys

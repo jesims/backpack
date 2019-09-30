@@ -1,5 +1,5 @@
 (ns io.jesi.backpack.collection
-  (:refer-clojure :exclude [assoc-in conj!])
+  (:refer-clojure :exclude [assoc-in conj! sorted?])
   (:require
     [clojure.core :as clj]
     [clojure.walk :refer [postwalk prewalk]]
@@ -279,3 +279,15 @@
          (assoc-non-empty :same @same)
          (assoc-non-empty :removed vec @removed)
          persistent!))))
+
+(defn sorted?
+  "True if a collection is sorted by means of a 2 or 3 way comparator"
+  ([coll] (sorted? compare coll))
+  ([comp coll]
+   (let [coll (seq coll)]
+     (or (< (count coll) 2)
+         (let [results (map (partial apply comp) (partition 2 1 coll))
+               pred (if (boolean? (first results))
+                      true?
+                      (complement pos?))]
+           (every? pred results))))))
