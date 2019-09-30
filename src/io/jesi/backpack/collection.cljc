@@ -282,18 +282,13 @@
 
 (defn sorted?
   "True if a collection is sorted by means of a 2 or 3 way comparator"
-  [comp coll]
-  (let [coll (seq coll)]
-    (cond
-      (nil? coll)
-      true
-
-      (= 1 (count coll))
-      true
-
-      :else
-      (let [results (map (partial apply comp) (partition 2 1 coll))
-            pred (if (boolean? (first results))
-                   true?
-                   (complement pos?))]
-        (every? pred results)))))
+  ([coll] (sorted? compare coll))
+  ([comp coll]
+   (let [coll (seq coll)]
+     (or
+       (< (count coll) 2)
+       (let [results (map (partial apply comp) (partition 2 1 coll))
+             pred (if (boolean? (first results))
+                    true?
+                    (complement pos?))]
+         (every? pred results))))))

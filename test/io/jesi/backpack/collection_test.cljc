@@ -625,6 +625,10 @@
 
   (testing "sorted?"
 
+    (testing "allows natural compare"
+      (is (true? (bp/sorted? [1 2 3 4 5])))
+      (is (false? (bp/sorted? [5 4 3 2 1]))))
+
     (testing "empty and or single item collections"
       (is (true? (bp/sorted? < nil)))
       (is (true? (bp/sorted? < [])))
@@ -634,10 +638,6 @@
       (is (true? (bp/sorted? < [1 2 3 4 5])))
       (is (false? (bp/sorted? > [1 2 3 4 5])))
       (is (true? (bp/sorted? <= [1 1 2 2 3 3]))))
-
-    (testing "allows natural compare"
-      (is (true? (bp/sorted? compare [1 2 3 4 5])))
-      (is (false? (bp/sorted? compare [5 4 3 2 1]))))
 
     (let [char-code #?(:clj int
                        :cljs cljs.pprint/char-code)]
