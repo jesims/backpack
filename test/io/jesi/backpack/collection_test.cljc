@@ -620,3 +620,31 @@
                          test-coll)
                 expected 30]
             (is= expected actual)))))))
+
+(deftest sorted?-test
+
+  (testing "sorted?"
+
+    (testing "empty and or single item collections"
+      (is (true? (bp/sorted? < nil)))
+      (is (true? (bp/sorted? < [])))
+      (is (true? (bp/sorted? < [0]))))
+
+    (testing "allows 2-way boolean returning comparator"
+      (is (true? (bp/sorted? < [1 2 3 4 5])))
+      (is (false? (bp/sorted? > [1 2 3 4 5])))
+      (is (true? (bp/sorted? <= [1 1 2 2 3 3]))))
+
+    (testing "allows 3-way integer returning comparators"
+      (let [comp (fn [left-char right-char]
+                   (- (int right-char) (int left-char)))]
+        (is (true? (bp/sorted? comp "abcde")))
+        (is (false? (bp/sorted? comp "edcba")))))
+
+    (testing "short circuits on first failure"
+      (let [last-right-char (atom nil)
+            comp (fn [left-char right-char]
+                   (reset! last-right-char right-char)
+                   (- (int right-char) (int left-char)))]
+        (is (false? (bp/sorted? comp "adbc")))
+        (is= \b @last-right-char)))))

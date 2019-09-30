@@ -1,18 +1,23 @@
+# 3.3.0
+
+Added:
+  * `sorted?`
+
 # 3.2.1
 
 Misc:
   * exclude `clojure.core/mod` to suppress warning
-  
+
 # 3.2.0
 
 Added:
-  * `mod` 
+  * `mod`
 
 # 3.1.0
 
 Added:
   * `test.util/wait-for` (clj only)
-  
+
 # 3.0.0
 
 Added:
@@ -28,7 +33,7 @@ Added:
   * `and-fn`
   * `or-fn`
   * `random/character`
-  
+
 Removed:
   * `cache`
   * `keyed-cache`
@@ -38,7 +43,7 @@ Removed:
 Added:
   * `async/go-call`
   * `update-some`
-  
+
 Changed:
   * Split `http` namespace into `status` and `response`
 
