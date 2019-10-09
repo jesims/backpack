@@ -1,3 +1,8 @@
+# 3.3.1
+
+Fixed:
+  * `is=` now takes at least 2 args
+
 # 3.3.0
 
 Added:
