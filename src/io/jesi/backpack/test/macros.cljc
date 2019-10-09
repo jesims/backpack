@@ -21,6 +21,6 @@
   (let [is* (env-specific &env 'clojure.test/is)]
     `(~is* (nil? (async/<? ~body)))))
 
-(defmacro is= [& body]
+(defmacro is= [x y & more]
   (let [is* (env-specific &env 'clojure.test/is)]
-    `(~is* (= ~@body))))
+    `(~is* (= ~x ~y ~@more))))
