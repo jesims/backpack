@@ -1,12 +1,12 @@
 (ns io.jesi.backpack.fn-test
   (:require
     [clojure.string :as str]
-    [clojure.test :refer [deftest testing is]]
+    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as random]
     [io.jesi.backpack.test.macros :refer [is=]])
   #?(:cljs (:require [cljs.core :refer [IDeref]])
-     :clj  (:import (clojure.lang IDeref ArityException))))
+     :clj  (:import (clojure.lang ArityException IDeref))))
 
 
 (deftest partial-right-test

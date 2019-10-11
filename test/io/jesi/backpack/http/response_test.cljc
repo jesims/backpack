@@ -1,6 +1,6 @@
 (ns io.jesi.backpack.http.response-test
   (:require
-    [clojure.test :refer [deftest testing is]]
+    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack.http.response :as response]
     [io.jesi.backpack.test.macros :refer [is=]]))
 

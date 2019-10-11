@@ -1,10 +1,10 @@
 (ns io.jesi.backpack.cache-test
   (:require
-    [clojure.test :refer [deftest testing is]]
+    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack.cache :as cache]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.macros :refer [is= async-go]])
+    [io.jesi.backpack.test.macros :refer [async-go is=]])
   #?(:clj
      (:import
        (clojure.lang ILookup))))

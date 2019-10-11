@@ -1,6 +1,6 @@
 (ns io.jesi.backpack.spy-test
   (:require
-    [clojure.test :refer [deftest testing is use-fixtures]]
+    [clojure.test :refer [deftest is testing use-fixtures]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.spy :as spy]

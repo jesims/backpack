@@ -8,8 +8,8 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.6"]]
-  :parent-project {:coords  [io.jesi/parent "0.0.24"]
-                   :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh]}
+  :parent-project {:coords  [io.jesi/parent "1.0.0"]
+                   :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh :aliases]}
   :dependencies [[thheller/shadow-cljs :scope "provided"]
                  [org.clojure/clojure]
                  [org.clojure/core.async]
@@ -18,13 +18,14 @@
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.1.0"]
                  [org.clojure/core.cache "0.7.2"]
-                 [org.clojars.mmb90/cljs-cache "0.1.4"]]
+                 [org.clojars.mmb90/cljs-cache "0.1.4"]
+                 [pjstadig/humane-test-output "0.10.0"]]
   :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
-             :dev  {;commented out until https://github.com/pjstadig/humane-test-output/issues/37 is fixed
-                    ;:dependencies [[pjstadig/humane-test-output "0.9.0"]]
-                    :plugins [[lein-codox "0.10.7"]
-                              [lein-auto "0.1.3"]
-                              [lein-shell "0.5.0"]]}}
+             :dev  {:injections [(require 'pjstadig.humane-test-output)
+                                 (pjstadig.humane-test-output/activate!)]
+                    :plugins    [[lein-codox "0.10.7"]
+                                 [lein-auto "0.1.3"]
+                                 [lein-shell "0.5.0"]]}}
   :clean-targets ^{:protect false} ["target"]
   :release-tasks [["deploy"]]
   ;FIXME generate docs for cljc, clj and cljs

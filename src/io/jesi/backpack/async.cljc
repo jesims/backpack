@@ -1,11 +1,11 @@
 (ns io.jesi.backpack.async
-  #?(:cljs (:require-macros [io.jesi.backpack.async :refer [when-open go go-try]]))
+  #?(:cljs (:require-macros [io.jesi.backpack.async :refer [go go-try when-open]]))
   (:require
     [clojure.core.async :as async]
     [clojure.core.async.impl.protocols :as proto]
     [io.jesi.backpack.exceptions :as ex]
     [io.jesi.backpack.macros :refer [catch->identity]]
-    [io.jesi.backpack.miscellaneous :refer [env-specific cljs-env?]]))
+    [io.jesi.backpack.miscellaneous :refer [cljs-env? env-specific]]))
 
 (defn closed?
   "returns true if the channel is nil or closed"

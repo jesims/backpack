@@ -5,18 +5,18 @@ aliases:
     lein_cache: &LEIN_CACHE
       key: lein-{{ checksum "project.clj" }}
       paths:
-      - ~/.lein
-      - ~/.m2
+        - ~/.lein
+        - ~/.m2
     node_cache: &NODE_CACHE
       key: node-{{ checksum "/tmp/.node_version" }}-{{ checksum "package-lock.json" }}
       paths:
-      - node_modules
+        - node_modules
   containers:
     docker: &DEFAULT
-    - image: jesiio/build-bus:latest
-      environment:
-        JVM_OPTS: -Xmx3200m
-        DEBUG: 1
+      - image: jesiio/build-bus:latest
+        environment:
+          JVM_OPTS: -Xmx3200m
+          DEBUG: 1
   commands:
     cancel_redundant: &CANCEL_REDUNDANT
       run:
@@ -26,115 +26,106 @@ jobs:
   deps:
     docker: *DEFAULT
     steps:
-    - *CANCEL_REDUNDANT
-    - checkout
-    - restore_cache:
-        <<: *LEIN_CACHE
-    - restore_cache:
-        <<: *NODE_CACHE
-    - run: './backpack.sh deps'
-    - save_cache:
-        <<: *LEIN_CACHE
-    - save_cache:
-        <<: *NODE_CACHE
+      - *CANCEL_REDUNDANT
+      - checkout
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - restore_cache:
+          <<: *NODE_CACHE
+      - run: './backpack.sh deps'
+      - save_cache:
+          <<: *LEIN_CACHE
+      - save_cache:
+          <<: *NODE_CACHE
+  lint:
+    docker: *DEFAULT
+    steps:
+      - *CANCEL_REDUNDANT
+      - checkout
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - run: './backpack.sh lint'
   test_clj:
     docker: *DEFAULT
     steps:
-    - *CANCEL_REDUNDANT
-    - checkout
-    - restore_cache:
-        <<: *LEIN_CACHE
-    - restore_cache:
-        <<: *NODE_CACHE
-    - run: './backpack.sh test'
-    - save_cache:
-        <<: *LEIN_CACHE
-    - save_cache:
-        <<: *NODE_CACHE
+      - *CANCEL_REDUNDANT
+      - checkout
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - restore_cache:
+          <<: *NODE_CACHE
+      - run: './backpack.sh test'
   test_cljs:
     docker: *DEFAULT
     steps:
-    - *CANCEL_REDUNDANT
-    - checkout
-    - restore_cache:
-        <<: *LEIN_CACHE
-    - restore_cache:
-        <<: *NODE_CACHE
-    - run: './backpack.sh test-cljs'
-    - save_cache:
-        <<: *LEIN_CACHE
-    - save_cache:
-        <<: *NODE_CACHE
+      - *CANCEL_REDUNDANT
+      - checkout
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - restore_cache:
+          <<: *NODE_CACHE
+      - run: './backpack.sh test-cljs'
   test_docs:
     docker: *DEFAULT
     steps:
-    - *CANCEL_REDUNDANT
-    - checkout
-    - restore_cache:
-        <<: *LEIN_CACHE
-    - restore_cache:
-        <<: *NODE_CACHE
-    - run: './backpack.sh test-docs'
-    - save_cache:
-        <<: *LEIN_CACHE
-    - save_cache:
-        <<: *NODE_CACHE
+      - *CANCEL_REDUNDANT
+      - checkout
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - restore_cache:
+          <<: *NODE_CACHE
+      - run: './backpack.sh test-docs'
   snapshot:
     docker: *DEFAULT
     steps:
-    - *CANCEL_REDUNDANT
-    - checkout
-    - restore_cache:
-        <<: *LEIN_CACHE
-    - restore_cache:
-        <<: *NODE_CACHE
-    - run: './backpack.sh snapshot'
-    - save_cache:
-        <<: *LEIN_CACHE
-    - save_cache:
-        <<: *NODE_CACHE
+      - *CANCEL_REDUNDANT
+      - checkout
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - restore_cache:
+          <<: *NODE_CACHE
+      - run: './backpack.sh snapshot'
   release:
     docker: *DEFAULT
     steps:
-    - *CANCEL_REDUNDANT
-    - checkout
-    - restore_cache:
-        <<: *LEIN_CACHE
-    - restore_cache:
-        <<: *NODE_CACHE
-    - run: './backpack.sh release'
-    - save_cache:
-        <<: *LEIN_CACHE
-    - save_cache:
-        <<: *NODE_CACHE
+      - *CANCEL_REDUNDANT
+      - checkout
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - restore_cache:
+          <<: *NODE_CACHE
+      - run: './backpack.sh release'
 workflows:
   version: 2
   build:
     jobs:
-    - deps
-    - test_clj:
-        requires:
-        - deps
-    - test_cljs:
-        requires:
-        - deps
-    - test_docs:
-        requires:
-        - deps
-    - snapshot:
-        context: JESI
-        requires:
-        - test_clj
-        - test_cljs
-        - test_docs
-        filters:
-          branches:
-            ignore: /^(master|develop)$/
-    - release:
-        context: JESI
-        requires:
-        - test_clj
-        - test_cljs
-        filters:
-          branches:
-            only: master
+      - deps
+      - lint:
+          requires:
+            - deps
+      - test_clj:
+          requires:
+            - lint
+      - test_cljs:
+          requires:
+            - lint
+      - test_docs:
+          requires:
+            - lint
+      - snapshot:
+          context: JESI
+          requires:
+            - test_clj
+            - test_cljs
+            - test_docs
+          filters:
+            branches:
+              ignore: /^(master|develop)$/
+      - release:
+          context: JESI
+          requires:
+            - test_clj
+            - test_cljs
+          filters:
+            branches:
+              only: master

@@ -1,15 +1,15 @@
 (ns io.jesi.backpack.async-test
   (:require
+    #?(:clj [io.jesi.backpack.macros :refer [macro?]])
     [clojure.core.async :as core-async :refer [<!]]
     [clojure.string :as string]
-    [clojure.test :refer [deftest testing is]]
+    [clojure.test :refer [deftest is testing]]
     [com.rpl.specter :as sp]
     [io.jesi.backpack.async :as async]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.miscellaneous :refer [env-specific namespaced?]]
     [io.jesi.backpack.test.macros :refer [async-go is=]]
-    [io.jesi.backpack.test.util :refer [is-macro=]]
-    #?(:clj [io.jesi.backpack.macros :refer [macro?]])))
+    [io.jesi.backpack.test.util :refer [is-macro=]]))
 
 (deftest closed?-test
 

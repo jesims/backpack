@@ -2,7 +2,6 @@
   (:require
     [clojure.java.io :as io]
     [clojure.test :refer :all]
-    [clojure.test :refer :all]
     [clojure.tools.namespace.find :as ns-find]
     [io.jesi.backpack]))
 

@@ -2,9 +2,9 @@
   (:refer-clojure :exclude [when-let])
   (:require
     [clojure.string :as string]
-    [clojure.test :refer [deftest testing is use-fixtures]]
+    [clojure.test :refer [deftest is testing use-fixtures]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [try* catch->nil fn1 when-let shorthand condf defconsts when-debug catch->identity]]
+    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf defconsts fn1 shorthand try* when-debug when-let]]
     [io.jesi.backpack.test.macros :refer [is=]]
     [io.jesi.backpack.test.util :refer [is-macro=]])
   #?(:clj

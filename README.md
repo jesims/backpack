@@ -9,7 +9,7 @@ Backpack is a collection of common utility functions and helpers for Clojure(Scr
 
 # API Docs
 
-[https://jesims.github.io/backpack/](https://jesims.github.io/backpack/)
+<https://jesims.github.io/backpack/>
 
 ## Other Great (similar) Projects Include
 
