@@ -43,7 +43,7 @@ deps () {
 	lein -U deps
 	abort_on_error
 	if is-ci;then
-		npm ci
+		dry ci
 	else
 		dry install
 	fi
