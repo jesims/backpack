@@ -1,6 +1,12 @@
 {
   "name": "backpack",
   "version": "0.0.7",
+  "dependencyManagement": {
+    "karma": "^4.0.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-cljs-test": "0.1.0",
+    "standard": "^12.0.1"
+  },
   "description": "Clojure(Script) cross-project utilities",
   "homepage": "https://github.com/jesims/backpack#readme",
   "repository": {
@@ -13,11 +19,12 @@
     "url": "https://github.com/jesims/backpack/issues"
   },
   "devDependencies": {
-    "karma": "managed",
-    "karma-chrome-launcher": "managed",
+    "standard": "^12.0.1",
+    "karma": "^4.0.0",
+    "karma-chrome-launcher": "2.2.0",
     "karma-clear-screen-reporter": "^1.0.0",
-    "karma-cljs-test": "managed",
-    "standard": "managed"
+    "karma-cljs-test": "0.1.0",
+    "remark": "^11.0.1"
   },
   "dry": {
     "extends": "@io.jesi/parent/package-dry.json",

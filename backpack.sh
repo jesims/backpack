@@ -20,6 +20,9 @@ clean () {
 
 ## lint:
 lint () {
+	echo_message 'Clojure check'
+	lein check
+	abort_on_error
 	echo_message 'Clojure lint'
 	lein lint
 	abort_on_error
@@ -37,9 +40,13 @@ lint () {
 ## Installs all required dependencies for Clojure and ClojureScript
 deps () {
 	echo_message 'Installing dependencies'
-	lein deps
+	lein -U deps
 	abort_on_error
-	dry install
+	if is-ci;then
+		npm ci
+	else
+		dry install
+	fi
 	abort_on_error
 }
 
