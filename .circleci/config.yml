@@ -44,6 +44,8 @@ jobs:
       - checkout
       - restore_cache:
           <<: *LEIN_CACHE
+      - restore_cache:
+          <<: *NODE_CACHE
       - run: './backpack.sh lint'
   test_clj:
     docker: *DEFAULT
