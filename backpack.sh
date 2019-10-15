@@ -158,7 +158,7 @@ deploy () {
 	else
 		lein with-profile install deploy clojars
 	fi
-	bort_on_error
+	abort_on_error
 }
 
 ## snapshot:
