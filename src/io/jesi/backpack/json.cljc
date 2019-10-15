@@ -1,11 +1,11 @@
 (ns io.jesi.backpack.json
   #?(:cljs (:refer-clojure :exclude [clj->js js->clj]))
   (:require
-    [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]]
     #?(:clj [cheshire.core :refer [generate-string parse-string]])
     #?(:clj [io.jesi.backpack.macros :refer [shorthand]])
     #?(:cljs [clojure.string :as string])
-    #?(:cljs [io.jesi.backpack.clojurescript :refer [clj->js js->clj]])))
+    #?(:cljs [io.jesi.backpack.clojurescript :refer [clj->js js->clj]])
+    [io.jesi.backpack.string :refer [->camelCase ->kebab-case-key]]))
 
 ;XXX DO NOT FORMAT THIS FILE
 ;it breaks the function overloads

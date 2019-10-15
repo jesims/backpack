@@ -6,9 +6,9 @@
        [clojure.string :as string])
      :cljs
      (:require
+       [cljs-uuid-utils.core :as UUID]
        [clojure.set :as set]
        [clojure.string :as string]
-       [cljs-uuid-utils.core :as UUID]
        [goog.string :refer [format]]
        [goog.string.format]))
   #?(:clj

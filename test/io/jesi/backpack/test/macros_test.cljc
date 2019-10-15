@@ -1,10 +1,10 @@
 (ns io.jesi.backpack.test.macros-test
   (:require
-    [clojure.test :refer [deftest testing is]]
+    #?(:clj [io.jesi.backpack.macros :refer [macro?]])
+    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack.async :as async]
     [io.jesi.backpack.test.macros :refer [async-go is=]]
-    [io.jesi.backpack.test.util :refer [is-macro=]]
-    #?(:clj [io.jesi.backpack.macros :refer [macro?]])))
+    [io.jesi.backpack.test.util :refer [is-macro=]]))
 
 (deftest async-go-test
 

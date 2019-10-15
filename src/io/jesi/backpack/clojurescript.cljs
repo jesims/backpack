@@ -5,7 +5,7 @@
     [clojure.walk :refer [postwalk]]
     [goog.object :as gobj]
     [io.jesi.backpack.collection :refer [trans-reduce transform-keys]]
-    [io.jesi.backpack.string :refer [->kebab-case-key ->camelCase]]))
+    [io.jesi.backpack.string :refer [->camelCase ->kebab-case-key]]))
 
 (extend-type UUID
   IEncodeJS

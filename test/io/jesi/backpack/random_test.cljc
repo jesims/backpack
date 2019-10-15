@@ -1,7 +1,7 @@
 (ns io.jesi.backpack.random-test
   (:require
     [clojure.string :as string]
-    [clojure.test :refer [deftest testing is]]
+    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.backpack.test.macros :refer [is=]]))

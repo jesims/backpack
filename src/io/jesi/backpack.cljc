@@ -1,6 +1,7 @@
 (ns io.jesi.backpack
-  (:refer-clojure :exclude [js->clj clj->js assoc-in mod sorted?])
+  (:refer-clojure :exclude [assoc-in clj->js js->clj mod sorted?])
   (:require
+    #?(:cljs [io.jesi.backpack.clojurescript])
     [io.jesi.backpack.collection]
     [io.jesi.backpack.fn]
     [io.jesi.backpack.json]
@@ -8,8 +9,7 @@
     [io.jesi.backpack.miscellaneous]
     [io.jesi.backpack.number]
     [io.jesi.backpack.specter]
-    [io.jesi.backpack.string]
-    #?(:cljs [io.jesi.backpack.clojurescript]))
+    [io.jesi.backpack.string])
   #?(:clj
      (:require [io.jesi.backpack.clojure])))
 

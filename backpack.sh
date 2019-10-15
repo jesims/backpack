@@ -18,13 +18,35 @@ clean () {
 	rm -rf .shadow-cljs/
 }
 
+## lint:
+lint () {
+	echo_message 'Clojure check'
+	lein check
+	abort_on_error
+	echo_message 'Clojure lint'
+	lein lint
+	abort_on_error
+	if ! is-ci;then
+		echo_message 'Checking CircleCI config'
+		circleci config validate
+		abort_on_error
+	fi
+	echo_message 'Formatting Markdown'
+	npx remark . --output
+	abort_on_error
+}
+
 ## deps:
 ## Installs all required dependencies for Clojure and ClojureScript
 deps () {
 	echo_message 'Installing dependencies'
-	lein deps
+	lein -U deps
 	abort_on_error
-	dry install
+	if is-ci;then
+		dry ci
+	else
+		dry install
+	fi
 	abort_on_error
 }
 
@@ -126,14 +148,17 @@ is-snapshot () {
 	[[ "$version" == *SNAPSHOT ]]
 }
 
+is-ci () {
+	[[ -n "$CIRCLECI" ]]
+}
+
 deploy () {
-	if [[ -n "$CIRCLECI" ]];then
+	if is-ci;then
 		lein with-profile install deploy clojars &>/dev/null
-		abort_on_error
 	else
 		lein with-profile install deploy clojars
-		abort_on_error
 	fi
+	abort_on_error
 }
 
 ## snapshot:
@@ -197,6 +222,7 @@ check-docs () {
 ## test-docs:
 ## Checks that the committed api documentation is up to date with the latest code
 test-docs () {
+	check-docs
 	docs
 	echo_message 'Verifying animal facts...'
 	if ! git diff --quiet --exit-code docs;then

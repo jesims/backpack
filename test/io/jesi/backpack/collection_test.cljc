@@ -1,6 +1,6 @@
 (ns io.jesi.backpack.collection-test
   (:require
-    [clojure.test :refer [deftest testing is]]
+    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.backpack.test.macros :refer [is=]]))

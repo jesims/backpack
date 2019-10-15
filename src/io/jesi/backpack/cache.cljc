@@ -1,9 +1,9 @@
 (ns io.jesi.backpack.cache
   (:refer-clojure :exclude [get set])
   (:require
-    [io.jesi.backpack.macros :refer [reify-ifn]]
     #?(:clj  [clojure.core.cache :as cache]
-       :cljs [cljs.cache :as cache :refer [CacheProtocol]]))
+       :cljs [cljs.cache :as cache :refer [CacheProtocol]])
+    [io.jesi.backpack.macros :refer [reify-ifn]])
   #?(:clj
      (:import
        (clojure.core.cache CacheProtocol)

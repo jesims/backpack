@@ -1,6 +1,6 @@
 (ns io.jesi.backpack.specter-test
   (:require
-    [clojure.test :refer [deftest testing is]]
+    [clojure.test :refer [deftest is testing]]
     [com.rpl.specter :as sp]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.test.macros :refer [is=]]))

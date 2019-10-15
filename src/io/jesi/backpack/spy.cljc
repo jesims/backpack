@@ -1,11 +1,11 @@
 ;TODO move to test utils library
 (ns io.jesi.backpack.spy
-  #?(:clj  (:refer-clojure :exclude [prn peek])
-     :cljs (:refer-clojure :exclude [prn -name peek]))
-  #?(:cljs (:require-macros [io.jesi.backpack.spy :refer [prn pprint]]))
+  #?(:clj  (:refer-clojure :exclude [peek prn])
+     :cljs (:refer-clojure :exclude [-name peek prn]))
+  #?(:cljs (:require-macros [io.jesi.backpack.spy :refer [pprint prn]]))
   (:require
     [io.jesi.backpack.collection :refer [trans-reduce]]
-    [io.jesi.backpack.macros :refer [when-not= if-cljs when-debug]]
+    [io.jesi.backpack.macros :refer [if-cljs when-debug when-not=]]
     [io.jesi.backpack.test.util :refer [pprint-str]]))
 
 (def ^:dynamic *enabled* false)
