@@ -1,3 +1,9 @@
+# 3.5.1
+
+Added:
+
+* `def-` macro
+
 # 3.4.1
 
 Added:

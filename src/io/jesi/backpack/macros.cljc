@@ -150,3 +150,19 @@
       (concat code `(
                      (applyTo [this# args#]
                        (~invoke-fn this# args#)))))))
+
+(defn- private [sym]
+  (vary-meta sym assoc :private true))
+
+(defmacro def-
+  "Creates and interns a private var with the name of symbol in the
+  current namespace (`*ns*`) or locates such a var if it already exists.
+  If init is supplied, it is evaluated, and the root binding of the
+  var is set to the resulting value. If init is not supplied, the
+  root binding of the var is unaffected."
+  ([symbol]
+   `(def ~(private symbol)))
+  ([symbol init]
+   `(def ~(private symbol) ~init))
+  ([symbol doc-string init]
+   `(def ~(private symbol) ~doc-string ~init)))
