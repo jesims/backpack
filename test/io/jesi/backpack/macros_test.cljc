@@ -216,6 +216,12 @@
     (testing "defs a private var"
       (let [val (rnd/string)
             v (def- test-var val)]
-        (is (var? v))
-        (is (:private (meta v)))
-        (is= val @v)))))
+        #?(:clj
+           (do
+             (is (var? v))
+             (is (:private (meta v)))
+             (is= val @v)
+             (is= test-var val))
+           :cljs
+           (do
+             (is= test-var val)))))))
