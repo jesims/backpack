@@ -1,4 +1,5 @@
 (ns io.jesi.backpack.string-test
+  ;(:refer-clojure :exclude [subs])
   (:require
     [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack :as bp]
@@ -155,3 +156,57 @@
       (testing "allows specifying a custom separator"
         (is= "insects, scorpions, small lizards, snakes, eggs."
              (bp/remove-prefix "Meerkats hunt and eat" \space fact))))))
+
+(deftest subs-test
+  (let [string "Reptiles and amphibians are sometimes thought of as primitive, dull and dimwitted"]
+
+    (testing "Returns nil when given nil"
+      (bp/subs nil 1))
+
+    (testing "Returns empty string when"
+
+      (testing "when start after end"
+        (is= "Reptil"
+             (bp/subs string 5 1))
+        (is= "Reptil"
+             (bp/subs string -1 -5))))
+
+    (testing "Returns substring"
+
+      (testing "when start and end are "
+
+        (testing "positive"
+          (is= "Reptil"
+               (bp/subs string 1 5)))
+
+        (testing "negative"
+          (is= "Reptil"
+               (bp/subs string -5 -1))))
+
+      (testing "from beginning when end is "
+
+        (testing "positive"
+          (is= "Reptil"
+               (bp/subs string 5)))
+
+        (testing "negative"
+          (is= "Reptil"
+               (bp/subs string -5)))
+
+        (testing "nil"
+          (is= "Reptil"
+               (bp/subs string nil))))
+
+      (testing "when start is "
+
+        (testing "positive"
+          (is= "Reptil"
+               (bp/subs string 1 5)))
+
+        (testing "negative"
+          (is= "Reptil"
+               (bp/subs string -5 5)))
+
+        (testing "nil"
+          (is= "Reptil"
+               (bp/subs string nil 5)))))))

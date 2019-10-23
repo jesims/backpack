@@ -1,7 +1,30 @@
 (ns io.jesi.backpack.string
+  (:refer-clojure :exclude [subs])
   (:require
     [clojure.string :as string]
+    [io.jesi.backpack.macros :refer [shorthand when-let]]
     [io.jesi.backpack.fn :refer [if-fn]]))
+
+(defn- normalize-str-idx [s idx]
+  (if (neg? idx)
+    (+ (count s) idx)
+    idx))
+
+(defn subs
+  ([s end] (subs s 0 end))
+  ([s start end]
+   ; TODO support negative start? See what other languages do
+   (when (seq s)
+     (when-let [start (if (neg? start)
+                        (+ (count s) start)
+                        start)]
+       (throw (ex-info "Start out of bounds" (shorthand s start end))))
+     (let [end (if (neg? end)
+                 (+ (count s) end)
+                 end)]
+       (when (< (count s) end)
+         (throw (ex-info "End out of bounds" (shorthand s start end))))
+       (clojure.core/subs s start end)))))
 
 (defn uuid-str?
   "True if 's' is a string and matches the UUID format"
