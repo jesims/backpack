@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [subs])
   (:require
     [clojure.string :as string]
-    [io.jesi.backpack.fn :refer [if-fn]]))
+    [io.jesi.backpack.fn :refer [if-fn or-fn]]))
 
 (defn- normalize-str-idx [length i]
   (if (neg? i)
@@ -20,13 +20,15 @@
            end (or end length)
            normalize-idx (partial normalize-str-idx length)
            pos-start (normalize-idx start)
-           pos-end (normalize-idx end)]
+           pos-end (normalize-idx end)
+           invalid-idx? (or-fn neg? (partial < length))]
+
        (cond
 
-         (or (neg? pos-end) (< length pos-end))
+         (invalid-idx? pos-end)
          (throw (ex-info "End out of bounds" {:s s :start start :end end}))
 
-         (or (neg? pos-start) (< length pos-start))
+         (invalid-idx? pos-start)
          (throw (ex-info "Start out of bounds" {:s s :start start :end end}))
 
          (< end start)
