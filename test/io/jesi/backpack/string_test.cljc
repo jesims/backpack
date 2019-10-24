@@ -1,4 +1,5 @@
 (ns io.jesi.backpack.string-test
+  ;(:refer-clojure :exclude [subs])
   (:require
     [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack :as bp]
@@ -155,3 +156,66 @@
       (testing "allows specifying a custom separator"
         (is= "insects, scorpions, small lizards, snakes, eggs."
              (bp/remove-prefix "Meerkats hunt and eat" \space fact))))))
+
+(deftest subs-test
+  (let [s "Reptiles"]
+
+    (testing "returns nil when given nil"
+      (is (nil? (bp/subs nil 1)))
+      (is= s (bp/subs s nil)))
+
+    (testing "Returns error when out of bounds"
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s 100)))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s -100)))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s 100 5)))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s -100 5))))
+
+    (testing "Invalid data"
+      (is (thrown? #?(:clj Error :cljs js/Error) (bp/subs s true))))
+
+    (testing "returns empty string when"
+
+      (testing "start is after end"
+        (is= ""
+             (bp/subs s 5 1))
+        (is= ""
+             (bp/subs s -1 -5))))
+
+    (testing "returns substring"
+
+      (testing "when start and end are both "
+
+        (testing "positive"
+          (is= "epti"
+               (bp/subs s 1 5)))
+
+        (testing "negative"
+          (is= "tile"
+               (bp/subs s -5 -1))))
+
+      (testing "off setting from start "
+
+        (testing "positive"
+          (is= "les"
+               (bp/subs s 5)))
+
+        (testing "negative"
+          (is= "tiles"
+               (bp/subs s -5)))
+
+        (testing "nil"
+          (is= s (bp/subs s nil))))
+
+      (testing "when start is "
+
+        (testing "positive"
+          (is= "epti"
+               (bp/subs s 1 5)))
+
+        (testing "negative"
+          (is= "ti"
+               (bp/subs s -5 5)))
+
+        (testing "nil"
+          (is= "Repti"
+               (bp/subs s nil 5)))))))

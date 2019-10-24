@@ -1,7 +1,39 @@
 (ns io.jesi.backpack.string
+  (:refer-clojure :exclude [subs])
   (:require
     [clojure.string :as string]
     [io.jesi.backpack.fn :refer [if-fn]]))
+
+(defn- normalize-str-idx [length i]
+  (if (neg? i)
+    (+ length i)
+    i))
+
+(defn subs
+  ([s start] (subs s start nil))
+  ([s start end]
+   {:pre [(or (nil? start) (int? start))
+          (or (nil? end) (int? end))]}
+   (when (seq s)
+     (let [length (count s)
+           start (or start 0)
+           end (or end length)
+           normalize-idx (partial normalize-str-idx length)
+           pos-start (normalize-idx start)
+           pos-end (normalize-idx end)]
+       (cond
+
+         (or (neg? pos-end) (< length pos-end))
+         (throw (ex-info "End out of bounds" {:s s :start start :end end}))
+
+         (or (neg? pos-start) (< length pos-start))
+         (throw (ex-info "Start out of bounds" {:s s :start start :end end}))
+
+         (< end start)
+         ""
+
+         :else
+         (clojure.core/subs s pos-start pos-end))))))
 
 (defn uuid-str?
   "True if 's' is a string and matches the UUID format"
