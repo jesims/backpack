@@ -1,5 +1,4 @@
 (ns io.jesi.backpack.string-test
-  ;(:refer-clojure :exclude [subs])
   (:require
     [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack :as bp]
