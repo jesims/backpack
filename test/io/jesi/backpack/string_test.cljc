@@ -172,13 +172,11 @@
     (testing "Invalid data"
       (is (thrown? #?(:clj Error :cljs js/Error) (bp/subs s true))))
 
-    (testing "returns empty string when"
-
-      (testing "start is after end"
+    (testing "returns empty string when start is after end"
         (is= ""
              (bp/subs s 5 1))
         (is= ""
-             (bp/subs s -1 -5))))
+             (bp/subs s -1 -5)))
 
     (testing "returns substring"
 
