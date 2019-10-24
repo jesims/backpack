@@ -157,26 +157,28 @@
              (bp/remove-prefix "Meerkats hunt and eat" \space fact))))))
 
 (deftest subs-test
-  (let [s "Reptiles"]
+  (let [s "Reptiles have scales"]
 
     (testing "returns nil when given nil"
       (is (nil? (bp/subs nil 1)))
       (is= s (bp/subs s nil)))
 
-    (testing "Returns error when out of bounds"
+    (testing "returns error when out of bounds"
       (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s 100)))
       (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s -100)))
       (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s 100 5)))
       (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s -100 5))))
 
-    (testing "Invalid data"
+    (testing "invalid data"
       (is (thrown? #?(:clj Error :cljs js/Error) (bp/subs s true))))
 
     (testing "returns empty string when start is after end"
         (is= ""
              (bp/subs s 5 1))
         (is= ""
-             (bp/subs s -1 -5)))
+             (bp/subs s -1 -5))
+        (is= ""
+             (bp/subs s -1 2)))
 
     (testing "returns substring"
 
@@ -187,17 +189,17 @@
                (bp/subs s 1 5)))
 
         (testing "negative"
-          (is= "tile"
+          (is= "cale"
                (bp/subs s -5 -1))))
 
-      (testing "off setting from start "
+      (testing "off setting from start is "
 
         (testing "positive"
-          (is= "les"
+          (is= "les have scales"
                (bp/subs s 5)))
 
         (testing "negative"
-          (is= "tiles"
+          (is= "cales"
                (bp/subs s -5)))
 
         (testing "nil"
@@ -210,8 +212,8 @@
                (bp/subs s 1 5)))
 
         (testing "negative"
-          (is= "ti"
-               (bp/subs s -5 5)))
+          (is= "ave s"
+               (bp/subs s -10 15)))
 
         (testing "nil"
           (is= "Repti"

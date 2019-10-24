@@ -22,16 +22,14 @@
            pos-start (normalize-idx start)
            pos-end (normalize-idx end)
            invalid-idx? (or-fn neg? (partial < length))]
-
        (cond
-
          (invalid-idx? pos-end)
          (throw (ex-info "End out of bounds" {:s s :start start :end end}))
 
          (invalid-idx? pos-start)
          (throw (ex-info "Start out of bounds" {:s s :start start :end end}))
 
-         (< end start)
+         (< pos-end pos-start)
          ""
 
          :else
