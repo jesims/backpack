@@ -1,8 +1,9 @@
-# 3.5.1
+# 3.5.0
 
 Added:
 
 * `def-` macro
+* `string/subs`
 
 # 3.4.1
 
