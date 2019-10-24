@@ -158,55 +158,64 @@
              (bp/remove-prefix "Meerkats hunt and eat" \space fact))))))
 
 (deftest subs-test
-  (let [string "Reptiles and amphibians are sometimes thought of as primitive, dull and dimwitted"]
+  (let [s "Reptiles"]
 
-    (testing "Returns nil when given nil"
-      (bp/subs nil 1))
+    (testing "returns nil when given nil"
+      (is (nil? (bp/subs nil 1)))
+      (is= s (bp/subs s nil)))
 
-    (testing "Returns empty string when"
+    (testing "Returns error when out of bounds"
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s 100)))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s -100)))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s 100 5)))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s -100 5))))
 
-      (testing "when start after end"
-        (is= "Reptil"
-             (bp/subs string 5 1))
-        (is= "Reptil"
-             (bp/subs string -1 -5))))
+    (testing "Invalid data"
+      (is (thrown? #?(:clj Error :cljs js/Error) (bp/subs s true))))
 
-    (testing "Returns substring"
+    (testing "returns empty string when"
 
-      (testing "when start and end are "
+      (testing "start is after end"
+        (is= ""
+             (bp/subs s 5 1))
+        (is= ""
+             (bp/subs s -1 -5))))
+
+    (testing "returns substring"
+
+      (testing "when start and end are both "
 
         (testing "positive"
-          (is= "Reptil"
-               (bp/subs string 1 5)))
+          (is= "epti"
+               (bp/subs s 1 5)))
 
         (testing "negative"
-          (is= "Reptil"
-               (bp/subs string -5 -1))))
+          (is= "tile"
+               (bp/subs s -5 -1))))
 
-      (testing "from beginning when end is "
+      (testing "off setting from start "
 
         (testing "positive"
-          (is= "Reptil"
-               (bp/subs string 5)))
+          (is= "les"
+               (bp/subs s 5)))
 
         (testing "negative"
-          (is= "Reptil"
-               (bp/subs string -5)))
+          (is= "tiles"
+               (bp/subs s -5)))
 
         (testing "nil"
-          (is= "Reptil"
-               (bp/subs string nil))))
+          (is= s (bp/subs s nil))))
 
       (testing "when start is "
 
         (testing "positive"
-          (is= "Reptil"
-               (bp/subs string 1 5)))
+          (is= "epti"
+               (bp/subs s 1 5)))
 
         (testing "negative"
-          (is= "Reptil"
-               (bp/subs string -5 5)))
+          (is= "ti"
+               (bp/subs s -5 5)))
 
         (testing "nil"
-          (is= "Reptil"
-               (bp/subs string nil 5)))))))
+          (is= "Repti"
+               (bp/subs s nil 5)))))))

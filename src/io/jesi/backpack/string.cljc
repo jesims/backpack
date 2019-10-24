@@ -2,29 +2,38 @@
   (:refer-clojure :exclude [subs])
   (:require
     [clojure.string :as string]
-    [io.jesi.backpack.macros :refer [shorthand when-let]]
     [io.jesi.backpack.fn :refer [if-fn]]))
 
-(defn- normalize-str-idx [s idx]
-  (if (neg? idx)
-    (+ (count s) idx)
-    idx))
+(defn- normalize-str-idx [length i]
+  (if (neg? i)
+    (+ length i)
+    i))
 
 (defn subs
-  ([s end] (subs s 0 end))
+  ([s start] (subs s start nil))
   ([s start end]
-   ; TODO support negative start? See what other languages do
+   {:pre [(or (nil? start) (int? start))
+          (or (nil? end) (int? end))]}
    (when (seq s)
-     (when-let [start (if (neg? start)
-                        (+ (count s) start)
-                        start)]
-       (throw (ex-info "Start out of bounds" (shorthand s start end))))
-     (let [end (if (neg? end)
-                 (+ (count s) end)
-                 end)]
-       (when (< (count s) end)
-         (throw (ex-info "End out of bounds" (shorthand s start end))))
-       (clojure.core/subs s start end)))))
+     (let [length (count s)
+           start (or start 0)
+           end (or end length)
+           normalize-idx (partial normalize-str-idx length)
+           pos-start (normalize-idx start)
+           pos-end (normalize-idx end)]
+       (cond
+
+         (or (neg? pos-end) (< length pos-end))
+         (throw (ex-info "End out of bounds" {:s s :start start :end end}))
+
+         (or (neg? pos-start) (< length pos-start))
+         (throw (ex-info "Start out of bounds" {:s s :start start :end end}))
+
+         (< end start)
+         ""
+
+         :else
+         (clojure.core/subs s pos-start pos-end))))))
 
 (defn uuid-str?
   "True if 's' is a string and matches the UUID format"
