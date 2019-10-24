@@ -1,5 +1,5 @@
 (ns io.jesi.backpack
-  (:refer-clojure :exclude [assoc-in clj->js js->clj mod sorted?])
+  (:refer-clojure :exclude [assoc-in clj->js js->clj mod sorted? subs])
   (:require
     #?(:cljs [io.jesi.backpack.clojurescript])
     [io.jesi.backpack.collection]
@@ -83,6 +83,7 @@
    ->snake_case-key
    prefix
    remove-prefix
+   subs
    subs-inc
    subs-to
    suffix

@@ -4,7 +4,8 @@
     [clojure.string :as string]
     [clojure.test :refer [deftest is testing use-fixtures]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf defconsts fn1 shorthand try* when-debug when-let]]
+    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts fn1 shorthand try* when-debug when-let]]
+    [io.jesi.backpack.random :as rnd]
     [io.jesi.backpack.test.macros :refer [is=]]
     [io.jesi.backpack.test.util :refer [is-macro=]])
   #?(:clj
@@ -204,3 +205,22 @@
       (is= 1 (catch->identity 1))
       (let [ex (ex-info "Elephants are the only animal that can't jump" {:elephant {:sad? true}})]
         (is= ex (catch->identity (throw ex)))))))
+
+(deftest def--test
+
+  (testing "def-"
+
+    #?(:clj (testing "is a macro"
+              (bp/macro? `def-)))
+
+    (testing "defs a private var"
+      (let [val (rnd/string)
+            v (def- test-var val)]
+        (is= test-var val)
+        #?(:clj
+           (do
+             (is (var? v))
+             (is (:private (meta v)))
+             (is= val @v))
+           :cljs
+           (is= val v))))))

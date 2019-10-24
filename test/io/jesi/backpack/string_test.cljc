@@ -155,3 +155,66 @@
       (testing "allows specifying a custom separator"
         (is= "insects, scorpions, small lizards, snakes, eggs."
              (bp/remove-prefix "Meerkats hunt and eat" \space fact))))))
+
+(deftest subs-test
+  (let [s "Reptiles have scales"]
+
+    (testing "returns nil when given nil"
+      (is (nil? (bp/subs nil 1)))
+      (is= s (bp/subs s nil)))
+
+    (testing "returns error when out of bounds"
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s 100)))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s -100)))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s 100 5)))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/subs s -100 5))))
+
+    (testing "invalid data"
+      (is (thrown? #?(:clj Error :cljs js/Error) (bp/subs s true))))
+
+    (testing "returns empty string when start is after end"
+        (is= ""
+             (bp/subs s 5 1))
+        (is= ""
+             (bp/subs s -1 -5))
+        (is= ""
+             (bp/subs s -1 2)))
+
+    (testing "returns substring"
+
+      (testing "when start and end are both "
+
+        (testing "positive"
+          (is= "epti"
+               (bp/subs s 1 5)))
+
+        (testing "negative"
+          (is= "cale"
+               (bp/subs s -5 -1))))
+
+      (testing "off setting from start is "
+
+        (testing "positive"
+          (is= "les have scales"
+               (bp/subs s 5)))
+
+        (testing "negative"
+          (is= "cales"
+               (bp/subs s -5)))
+
+        (testing "nil"
+          (is= s (bp/subs s nil))))
+
+      (testing "when start is "
+
+        (testing "positive"
+          (is= "epti"
+               (bp/subs s 1 5)))
+
+        (testing "negative"
+          (is= "ave s"
+               (bp/subs s -10 15)))
+
+        (testing "nil"
+          (is= "Repti"
+               (bp/subs s nil 5)))))))
