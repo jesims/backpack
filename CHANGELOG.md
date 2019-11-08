@@ -1,3 +1,9 @@
+# 3.6.0
+
+Added:
+
+* `cache/reset`
+
 # 3.5.0
 
 Added:

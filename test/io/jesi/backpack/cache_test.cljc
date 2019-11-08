@@ -109,7 +109,8 @@
                (is= 23 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)))))))
 
     (testing "without miss fn"
-      (let [simple-cache (cache/->Simple (cache/create-lru 3 {}))]
+      (let [default {:c 3}
+            simple-cache (cache/->Simple (cache/create-lru 3 default))]
 
         (testing "converts a CacheProtocol into a simple cache"
           (is (satisfies? cache/SimpleCache simple-cache)))
@@ -135,7 +136,14 @@
           (cache/set simple-cache [:b] 1)
           (is= 1 (cache/get simple-cache [:b]))
           (cache/evict simple-cache [:b])
-          (is (nil? (cache/get simple-cache [:b]))))))
+          (is (nil? (cache/get simple-cache [:b]))))
+
+        (testing "reset"
+          (is= 3 (cache/get simple-cache [:c]))
+          (cache/set simple-cache [:c] 2)
+          (is= 2 (cache/get simple-cache [:c]))
+          (cache/reset simple-cache)
+          (is= 3 (cache/get simple-cache [:c])))))
 
     (testing "with a miss fn"
       (let [captor (atom nil)
