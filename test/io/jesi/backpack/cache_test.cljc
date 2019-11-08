@@ -109,7 +109,7 @@
                (is= 23 (cached-sum 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)))))))
 
     (testing "without miss fn"
-      (let [default {:c 3}
+      (let [default {[:c] 3}
             simple-cache (cache/->Simple (cache/create-lru 3 default))]
 
         (testing "converts a CacheProtocol into a simple cache"
