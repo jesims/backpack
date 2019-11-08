@@ -53,7 +53,9 @@
   (set [this entry value]
     "Sets the `entry` to the specific `value` within the cache `impl`")
   (evict [this entry]
-    "Evicts the `entry` from the cache `impl`"))
+    "Evicts the `entry` from the cache `impl`")
+  (reset [this]
+    "Resets the cache back to it's initial value"))
 
 (defn ->Simple
   "Converts a `CacheProtocol` into a `SimpleCache`. The `miss` function will be invoked with the entry to determine
@@ -78,6 +80,10 @@
 
        (evict [_ entry]
          (swap! cache cache/evict entry)
+         nil)
+
+       (reset [_]
+         (reset! cache impl)
          nil)
 
        ILookup
