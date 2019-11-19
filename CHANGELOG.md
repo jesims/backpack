@@ -1,3 +1,9 @@
+# 3.7.0
+
+Added:
+
+* `io.jesi.backpack.test.macros/testing` macro
+
 # 3.6.0
 
 Added:

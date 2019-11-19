@@ -114,11 +114,8 @@ unit-test-browser-refresh () {
 unit-test-cljs-refresh () {
 	clean
 	echo_message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
-	shadow-cljs compile karma
+	shadow-cljs watch node
 	abort_on_error
-	trap stop EXIT
-	npx karma start --no-single-run &
-	shadow-cljs watch karma
 }
 
 ## test-cljs:

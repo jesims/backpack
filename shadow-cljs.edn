@@ -1,7 +1,8 @@
 {:lein   true
  :builds {:node    {:target    :node-test
                     :output-to "target/node/test.js"
-                    :ns-regexp #shadow/env "TEST_NS_REGEXP"}
+                    :ns-regexp #shadow/env "TEST_NS_REGEXP"
+                    :autorun   true}
           :karma   {:target    :karma
                     :ns-regexp #shadow/env "TEST_NS_REGEXP"
                     :output-to "target/karma/test.js"}

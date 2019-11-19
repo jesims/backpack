@@ -24,3 +24,14 @@
 (defmacro is= [x y & more]
   (let [is* (env-specific &env 'clojure.test/is)]
     `(~is* (= ~x ~y ~@more))))
+
+(defmacro testing
+  "Like `clojure.test/testing`, but will fail if `body` is empty."
+  [string & body]
+  (let [testing* (env-specific &env 'clojure.test/testing)
+        try-expr* (env-specific &env 'clojure.test/try-expr)
+        body (if (seq body)
+               body
+               [`(~try-expr* "Test is empty" nil)])]
+    `(~testing* ~string
+       ~@body)))
