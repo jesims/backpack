@@ -1,10 +1,11 @@
 (ns io.jesi.backpack.cache-test
+  (:refer-clojure :exclude [=])
   (:require
-    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack.cache :as cache]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.macros :refer [async-go is=]])
+    [io.jesi.backpack.test.macros :refer [async-go]]
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]])
   #?(:clj
      (:import
        (clojure.lang ILookup))))
@@ -69,7 +70,7 @@
 
     (testing "can be applied to"
       (let [cached-sum (cache/->Simple (cache/create-default) +)]
-        (doseq [v (range 1 #?(:clj 100
+        (doseq [v (range 1 #?(:clj  100
                               :cljs 21))]
           (let [args (range v)
                 expected (apply + args)

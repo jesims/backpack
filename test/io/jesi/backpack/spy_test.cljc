@@ -1,15 +1,16 @@
 (ns io.jesi.backpack.spy-test
+  (:refer-clojure :exclude [=])
   (:require
-    [clojure.test :refer [deftest is testing use-fixtures]]
+    [clojure.test :as t]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.spy :as spy]
-    [io.jesi.backpack.test.macros :refer [is=]]))
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
 (defn- set-debug [v]
   #?(:cljs (set! js/goog.DEBUG v)))
 
-(use-fixtures :each
+(t/use-fixtures :each
   (fn [f]
     (f)
     (set-debug false)))
@@ -41,7 +42,7 @@
         (set-debug true)
 
         (testing "the specified values"
-          (is= (str file ":" (set-line 45) " a: 1" \newline)
+          (is= (str file ":" (set-line 46) " a: 1" \newline)
                (with-out-str (spy/prn a)))
           (is= (str file ":" (add-line 2) " a: 1 b: 2" \newline)
                (with-out-str (spy/prn a b))))
@@ -78,7 +79,7 @@
         (set-debug true)
 
         (testing "the specified values"
-          (is= (str file ":" (set-line 83) " a:" \newline
+          (is= (str file ":" (set-line 84) " a:" \newline
                  "1" \newline)
                (with-out-str (spy/pprint a)))
           (is= (str file ":" (add-line 5) " a:" \newline
@@ -124,7 +125,7 @@
       (spy/enabled
         (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 128) " a: 1" \newline)
+          (is= (str file ":" (set-line 129) " a: 1" \newline)
                (with-out-str (reset! result (spy/peek a))))
           (is= a @result)
 
@@ -144,7 +145,7 @@
       (spy/enabled
         (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 148) " a:" \newline "1" \newline)
+          (is= (str file ":" (set-line 149) " a:" \newline "1" \newline)
                (with-out-str (reset! result (spy/ppeek a))))
           (is= a @result)
 

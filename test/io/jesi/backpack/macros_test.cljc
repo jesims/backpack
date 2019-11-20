@@ -1,12 +1,12 @@
 (ns io.jesi.backpack.macros-test
-  (:refer-clojure :exclude [when-let])
+  (:refer-clojure :exclude [= when-let])
   (:require
     [clojure.string :as string]
-    [clojure.test :refer [deftest is testing use-fixtures]]
+    [clojure.test :as t]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts fn1 shorthand try* when-debug when-let]]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.macros :refer [is=]]
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]
     [io.jesi.backpack.test.util :refer [is-macro=]])
   #?(:clj
      (:import (java.lang ArithmeticException
@@ -15,7 +15,7 @@
 (defn- set-debug [v]
   #?(:cljs (set! js/goog.DEBUG v)))
 
-(use-fixtures :each
+(t/use-fixtures :each
   (fn [f]
     (f)
     (set-debug false)))

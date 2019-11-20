@@ -1,8 +1,8 @@
 (ns io.jesi.backpack.json-test
+  (:refer-clojure :exclude [=])
   (:require
-    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.test.macros :refer [is=]]))
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
 (def clj {:base-url "https://"
           :v2       "is better than v1"

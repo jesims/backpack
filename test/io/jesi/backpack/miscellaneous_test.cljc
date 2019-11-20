@@ -1,9 +1,9 @@
 (ns io.jesi.backpack.miscellaneous-test
+  (:refer-clojure :exclude [=])
   (:require
-    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.macros :refer [is=]]))
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
 (deftest ->uuid-test
   (testing "Converts the first parameter to a UUID object, or returns ::s/invalid"

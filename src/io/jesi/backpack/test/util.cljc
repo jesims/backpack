@@ -4,7 +4,7 @@
     [clojure.pprint :as pprint]
     [clojure.string :as string]
     [clojure.walk :refer [postwalk]]
-    [io.jesi.backpack.test.macros :refer [is=]]))
+    [io.jesi.backpack.test.strict :refer [is=]]))
 
 (defn pprint-str [object]
   (pprint/write object
