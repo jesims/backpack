@@ -9,25 +9,25 @@
 
 (deftest async-go-test
 
-  (testing "async-go")
+  (testing "async-go"
 
-  #?(:clj (testing "is a macro"
-            (is (macro? `async-go))))
+    #?(:clj (testing "is a macro"
+              (is (macro? `async-go))))
 
-  (testing "expands "
-    #?(:clj  (is-macro= '(clojure.core.async/<!!
-                           (io.jesi.backpack.async/go
-                             (is true)))
-                        (macroexpand-1 '(io.jesi.backpack.test.macros/async-go (is true))))
-       :cljs (is-macro= '(cljs.test/async done
-                           (io.jesi.backpack.async/go
-                             (try
-                               (is true)
-                               (finally
-                                 (done)))))
-                        (macroexpand-1 '(io.jesi.backpack.test.macros/async-go (is true))))))
+    (testing "expands"
+      (let [expected '(clojure.core.async/<!!
+                        (io.jesi.backpack.async/go
+                          (is true)))]
+        (is-macro= #?(:clj  expected
+                      :cljs '(cljs.test/async done
+                               (io.jesi.backpack.async/go
+                                 (try
+                                   (is true)
+                                   (finally
+                                     (done))))))
+                   (macroexpand '(io.jesi.backpack.test.macros/async-go (is true))))))
 
-  (testing "is a `clojure.test/async` `go` block"
-    (async-go
-      (is= 1 (async/<? (async/go-try 1))))))
+    (testing "is a `clojure.test/async` `go` block"
+      (async-go
+        (is= 1 (async/<? (async/go-try 1)))))))
 

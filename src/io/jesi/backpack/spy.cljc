@@ -5,7 +5,7 @@
   #?(:cljs (:require-macros [io.jesi.backpack.spy :refer [pprint prn]]))
   (:require
     [io.jesi.backpack.collection :refer [trans-reduce]]
-    [io.jesi.backpack.macros :refer [if-cljs when-debug when-not=]]
+    [io.jesi.backpack.macros :refer [when-debug when-not=]]
     [io.jesi.backpack.test.util :refer [pprint-str]]))
 
 (def ^:dynamic *enabled* false)
@@ -20,12 +20,13 @@
     (str form)))
 
 (defn- line-number [file form]
-  (let [f (or (when (and file
+  (let [{:keys [line] meta-file :file} (meta form)
+        f (or (when (and file
                          (not= "NO_SOURCE_PATH" file)
                          (not= \/ (nth file 0)))
                 file)
-              *ns*)
-        line (:line (meta form))]
+              meta-file
+              *ns*)]
     (if line
       (str f \: line)
       (str f))))

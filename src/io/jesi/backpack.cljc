@@ -60,9 +60,8 @@
    ->uuid
    ->uuid-or-not
    assoc-changed!
-   cljs-env?
    collify
-   env-specific
+   named?
    namespaced?]
 
   [io.jesi.backpack.number

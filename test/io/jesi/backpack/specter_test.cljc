@@ -13,9 +13,9 @@
       (is= {:a 1} (select-one {:a 1})))
 
     (testing "does not include non maps"
-      (is nil? (select-one []))
-      (is nil? (select-one 1))
-      (is nil? (select-one [1 [2] "3" nil {}])))
+      (is (nil? (select-one [])))
+      (is (nil? (select-one 1)))
+      (is (nil? (select-one [1 [2] "3" nil {}]))))
 
     (testing "walks over nested maps"
       (let [c {:c 2}

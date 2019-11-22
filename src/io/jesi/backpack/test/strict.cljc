@@ -1,11 +1,11 @@
 ;TODO move to test utils library
 (ns io.jesi.backpack.test.strict
   (:refer-clojure :exclude [=])
-  #?(:cljs (:require-macros [io.jesi.backpack.test.strict]))
+  #?(:cljs (:require-macros [io.jesi.backpack.test.strict :refer [is]]))
   (:require
-    [clojure.test]
     [clojure.string :as str]
-    [io.jesi.backpack.miscellaneous :refer [env-specific]])
+    [clojure.test :as test]
+    [io.jesi.backpack.env :as env])
   #?(:clj (:import
             (java.util.regex Pattern))))
 
@@ -24,55 +24,6 @@
     (apply clojure.core/= x y more)
     (clojure.core/= x y)))
 
-(defn- default-body [env body]
-  (let [try-expr* (env-specific env 'clojure.test/try-expr)]
-    (if (seq body)
-      body
-      [`(~try-expr* "Test is empty" nil)])))
-
-(defmacro deftest
-  "Like `clojure.test/deftest`, but will fail if `body` is empty."
-  [name & body]
-  {:pre [(symbol? name)]}
-  (let [deftest* (env-specific &env 'clojure.test/deftest)]
-    `(~deftest* ~name
-       ~@(default-body &env body))))
-
-(defmacro testing
-  "Like `clojure.test/testing`, but will fail if `body` is empty."
-  [string & body]
-  {:pre [(string? string)
-         (not (str/blank? string))]}
-  (let [testing* (env-specific &env 'clojure.test/testing)]
-    `(~testing* ~string
-       ~@(default-body &env body))))
-
-(defn thrown?
-  "Checks that an instance of `c` is thrown from `body`, fails if not;
-  then returns the thing thrown. Must be used in an `is` block."
-  [c body]
-  {:pre [#?(:clj     (instance? Class c)
-            :default (some? c))
-         (some? body)]}
-  (assert nil "`thrown?` used not in `is` block"))
-
-(defmacro is= [x y & more]
-  (let [is* (env-specific &env 'clojure.test/is)
-        =* (env-specific &env 'clojure.core/=)]
-    `(~is* (~=* ~x ~y ~@more))))
-
-(defn thrown-with-msg?
-  "Checks that an instance of `c` is thrown AND that the message
-  on the exception matches (with re-find) the regular expression `re`.
-  Must be used in an `is` block."
-  [c re body]
-  {:pre [#?(:clj     (instance? Class c)
-            :default (some? c))
-         #?(:cljs (regexp? re)
-            :clj  (instance? Pattern re))
-         (some? body)]}
-  (assert nil "`thrown-with-msg?` used not in `is` block"))
-
 (defmacro is
   "Generic assertion macro. `form` is any predicate test.
   `msg` is an optional message to attach to the assertion.
@@ -88,18 +39,66 @@
   thrown from `body` and that the message on the exception
   matches (with `re-find`) the regular expression `re`."
   ([form]
-   {:pre [(some? form)]}
-   (let [is* (env-specific &env 'clojure.test/is)]
-     `(~is* ~form)))
+   `(env/transform
+      (test/is ~form)))
   ([form msg]
-   {:pre [(some? form)
-          (some? msg)]}
-   (let [is* (env-specific &env 'clojure.test/is)]
-     `(~is* ~form ~msg))))
+   {:pre [(string? msg)
+          (not (str/blank? msg))]}
+   `(env/transform
+      (test/is ~form ~msg))))
+
+(defmacro is= [x y & more]
+  `(env/transform
+     (test/is (clojure.core/= ~x ~y ~@more))))
+
+(defn- default-body [body]
+  (if (seq body)
+    body
+    [`(test/try-expr "Test is empty" nil)]))
+
+(defmacro deftest
+  "Like `clojure.test/deftest`, but will fail if `body` is empty."
+  [name & body]
+  {:pre [(symbol? name)]}
+  `(env/transform
+     (test/deftest ~name
+       ~@(default-body body))))
+
+(defmacro testing
+  "Like `clojure.test/testing`, but will fail if `body` is empty."
+  [string & body]
+  {:pre [(string? string)
+         (not (str/blank? string))]}
+  `(env/transform
+     (test/testing ~string
+       ~@(default-body body))))
+
+(defn thrown?
+  "Checks that an instance of `c` is thrown from `body`, fails if not;
+  then returns the thing thrown. Must be used in an `is` block."
+  [c body]
+  (assert nil "`thrown?` used not in `is` block"))
+
+(defn thrown-with-msg?
+  "Checks that an instance of `c` is thrown AND that the message
+  on the exception matches (with re-find) the regular expression `re`.
+  Must be used in an `is` block."
+  [c re body]
+  (assert nil "`thrown-with-msg?` used not in `is` block"))
 
 (defmacro are [argv expr & args]
   {:pre [(seq argv)
          (some? expr)
          (seq args)]}
-  (let [are* (env-specific &env 'clojure.test/are)]
-    `(~are* ~argv ~expr ~@args)))
+  `(env/transform
+     (test/are ~argv ~expr ~@args)))
+
+(defmacro use-fixtures
+  "Wrap test runs in a fixture function to perform setup and
+  teardown. Using a fixture-type of :each wraps every test
+  individually, while :once wraps the whole run in a single function."
+  [type & fns]
+  {:pre [(#{:once :each} type)
+         (seq fns)]}
+  `(env/transform
+     (clojure.test/use-fixtures ~type ~@fns)))

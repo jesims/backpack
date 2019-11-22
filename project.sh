@@ -53,7 +53,7 @@ script-invoke () {
 		usage
 		exit 1
 	elif [[ $(grep "^$1\ (" "$script_name") ]];then
-		eval $@
+		"$@"
 	else
 		echo_error "Unknown function $1 ($script_name $@)"
 		exit 1

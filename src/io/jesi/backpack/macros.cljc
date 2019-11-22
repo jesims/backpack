@@ -3,8 +3,8 @@
   #?(:cljs (:require-macros [io.jesi.backpack.macros]))
   (:require
     [clojure.core]
-    [io.jesi.backpack.fn :refer [noop]]
-    [io.jesi.backpack.miscellaneous :refer [cljs-env?]])
+    [io.jesi.backpack.env :as env]
+    [io.jesi.backpack.fn :refer [noop]])
   #?(:cljs (:require [cljs.core :refer [IFn]]))
   #?(:clj
      (:import
@@ -24,17 +24,10 @@
              (def ~name ~doc ~src)
              (alter-meta! #'~name assoc :arglists '~arglists))))))
 
-(defmacro if-cljs
-  "Return `then` if we are generating cljs code, and `else` for Clojure code"
-  [then else]
-  (if (cljs-env? &env)
-    then
-    else))
-
 (defmacro catch-> [handle & body]
   `(try
      ~@body
-     (catch ~(if (cljs-env? &env) :default `Throwable) ~'ex
+     (catch ~(if (env/cljs? &env) :default `Throwable) ~'ex
        (~handle ~'ex))))
 
 (defmacro catch->identity [& body]
@@ -111,7 +104,7 @@
      ~body))
 
 (defmacro when-debug [body]
-  (if (cljs-env? &env)
+  (if (env/cljs? &env)
     `(when ~(vary-meta 'js/goog.DEBUG assoc :tag 'boolean)
        ~body)
     body))
@@ -120,7 +113,7 @@
   "Defines IFn invoke implementations to call as `(invoke-fn this [args])`"
   [invoke-fn & more]
   (let [arg (comp symbol (partial str "arg"))
-        cljs? (cljs-env? &env)
+        cljs? (env/cljs? &env)
         sym (if cljs? '-invoke 'invoke)
         protocol (if cljs? 'IFn 'clojure.lang.IFn)
         code `(reify

@@ -13,7 +13,7 @@
   :dependencies [[thheller/shadow-cljs :scope "provided"]
                  [org.clojure/clojure]
                  [org.clojure/core.async]
-                 [com.rpl/specter]
+                 [com.rpl/specter "1.1.3"]                  ;TODO use version in parent
                  [cheshire "5.8.1"]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.1.0"]

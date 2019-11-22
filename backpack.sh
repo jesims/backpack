@@ -127,7 +127,7 @@ unit-test-cljs-refresh () {
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates with karma
 ## [test-ns-regex] Watches tests and source files for changes, and subsequently re-evaluates
 test-cljs () {
-	export TEST_NS_REGEXP=${2:-'-test$'}
+	export TEST_NS_REGEXP="${2:-'-test$'}"
 	case $1 in
 		-r)
 			unit-test-cljs-refresh;;

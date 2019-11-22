@@ -3,8 +3,8 @@
   (:require
     [clojure.pprint :as pprint]
     [clojure.string :as string]
-    [clojure.walk :refer [postwalk]]
-    [io.jesi.backpack.test.strict :refer [is=]]))
+    [clojure.test :refer [is]]
+    [clojure.walk :refer [postwalk]]))
 
 (defn pprint-str [object]
   (pprint/write object
@@ -30,7 +30,7 @@
                           form)))
                     pprint-str-code)
         expected (pprint-str-code expected)]
-    (is= expected actual)))
+    (is (= expected actual))))
 
 #?(:clj
    (defn- ^:dynamic *sleep* [ms-duration]

@@ -3,7 +3,9 @@
   (:require
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
+    [io.jesi.backpack.test.strict :refer [= are deftest is is= testing]])
+  #?(:clj (:import
+            (clojure.lang Named))))
 
 (deftest ->uuid-test
   (testing "Converts the first parameter to a UUID object, or returns ::s/invalid"
@@ -135,3 +137,34 @@
     (testing "returns nil for nil"
       (is (nil? (bp/collify)))
       (is (nil? (bp/collify nil))))))
+
+(deftest named?-test
+
+  (testing "named?"
+
+    (testing "is a function"
+      (is (fn? bp/named?)))
+
+    (testing "returns `true` if value is"
+
+      (testing "a string"
+        (is (bp/named? "hello")))
+
+      (testing "implement Named"
+        (are [v]
+          (is (bp/named? v))
+          'hello
+          :hello
+          #?(:cljs (reify INamed
+                     (-name [_]))
+             :clj  (reify Named
+                     (getName [_])
+                     (getNamespace [_]))))))
+
+    (testing "returns `false` for other types"
+      (are [x]
+        (is (false? (bp/named? x)))
+        nil
+        1
+        {}
+        []))))

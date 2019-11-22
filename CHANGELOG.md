@@ -1,3 +1,20 @@
+# 4.0.0
+
+Moved:
+
+* `io.jesi.backpack.miscellaneous/cljs-env?` to `io.jesi.backpack.env/cljs?`
+
+Removed:
+
+* `io.jesi.backpack.macros/if-cljs`
+* `io.jesi.backpack.miscellaneous/env-specific`
+
+Added:
+
+* `io.jesi.backpack.test.strict`
+* `io.jesi.backpack.env`
+* `io.jesi.backpack/named?`
+
 # 3.7.0
 
 Added:
