@@ -14,7 +14,7 @@
                  [org.clojure/clojure]
                  [org.clojure/core.async]
                  [com.rpl/specter]
-                 [cheshire "5.8.1"]
+                 [cheshire "5.9.0"]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.2.0"]
                  [com.taoensso/encore "2.117.0"]
