@@ -2,9 +2,11 @@
   (:require
     #?(:clj [io.jesi.backpack.macros :refer [macro?]])
     [clojure.string :as str]
+    [io.jesi.backpack.atom :as atom]
     [clojure.test :refer [are deftest is testing]]
     [io.jesi.backpack.test.strict :as strict :refer [thrown-with-msg? thrown?]]
-    [io.jesi.backpack.test.util :refer [is-macro=]])
+    [io.jesi.backpack.test.util :refer [is-macro=]]
+    [clojure.test :as test])
   #?(:clj (:import
             (clojure.lang Compiler$CompilerException))))
 
@@ -81,23 +83,37 @@
                                                      :message  nil}))))
                  (macroexpand '(io.jesi.backpack.test.strict/is true))))
 
+    (testing "takes"
+
+      (testing "an optional message string"
+        (strict/is true "true")
+        (strict/is true (str true))))
+
+    (testing "fails if message is not a non-blank string"
+      (are [msg]
+        (let [report (atom nil)]
+          (with-redefs [test/do-report (partial reset! report)]
+            (strict/is 1 msg))
+          (when (is (some? @report))
+            (let [{:keys [type expected actual]} @report]
+              (is (= :fail type))
+              (is (= (list 'clojure.core/and (list 'clojure.core/string? msg) (list 'clojure.core/not (list 'clojure.string/blank? msg)))
+                     expected))
+              (is (false? actual)))))
+        nil
+        1
+        ""
+        \space
+        " "
+        :message))
+
     #?(:clj (testing "errors if"
 
               (testing "`form` is `nil`"
                 (are [form]
                   (is-assertion-error-cause (is (thrown? Compiler$CompilerException (eval form))))
                   `(strict/is nil)
-                  `(strict/is nil "")))
-
-              (testing "`msg` is is not a non-blank string"
-                (are [form]
-                  (is-assertion-error-cause (is (thrown? Compiler$CompilerException (eval form))))
-                  `(strict/is 1 nil)
-                  `(strict/is 1 1)
-                  `(strict/is 1 "")
-                  `(strict/is 1 \space)
-                  `(strict/is 1 " ")
-                  `(strict/is 1 :message)))))))
+                  `(strict/is nil "")))))))
 
 (deftest is=-test
 

@@ -27,6 +27,7 @@
 (defmacro is
   "Generic assertion macro. `form` is any predicate test.
   `msg` is an optional message to attach to the assertion.
+  Will fail is message is not a string.
 
   Example: `(is (= 4 (+ 2 2)) \"Two plus two should be 4\")`
 
@@ -43,11 +44,10 @@
    `(env/transform
       (test/is ~form)))
   ([form msg]
-   {:pre [(some? form)
-          (string? msg)
-          (not (str/blank? msg))]}
+   {:pre [(some? form)]}
    `(env/transform
-      (test/is ~form ~msg))))
+      (when (test/is (and (string? ~msg) (not (str/blank? ~msg))))
+        (test/is ~form ~msg)))))
 
 (defmacro is= [x y & more]
   `(env/transform

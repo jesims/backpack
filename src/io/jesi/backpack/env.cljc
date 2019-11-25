@@ -41,7 +41,19 @@
   (fn ->cljs [sym]
     (let [ns (namespace sym)]
       (if (and (str/starts-with? ns "clojure.")
-               (not= "clojure.core" ns))
+               (not (contains?
+                      #{"clojure.core"
+                        "clojure.core.protocols"
+                        "clojure.core.reducers"
+                        "clojure.data"
+                        "clojure.datafy"
+                        "clojure.edn"
+                        "clojure.reflect"
+                        "clojure.set"
+                        "clojure.string"
+                        "clojure.walk"
+                        "clojure.zip"}
+                      ns)))
         (with-meta
           (clojure.core/symbol
             (str "cljs" (subs ns (str/index-of ns \.)))
