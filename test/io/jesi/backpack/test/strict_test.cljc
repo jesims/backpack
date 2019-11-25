@@ -6,7 +6,8 @@
     [clojure.test :as test]
     [io.jesi.backpack.atom :as atom]
     [io.jesi.backpack.test.strict :as strict :refer [thrown-with-msg? thrown?]]
-    [io.jesi.backpack.test.util :refer [is-macro=]])
+    [io.jesi.backpack.test.util :refer [is-macro=]]
+    [com.rpl.specter :as sp])
   #?(:clj (:import
             (clojure.lang Compiler$CompilerException))))
 
@@ -17,6 +18,9 @@
                 (is (instance? AssertionError cause))
                 (is (str/starts-with? (ex-message cause) "Assert failed: ")))
               cause))))
+
+(defn- is-not-blank-assertion [ex]
+  (is (str/starts-with? (ex-message ex) "Assert failed: (io.jesi.backpack.string/not-blank? ")))
 
 (deftest =-test
 
@@ -89,18 +93,12 @@
         (strict/is true "true")
         (strict/is true (str true))))
 
-    (testing "fails if message is not a non-blank string"
+    (testing "errors if message is not a non-blank string"
+      #?(:clj (-> (is (thrown? Compiler$CompilerException (eval `(strict/is nil))))
+                  is-assertion-error-cause))
       (are [msg]
-        (let [report (atom nil)]
-          (with-redefs [test/do-report (partial reset! report)]
-            (strict/is 1 msg))
-          (when (is (some? @report))
-            (let [{:keys [type expected actual]} @report]
-              (is (= :fail type))
-              (is (= (list 'clojure.core/and (list 'clojure.core/string? msg) (list 'clojure.core/not (list 'clojure.string/blank? msg)))
-                     expected))
-              (is (false? actual)))))
-        nil
+        (-> (is (thrown? #?(:clj AssertionError :cljs js/Error) (strict/is 1 msg)))
+            is-not-blank-assertion)
         1
         ""
         \space
@@ -188,8 +186,16 @@
         (when (is (some? test))
           (is (fn? test)))))
 
-    (testing "fails if empty")
-    ;TODO not sure how to test empty deftest
+    (testing "fails if empty"
+      (let [reports (atom [])]
+        (with-redefs [test/do-report (partial atom/conj! reports)]
+          (ns-unmap 'io.jesi.backpack.test.strict-test 'empty-deftest)
+          (strict/deftest empty-deftest)
+          (test/test-var #'empty-deftest))
+        (let [{:keys [type message] :as report} (sp/select-one! [sp/ALL (comp (partial = :fail) :type)] @reports)]
+          (when (is (some? report))
+            (is (= :fail type))
+            (is (= "Test is empty" message))))))
 
     (testing "expands"
       (is (= #?(:clj  '(def testing (clojure.core/fn [] (clojure.test/test-var (var testing))))
@@ -205,15 +211,30 @@
     #?(:clj (testing "is a macro"
               (is (macro? `strict/testing))))
 
-    #?(:clj (testing "errors if `string` is not a non-blank string"
-              (are [x]
-                (is-assertion-error-cause (is (thrown? Compiler$CompilerException (eval `(strict/testing ~x)))))
-                nil
-                1
-                :stuff
-                ""
-                \space
-                " ")))
+    (testing "takes a testing context string"
+      (strict/testing "a" true)
+      (strict/testing (str "a") true))
+
+    (testing "errors if `string` is not a non-blank string"
+      #?(:clj (-> (is (thrown? Compiler$CompilerException (eval `(strict/testing nil))))
+                  is-assertion-error-cause))
+      (are [x]
+        (->> (is (thrown? #?(:clj AssertionError :cljs js/Error) (strict/testing x)))
+             is-not-blank-assertion)
+        1
+        :stuff
+        ""
+        \space
+        " "))
+
+    (testing "fails if empty"
+      (let [report (atom nil)]
+        (with-redefs [test/do-report (partial reset! report)]
+          (strict/testing "test empty"))
+        (let [{:keys [type message] :as report} @report]
+          (when (is (some? report))
+            (is (= :fail type))
+            (is (= "Test is empty" message))))))
 
     (testing "expands"
 
@@ -221,12 +242,14 @@
         (is (= #?(:clj  '(let* []
                            (clojure.core/push-thread-bindings (clojure.core/hash-map (var clojure.test/*testing-contexts*) (clojure.core/conj clojure.test/*testing-contexts* "testing")))
                            (try
+                             (clojure.core/assert (io.jesi.backpack.string/not-blank? "testing"))
                              (clojure.test/try-expr "Test is empty" nil)
                              (finally
                                (clojure.core/pop-thread-bindings))))
                   :cljs '(do
                            (cljs.test/update-current-env! [:testing-contexts] clojure.core/conj "testing")
                            (try
+                             (clojure.core/assert (io.jesi.backpack.string/not-blank? "testing"))
                              (cljs.test/try-expr "Test is empty" nil)
                              (finally
                                (cljs.test/update-current-env! [:testing-contexts] clojure.core/rest)))))
@@ -236,6 +259,7 @@
         (is (= #?(:clj  '(let* []
                            (clojure.core/push-thread-bindings (clojure.core/hash-map (var clojure.test/*testing-contexts*) (clojure.core/conj clojure.test/*testing-contexts* "testing")))
                            (try
+                             (clojure.core/assert (io.jesi.backpack.string/not-blank? "testing"))
                              (io.jesi.backpack.test.strict/is true)
                              (io.jesi.backpack.test.strict/is= 1 1)
                              (finally
@@ -243,6 +267,7 @@
                   :cljs '(do
                            (cljs.test/update-current-env! [:testing-contexts] clojure.core/conj "testing")
                            (try
+                             (clojure.core/assert (io.jesi.backpack.string/not-blank? "testing"))
                              (io.jesi.backpack.test.strict/is true)
                              (io.jesi.backpack.test.strict/is= 1 1)
                              (finally

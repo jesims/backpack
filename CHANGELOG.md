@@ -19,6 +19,7 @@ Added:
 * `io.jesi.backpack.env`
 * `io.jesi.backpack.atom`
 * `io.jesi.backpack/named?`
+* `io.jesi.backpack/not-blank?`
 
 Changed:
 

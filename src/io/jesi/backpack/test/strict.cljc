@@ -4,6 +4,7 @@
   #?(:cljs (:require-macros [io.jesi.backpack.test.strict :refer [is]]))
   (:require
     [clojure.string :as str]
+    [io.jesi.backpack.string :refer [not-blank?]]
     [clojure.test :as test]
     [io.jesi.backpack.env :as env])
   #?(:clj (:import
@@ -44,9 +45,11 @@
    `(env/transform
       (test/is ~form)))
   ([form msg]
-   {:pre [(some? form)]}
+   {:pre [(some? form)
+          (some? msg)]}
    `(env/transform
-      (when (test/is (and (string? ~msg) (not (str/blank? ~msg))))
+      (do
+        (assert (not-blank? ~msg))
         (test/is ~form ~msg)))))
 
 (defmacro is= [x y & more]
@@ -69,10 +72,10 @@
 (defmacro testing
   "Like `clojure.test/testing`, but will fail if `body` is empty."
   [string & body]
-  {:pre [(string? string)
-         (not (str/blank? string))]}
+  {:pre [(some? string)]}
   `(env/transform
      (test/testing ~string
+       (assert (not-blank? ~string))
        ~@(default-body body))))
 
 (defn thrown?

@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [subs])
   (:require
     [clojure.string :as string]
-    [io.jesi.backpack.fn :refer [if-fn or-fn]]))
+    [io.jesi.backpack.fn :refer [if-fn or-fn and-fn]]
+    [clojure.string :as str]))
 
 (defn- normalize-str-idx [length i]
   (if (neg? i)
@@ -114,3 +115,5 @@
 (def prefix (create-affix string/starts-with? reverse))
 
 (def suffix (create-affix string/ends-with? identity))
+
+(def not-blank? (and-fn string? (complement str/blank?)))
