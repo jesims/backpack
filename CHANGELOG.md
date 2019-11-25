@@ -3,6 +3,7 @@
 Moved:
 
 * `io.jesi.backpack.miscellaneous/cljs-env?` to `io.jesi.backpack.env/cljs?`
+* `io.jesi.backpack.test.runner` to `io.jesi.backpack.test.runner.browser`
 
 Removed:
 
@@ -14,6 +15,10 @@ Added:
 * `io.jesi.backpack.test.strict`
 * `io.jesi.backpack.env`
 * `io.jesi.backpack/named?`
+
+Changed:
+
+* `is-macro=` to compare symbols instead of strings
 
 # 3.7.0
 
