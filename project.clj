@@ -32,6 +32,7 @@
   ;FIXME generate docs for cljc, clj and cljs
   :codox {:output-path "docs"
           :namespaces  [io.jesi.backpack
+                        io.jesi.backpack.atom
                         io.jesi.backpack.cache
                         io.jesi.backpack.env
                         io.jesi.backpack.http.codes

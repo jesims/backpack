@@ -14,6 +14,7 @@ Added:
 
 * `io.jesi.backpack.test.strict`
 * `io.jesi.backpack.env`
+* `io.jesi.backpack.atom`
 * `io.jesi.backpack/named?`
 
 Changed:
