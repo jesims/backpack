@@ -1,6 +1,7 @@
 (ns io.jesi.backpack.miscellaneous
   (:refer-clojure :exclude [assoc-in])
   (:require
+    [io.jesi.backpack.atom :as atom]
     [io.jesi.backpack.collection :refer [assoc-in]]
     [io.jesi.backpack.fn :refer [call]]
     [io.jesi.backpack.string :refer [uuid-str?]])
@@ -27,13 +28,12 @@
 (defn ->uuid-or-not [id]
   (or (->uuid id) id))
 
-(defn assoc-changed!
-  "assoc(-in) the atom when the value has changed"
+(defn ^:deprecated assoc-changed!
+  "DEPRECATED: Use atom ns
+
+   assoc(-in) the atom when the value has changed"
   [atom & kvs]
-  (let [base @atom
-        updated (apply assoc-in base kvs)]
-    (when (not= updated base)
-      (reset! atom updated))))
+  (apply atom/assoc-changed! atom kvs))
 
 (defn named?
   "Returns true if `x` is named (can be passed to `name`)"

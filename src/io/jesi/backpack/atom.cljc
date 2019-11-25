@@ -1,5 +1,5 @@
 (ns io.jesi.backpack.atom
-  (:refer-clojure :exclude [assoc! conj! dissoc! assoc-in])
+  (:refer-clojure :exclude [assoc! assoc-in conj! dissoc!])
   (:require
     [io.jesi.backpack.collection :refer [assoc-in dissoc-in]]
     [taoensso.encore :refer [assoc-some]]))
@@ -28,3 +28,10 @@
 (defn conj! [a x & xs]
   (apply swap! a conj x xs))
 
+(defn assoc-changed!
+  "assoc(-in) the atom when the value has changed"
+  [atom & kvs]
+  (let [base @atom
+        updated (apply assoc-in base kvs)]
+    (when (not= updated base)
+      (reset! atom updated))))

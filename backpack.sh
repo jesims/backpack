@@ -113,8 +113,6 @@ unit-test-browser-refresh () {
 unit-test-cljs-refresh () {
 	clean
 	echo_message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
-	shadow-cljs compile node
-	abort_on_error
 	shadow-cljs watch node
 	abort_on_error
 }

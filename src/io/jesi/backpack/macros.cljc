@@ -10,19 +10,34 @@
      (:import
        (clojure.lang IFn))))
 
-(defmacro import-vars
-  [& imports]
+(defmacro import-vars [& imports]
   `(do
      ~@(apply concat
-         (for [[ns & names] imports
-               name names
-               :let [src (symbol (str ns) (str name))
-                     meta (meta (resolve src))
-                     arglists (get meta :arglists)
-                     doc (get meta :doc "")]]
-           `(
-             (def ~name ~doc ~src)
-             (alter-meta! #'~name assoc :arglists '~arglists))))))
+         (for [import imports
+               :let [vars (if (symbol? import)
+                            (do
+                              (require import)
+                              (vals (ns-publics import)))
+                            (let [ns (first import)]
+                              (map
+                                (fn [name]
+                                  (require ns)
+                                  (let [sym (symbol (str ns) (str name))
+                                        var (resolve sym)]
+                                    (when (nil? var)
+                                      (throw (ex-info (str "Could not resolve var " sym) {:symbol sym
+                                                                                          :ns     *ns*
+                                                                                          :env    &env})))
+                                    var))
+                                (rest import))))]]
+           (apply concat
+             (for [var vars
+                   :let [sym (symbol var)
+                         name (-> sym name symbol)
+                         {:keys [doc arglists]
+                          :or   {doc ""}} (meta var)]]
+               `[(def ~name ~doc ~sym)
+                 (alter-meta! #'~name assoc :arglists '~arglists)]))))))
 
 (defmacro catch-> [handle & body]
   `(try

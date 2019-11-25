@@ -1,111 +1,30 @@
 (ns io.jesi.backpack
-  (:refer-clojure :exclude [assoc-in clj->js js->clj mod sorted? subs])
+  (:refer-clojure :exclude [assoc-in clj->js conj! js->clj mod sorted? subs])
   (:require
-    #?(:cljs [io.jesi.backpack.clojurescript])
+    #?(:clj  [io.jesi.backpack.clojure]
+       :cljs [io.jesi.backpack.clojurescript])
     [io.jesi.backpack.collection]
+    [io.jesi.backpack.exceptions]
     [io.jesi.backpack.fn]
     [io.jesi.backpack.json]
     [io.jesi.backpack.macros :refer [import-vars]]
     [io.jesi.backpack.miscellaneous]
     [io.jesi.backpack.number]
     [io.jesi.backpack.specter]
-    [io.jesi.backpack.string])
-  #?(:clj
-     (:require [io.jesi.backpack.clojure])))
+    [io.jesi.backpack.string]))
 
 (import-vars
-  [io.jesi.backpack.collection
-   assoc-in
-   concat!
-   contains-any?
-   diff
-   dissoc-all
-   dissoc-in
-   distinct-by
-   filter-empty
-   filter-nil-keys
-   filter-values
-   first-some
-   in?
-   map-leaves
-   reduce-leaves
-   remove-empty
-   rename-keys!
-   safe-empty?
-   select-non-nil-keys
-   sorted?
-   trans-reduce
-   trans-reduce-kv
-   transform-keys
-   translate-keys
-   update!
-   update-some]
+  io.jesi.backpack.collection
+  io.jesi.backpack.exceptions
+  io.jesi.backpack.fn
+  io.jesi.backpack.json
+  io.jesi.backpack.miscellaneous
+  io.jesi.backpack.number
+  io.jesi.backpack.specter
+  io.jesi.backpack.string)
 
-  [io.jesi.backpack.fn
-   and-fn
-   apply-when
-   call
-   compr
-   d#
-   if-fn
-   map-if
-   noop
-   or-fn
-   p=
-   partial-right
-   pass
-   pass-if]
-
-  [io.jesi.backpack.miscellaneous
-   ->uuid
-   ->uuid-or-not
-   assoc-changed!
-   collify
-   named?
-   namespaced?]
-
-  [io.jesi.backpack.number
-   infinity
-   round-to
-   mod]
-
-  [io.jesi.backpack.specter
-   map-walker
-   map-key-walker]
-
-  [io.jesi.backpack.string
-   ->camelCase
-   ->camelCase-key
-   ->kebab-case
-   ->kebab-case-key
-   ->snake_case
-   ->snake_case-key
-   prefix
-   remove-prefix
-   subs
-   subs-inc
-   subs-to
-   suffix
-   true-string?
-   uuid-str?]
-
-  [io.jesi.backpack.json
-   clj->json
-   json->clj])
-
-#?(:clj
-   (import-vars
-     [io.jesi.backpack.clojure
-      defkw-type
-      ->uri
-      java->clj]
-
-     [io.jesi.backpack.macros
-      macro?])
-
-   :cljs
-   (import-vars
-     [io.jesi.backpack.clojurescript
-      class->clj
-      clj->js
-      js->clj]))
+#?(:clj  (import-vars
+           io.jesi.backpack.clojure
+           [io.jesi.backpack.macros macro?])
+   :cljs (import-vars
+           io.jesi.backpack.clojurescript))

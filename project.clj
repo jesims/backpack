@@ -40,6 +40,7 @@
                         io.jesi.backpack.http.status
                         io.jesi.backpack.macros
                         io.jesi.backpack.random
+                        io.jesi.backpack.spy
                         io.jesi.backpack.test.macros
                         io.jesi.backpack.test.strict
                         io.jesi.backpack.test.util]}

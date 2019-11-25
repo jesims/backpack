@@ -4,9 +4,12 @@ Moved:
 
 * `io.jesi.backpack.miscellaneous/cljs-env?` to `io.jesi.backpack.env/cljs?`
 * `io.jesi.backpack.test.runner` to `io.jesi.backpack.test.runner.browser`
+* `io.jesi.backpack.clojurescript.cljs` to `io.jesi.backpack.clojurescript.cljc`
 
 Removed:
 
+* `io.jesi.backpack.clojurescript/clj->json` since it's in `json` ns
+* `io.jesi.backpack.clojurescript/json->clj` since it's in `json` ns
 * `io.jesi.backpack.macros/if-cljs`
 * `io.jesi.backpack.miscellaneous/env-specific`
 
@@ -20,6 +23,7 @@ Added:
 Changed:
 
 * `is-macro=` to compare symbols instead of strings
+* `import-vars` to import all public vars by passing in a symbol
 
 # 3.7.0
 

@@ -1,15 +1,18 @@
 {:lein   true
- :builds {:node    {:target    :node-test
-                    :output-to "target/node/test.js"
-                    :ns-regexp #shadow/env "TEST_NS_REGEXP"
-                    :autorun   true
-                    :main      io.jesi.backpack.test.runner.node/main}
-          :karma   {:target    :karma
-                    :ns-regexp #shadow/env "TEST_NS_REGEXP"
-                    :output-to "target/karma/test.js"}
+ :builds {:node    {:target      :node-test
+                    :output-to   "target/node/test.js"
+                    :ns-regexp   #shadow/env "TEST_NS_REGEXP"
+                    :cache-level :jars
+                    :autorun     true
+                    :main        io.jesi.backpack.test.runner.node/main}
+          :karma   {:target      :karma
+                    :output-to   "target/karma/test.js"
+                    :ns-regexp   #shadow/env "TEST_NS_REGEXP"
+                    :cache-level :jars}
           :browser {:target          :browser-test
                     :test-dir        "target/browser/"
                     :ns-regexp       #shadow/env "TEST_NS_REGEXP"
+                    :cache-level     :jars
                     :runner-ns       io.jesi.backpack.test.runner.browser
                     :closure-defines {cljs-test-display.core/printing      true
                                       cljs-test-display.core/notifications true}

@@ -1,8 +1,8 @@
 (ns io.jesi.backpack.atom-test
   (:refer-clojure :exclude [=])
   (:require
-    [io.jesi.backpack.test.strict :refer [deftest testing is is= =]]
-    [io.jesi.backpack.atom :as atom]))
+    [io.jesi.backpack.atom :as atom]
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
 (deftest assoc!-test
 
