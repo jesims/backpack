@@ -52,7 +52,7 @@
 (defmethod converter :default [_]
   identity)
 
-(defn symbol [env sym]
+(defn- symbol [env sym]
   {:pre [(symbol? sym)
          (namespaced? sym)]}
   (let [converter (converter (runtime env))]
