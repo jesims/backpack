@@ -4,10 +4,10 @@
     [clojure.string :as str]
     [clojure.test :refer [are deftest is testing]]
     [clojure.test :as test]
+    [com.rpl.specter :as sp]
     [io.jesi.backpack.atom :as atom]
     [io.jesi.backpack.test.strict :as strict :refer [thrown-with-msg? thrown?]]
-    [io.jesi.backpack.test.util :refer [is-macro=]]
-    [com.rpl.specter :as sp])
+    [io.jesi.backpack.test.util :refer [is-macro=]])
   #?(:clj (:import
             (clojure.lang Compiler$CompilerException))))
 

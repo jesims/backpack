@@ -4,9 +4,9 @@
   #?(:cljs (:require-macros [io.jesi.backpack.test.strict :refer [is]]))
   (:require
     [clojure.string :as str]
-    [io.jesi.backpack.string :refer [not-blank?]]
     [clojure.test :as test]
-    [io.jesi.backpack.env :as env])
+    [io.jesi.backpack.env :as env]
+    [io.jesi.backpack.string :refer [not-blank?]])
   #?(:clj (:import
             (java.util.regex Pattern))))
 

@@ -2,8 +2,8 @@
   (:refer-clojure :exclude [subs])
   (:require
     [clojure.string :as string]
-    [io.jesi.backpack.fn :refer [if-fn or-fn and-fn]]
-    [clojure.string :as str]))
+    [clojure.string :as str]
+    [io.jesi.backpack.fn :refer [and-fn if-fn or-fn]]))
 
 (defn- normalize-str-idx [length i]
   (if (neg? i)
