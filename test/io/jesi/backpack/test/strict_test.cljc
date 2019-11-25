@@ -2,8 +2,7 @@
   (:require
     #?(:clj [io.jesi.backpack.macros :refer [macro?]])
     [clojure.string :as str]
-    [clojure.test :refer [are deftest is testing]]
-    [clojure.test :as test]
+    [clojure.test :as test :refer [are deftest is testing]]
     [com.rpl.specter :as sp]
     [io.jesi.backpack.atom :as atom]
     [io.jesi.backpack.test.strict :as strict :refer [thrown-with-msg? thrown?]]
