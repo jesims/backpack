@@ -16,11 +16,12 @@
                  [com.rpl/specter]
                  [cheshire "5.8.1"]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
-                 [medley "1.1.0"]
-                 [org.clojure/core.cache "0.7.2"]
+                 [medley "1.2.0"]
+                 [com.taoensso/encore "2.117.0"]
+                 [org.clojure/core.cache "0.8.2"]
                  [org.clojars.mmb90/cljs-cache "0.1.4"]
                  [pjstadig/humane-test-output "0.10.0"]]
-  :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.2.11"]]}
+  :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.3.1"]]}
              :dev  {:injections [(require 'pjstadig.humane-test-output)
                                  (pjstadig.humane-test-output/activate!)]
                     :plugins    [[lein-codox "0.10.7"]
@@ -31,10 +32,14 @@
   ;FIXME generate docs for cljc, clj and cljs
   :codox {:output-path "docs"
           :namespaces  [io.jesi.backpack
+                        io.jesi.backpack.cache
+                        io.jesi.backpack.env
                         io.jesi.backpack.http.codes
                         io.jesi.backpack.http.response
                         io.jesi.backpack.http.status
-                        io.jesi.backpack.cache
                         io.jesi.backpack.macros
-                        io.jesi.backpack.random]}
+                        io.jesi.backpack.random
+                        io.jesi.backpack.test.macros
+                        io.jesi.backpack.test.strict
+                        io.jesi.backpack.test.util]}
   :aliases {"test-refresh" ["auto" "do" ["shell" "clear"] "test"]})
