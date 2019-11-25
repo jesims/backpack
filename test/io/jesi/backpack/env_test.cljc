@@ -4,9 +4,6 @@
     [io.jesi.backpack.env :as env]
     [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
-(defn- ^boolean test-private-fn []
-  true)
-
 (deftest transform-test
 
   (testing "transform*"
