@@ -1,10 +1,9 @@
 {:lein   true
- :builds {:node    {:target        :node-test
-                    :output-to     "target/node/test.js"
-                    :ns-regexp     #shadow/env "TEST_NS_REGEXP"
-                    :autorun       true
-                    :build-options {:cache-level :off}
-                    :main          io.jesi.backpack.test.runner.node/main}
+ :builds {:node    {:target    :node-test
+                    :output-to "target/node/test.js"
+                    :ns-regexp #shadow/env "TEST_NS_REGEXP"
+                    :autorun   true
+                    :main      io.jesi.backpack.test.runner.node/main}
           :karma   {:target    :karma
                     :ns-regexp #shadow/env "TEST_NS_REGEXP"
                     :output-to "target/karma/test.js"}

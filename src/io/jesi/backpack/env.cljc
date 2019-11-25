@@ -42,12 +42,11 @@
     (let [ns (namespace sym)]
       (if (and (str/starts-with? ns "clojure.")
                (not= "clojure.core" ns))
-        (do
-          (with-meta
-            (clojure.core/symbol
-              (str "cljs" (subs ns (str/index-of ns \.)))
-              (name sym))
-            (meta sym)))
+        (with-meta
+          (clojure.core/symbol
+            (str "cljs" (subs ns (str/index-of ns \.)))
+            (name sym))
+          (meta sym))
         sym))))
 
 (defmethod converter :default [_]

@@ -2,6 +2,7 @@
   {:dev/always true}
   (:require
     [cljs.test :as ct]
+    [io.jesi.backpack.spy :as spy]
     [io.jesi.backpack.test.runner.util :refer [convert-event]]
     [pjstadig.humane-test-output]
     [shadow.test :as st]
@@ -17,7 +18,8 @@
       (println (ct/testing-contexts-str)))
     (when-let [message (:message event)]
       (println message))
-    (println code)))
+    (when code
+      (println code))))
 
 ;from shadow.test.node
 

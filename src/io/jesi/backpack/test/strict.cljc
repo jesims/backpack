@@ -39,10 +39,12 @@
   thrown from `body` and that the message on the exception
   matches (with `re-find`) the regular expression `re`."
   ([form]
+   {:pre [(some? form)]}
    `(env/transform
       (test/is ~form)))
   ([form msg]
-   {:pre [(string? msg)
+   {:pre [(some? form)
+          (string? msg)
           (not (str/blank? msg))]}
    `(env/transform
       (test/is ~form ~msg))))

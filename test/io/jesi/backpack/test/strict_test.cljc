@@ -32,7 +32,7 @@
 (deftest use-fixtures-test
 
   (testing "use-fixtures"
-    (is (= #?(:clj  nil
+    (is (= #?(:clj  '(clojure.test/use-fixtures :each identity)
               :cljs '(def cljs-test-each-fixtures [identity]))
            (macroexpand '(io.jesi.backpack.test.strict/use-fixtures :each identity))))))
 
@@ -107,7 +107,24 @@
               (is (macro? `strict/is=))))
 
     (testing "expands"
-      (is-macro= #?(:clj  1
+      (is-macro= #?(:clj  '(try
+                             (clojure.core/let [values# (clojure.core/list 1 2 3)
+                                                result# (clojure.core/apply clojure.core/= values#)]
+                               (if result#
+                                 (clojure.test/do-report {:type     :pass
+                                                          :expected '(clojure.core/= 1 2 3)
+                                                          :actual   (clojure.core/cons clojure.core/= values#)
+                                                          :message  nil})
+                                 (clojure.test/do-report {:type     :fail
+                                                          :expected '(clojure.core/= 1 2 3)
+                                                          :actual   (clojure.core/list 'not (clojure.core/cons 'clojure.core/= values#))
+                                                          :message  nil}))
+                               result#)
+                             (catch java.lang.Throwable t#
+                               (clojure.test/do-report {:type     :error
+                                                        :expected '(clojure.core/= 1 2 3)
+                                                        :actual   t#
+                                                        :message  nil})))
                     ;TODO use env/transform once it supports converting catch clauses
                     :cljs '(try
                              (clojure.core/let [values# (clojure.core/list 1 2 3)
@@ -119,7 +136,7 @@
                                                        :message  nil})
                                  (cljs.test/do-report {:type     :fail
                                                        :expected '(clojure.core/= 1 2 3)
-                                                       :actual   (clojure.core/list 'not (clojure.core/cons 'clojure.core/=) values#)
+                                                       :actual   (clojure.core/list 'not (clojure.core/cons 'clojure.core/= values#))
                                                        :message  nil}))
                                result#)
                              (catch :default t#
@@ -132,6 +149,8 @@
     (testing "is the same as `(is (=`"
       (is (= (is (= 1 1))
              (strict/is= 1 1))))))
+
+(strict/deftest -deftest true)
 
 (deftest deftest-test
 
@@ -148,24 +167,20 @@
                 "name"
                 :name)))
 
+    (testing "is a deftest"
+      (let [test (-> #'-deftest meta :test)]
+        (when (is (some? test))
+          (is (fn? test)))))
+
+    (testing "fails if empty")
+    ;TODO not sure how to test empty deftest
+
     (testing "expands"
-
-      (testing "to fail if empty"
-        ;FIXME get :test meta from `def`ed symbol
-        (is (= #?(:cljs '(do
-                           (def testing (clojure.core/fn [] (cljs.test/test-var (.-cljs$lang$var testing))))
-                           (set! (.-cljs$lang$var testing) #'testing))
-                  :clj  nil)
-               (macroexpand '(io.jesi.backpack.test.strict/deftest testing)))))
-
-      (testing "normally if not empty"
-        (is (= #?(:clj  nil
-                  :cljs '(do
-                           (def testing (clojure.core/fn [] (cljs.test/test-var (.-cljs$lang$var testing))))
-                           (set! (.-cljs$lang$var testing) (var testing))))
-               (macroexpand '(io.jesi.backpack.test.strict/deftest testing
-                               (clojure.test/is true)
-                               (clojure.test/is (clojure.core/= 1 1))))))))))
+      (is (= #?(:clj  '(def testing (clojure.core/fn [] (clojure.test/test-var (var testing))))
+                :cljs '(do
+                         (def testing (clojure.core/fn [] (cljs.test/test-var (.-cljs$lang$var testing))))
+                         (set! (.-cljs$lang$var testing) #'testing)))
+             (macroexpand '(io.jesi.backpack.test.strict/deftest testing)))))))
 
 (deftest testing-test
 
@@ -187,7 +202,12 @@
     (testing "expands"
 
       (testing "to fail if empty"
-        (is (= #?(:clj  nil
+        (is (= #?(:clj  '(let* []
+                           (clojure.core/push-thread-bindings (clojure.core/hash-map (var clojure.test/*testing-contexts*) (clojure.core/conj clojure.test/*testing-contexts* "testing")))
+                           (try
+                             (clojure.test/try-expr "Test is empty" nil)
+                             (finally
+                               (clojure.core/pop-thread-bindings))))
                   :cljs '(do
                            (cljs.test/update-current-env! [:testing-contexts] clojure.core/conj "testing")
                            (try
@@ -197,7 +217,13 @@
                (macroexpand '(io.jesi.backpack.test.strict/testing "testing")))))
 
       (testing "normally if not empty"
-        (is (= #?(:clj  nil
+        (is (= #?(:clj  '(let* []
+                           (clojure.core/push-thread-bindings (clojure.core/hash-map (var clojure.test/*testing-contexts*) (clojure.core/conj clojure.test/*testing-contexts* "testing")))
+                           (try
+                             (io.jesi.backpack.test.strict/is true)
+                             (io.jesi.backpack.test.strict/is= 1 1)
+                             (finally
+                               (clojure.core/pop-thread-bindings))))
                   :cljs '(do
                            (cljs.test/update-current-env! [:testing-contexts] clojure.core/conj "testing")
                            (try

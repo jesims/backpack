@@ -18,19 +18,17 @@
     :dispatch pprint/code-dispatch))
 
 (defn is-macro= [expected expanded]
-  (let [actual (->> expanded
-                    (postwalk
-                      (fn [form]
-                        (if (symbol? form)
-                          (let [form-str (str form)
-                                replaced (string/replace-first form-str #"__\d+(__auto__)?" "")]
-                            (if (not= form-str replaced)
-                              (symbol (str replaced \#))
-                              form))
-                          form)))
-                    pprint-str-code)
-        expected (pprint-str-code expected)]
-    (is (= expected actual))))
+  (is (= expected (->> expanded
+                       (postwalk
+                         (fn [form]
+                           (if (symbol? form)
+                             ;TODO normalise reified objects
+                             (let [form-str (str form)
+                                   replaced (string/replace-first form-str #"__\d+(__auto__)?" "")]
+                               (if (not= form-str replaced)
+                                 (symbol (str replaced \#))
+                                 form))
+                             form)))))))
 
 #?(:clj
    (defn- ^:dynamic *sleep* [ms-duration]

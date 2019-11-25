@@ -92,8 +92,7 @@ test () {
 }
 
 unit-test-node () {
-	shadow-cljs compile node \
-	&& node target/node/test.js
+	shadow-cljs compile node
 	abort_on_error 'node tests failed'
 }
 
@@ -114,6 +113,8 @@ unit-test-browser-refresh () {
 unit-test-cljs-refresh () {
 	clean
 	echo_message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
+	shadow-cljs compile node
+	abort_on_error
 	shadow-cljs watch node
 	abort_on_error
 }
@@ -127,7 +128,7 @@ unit-test-cljs-refresh () {
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates with karma
 ## [test-ns-regex] Watches tests and source files for changes, and subsequently re-evaluates
 test-cljs () {
-	export TEST_NS_REGEXP="${2:-'-test$'}"
+	export TEST_NS_REGEXP=${2:-'-test$'}
 	case $1 in
 		-r)
 			unit-test-cljs-refresh;;
