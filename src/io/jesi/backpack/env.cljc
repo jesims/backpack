@@ -3,9 +3,9 @@
   #?(:cljs (:require-macros [io.jesi.backpack.env]))
   (:require
     [clojure.string :as str]
-    [io.jesi.backpack.fn :refer [or-fn]]
     [com.rpl.specter :as sp]
-    [io.jesi.backpack.miscellaneous :refer [namespaced? named?]]))
+    [io.jesi.backpack.fn :refer [or-fn]]
+    [io.jesi.backpack.miscellaneous :refer [named? namespaced?]]))
 
 (defn cljs?
   "Take the &env from a macro, and tell whether we are expanding into CLJS."

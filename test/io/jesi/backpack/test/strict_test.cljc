@@ -2,8 +2,8 @@
   (:require
     #?(:clj [io.jesi.backpack.macros :refer [macro?]])
     [clojure.string :as str]
-    [io.jesi.backpack.test.strict :as strict :refer [thrown-with-msg? thrown?]]
     [clojure.test :refer [are deftest is testing]]
+    [io.jesi.backpack.test.strict :as strict :refer [thrown-with-msg? thrown?]]
     [io.jesi.backpack.test.util :refer [is-macro=]])
   #?(:clj (:import
             (clojure.lang Compiler$CompilerException))))

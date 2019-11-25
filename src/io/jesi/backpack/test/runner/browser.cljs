@@ -10,9 +10,9 @@
     [goog.dom.classlist :as classlist]
     [io.jesi.backpack.async :as async]
     [io.jesi.backpack.test.reporter :refer [done-chan]]
+    [io.jesi.backpack.test.runner.util :refer [convert-event]]
     [pjstadig.util :as util]
     [shadow.dom :as dom]
-    [io.jesi.backpack.test.runner.util :refer [convert-event]]
     [shadow.test :as st]
     [shadow.test.env :as env]))
 

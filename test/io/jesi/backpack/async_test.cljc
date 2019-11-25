@@ -4,13 +4,13 @@
     #?(:clj [io.jesi.backpack.macros :refer [macro?]])
     [clojure.core.async :as core-async :refer [<!]]
     [clojure.string :as string]
+    [com.rpl.specter :as sp]
     [io.jesi.backpack.async :as async]
     [io.jesi.backpack.env :as env]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.test.macros :refer [async-go]]
-    [io.jesi.backpack.test.strict :refer [= is= thrown? deftest testing is]]
-    [io.jesi.backpack.test.util :refer [is-macro=]]
-    [com.rpl.specter :as sp]))
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing thrown?]]
+    [io.jesi.backpack.test.util :refer [is-macro=]]))
 
 (deftest go-test
   (async-go

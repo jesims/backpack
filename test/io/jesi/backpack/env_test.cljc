@@ -1,8 +1,8 @@
 (ns io.jesi.backpack.env-test
   (:refer-clojure :exclude [=])
   (:require
-    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]
-    [io.jesi.backpack.env :as env]))
+    [io.jesi.backpack.env :as env]
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
 (defn- ^boolean test-private-fn []
   true)
