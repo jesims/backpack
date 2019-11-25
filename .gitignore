@@ -1,4 +1,5 @@
 *.iml
+.idea/dictionaries/
 .idea/libraries/
 .idea/workspace.xml
 .lein-failures
@@ -8,4 +9,3 @@ node_modules/
 package.json
 pom.xml
 target/
-/.idea/dictionaries/
