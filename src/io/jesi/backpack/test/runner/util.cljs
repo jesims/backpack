@@ -18,4 +18,3 @@
                   rest
                   (str/join \newline))]
     [event code]))
-
