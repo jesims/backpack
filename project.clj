@@ -8,12 +8,12 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.6"]]
-  :parent-project {:coords  [io.jesi/parent "1.0.0"]
+  :parent-project {:coords  [io.jesi/parent "1.0.2"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh :aliases]}
   :dependencies [[thheller/shadow-cljs :scope "provided"]
                  [org.clojure/clojure]
                  [org.clojure/core.async]
-                 [com.rpl/specter "1.1.3"]                  ;TODO use version in parent
+                 [com.rpl/specter]
                  [cheshire "5.8.1"]
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.1.0"]
