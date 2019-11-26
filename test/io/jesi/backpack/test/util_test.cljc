@@ -1,7 +1,7 @@
 (ns io.jesi.backpack.test.util-test
+  (:refer-clojure :exclude [=])
   (:require
-    [clojure.test :refer [deftest is testing]]
-    [io.jesi.backpack.test.macros :refer [is=]]
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]
     [io.jesi.backpack.test.util :as util]))
 
 #?(:clj

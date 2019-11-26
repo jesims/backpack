@@ -1,9 +1,9 @@
 (ns io.jesi.backpack.collection-test
+  (:refer-clojure :exclude [=])
   (:require
-    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.macros :refer [is=]]))
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
 (deftest safe-empty?-test
 

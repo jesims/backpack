@@ -12,6 +12,7 @@
     (/ (Math/round (* d factor)) factor)))
 
 (defn- decimal-places [v]
+  ;TODO support other separators e.g. in France they use , instead of .
   (let [[whole decimal] (str/split (str v) \.)]
     (count decimal)))
 

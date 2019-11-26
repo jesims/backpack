@@ -1,5 +1,5 @@
 ;TODO move to test utils library
-(ns io.jesi.backpack.test.runner
+(ns io.jesi.backpack.test.runner.browser
   "Based on shadow.test.browser"
   {:dev/always true}
   (:require
@@ -10,8 +10,7 @@
     [goog.dom.classlist :as classlist]
     [io.jesi.backpack.async :as async]
     [io.jesi.backpack.test.reporter :refer [done-chan]]
-    [pjstadig.humane-test-output]
-    [pjstadig.print :as p]
+    [io.jesi.backpack.test.runner.util :refer [convert-event]]
     [pjstadig.util :as util]
     [shadow.dom :as dom]
     [shadow.test :as st]
@@ -22,15 +21,7 @@
 
 (defmethod test/report [::ctd/default :fail] [event]
   ;based on cljs-test-display.core/add-fail-node!
-  (let [event (p/convert-event event)
-        s (->> (with-out-str
-                 (binding [test/*current-env* (dissoc (test/get-current-env) :testing-contexts :report-counters)]
-                   (util/report- (dissoc event :message))))
-               str/trim
-               ;skip "FAIL in" line
-               str/split-lines
-               rest
-               (str/join \newline))
+  (let [[event code] (convert-event event)
         curr-node (current-node)]
     (classlist/add curr-node "has-failures")
     (classlist/add (current-node-parent) "has-failures")
@@ -41,7 +32,7 @@
                                       (div :test-message message))
                                     (div
                                       (n :pre {}
-                                        (n :code {} s))))))
+                                        (n :code {} code))))))
     (if printing
       (util/report- event)
       (test/inc-report-counter! :fail))))

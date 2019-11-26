@@ -1,8 +1,8 @@
 (ns io.jesi.backpack.http.status-test
+  (:refer-clojure :exclude [=])
   (:require
-    [clojure.test :refer [deftest is testing]]
     [io.jesi.backpack.http.status :as status]
-    [io.jesi.backpack.test.macros :refer [is=]]))
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
 (deftest ok-test
 

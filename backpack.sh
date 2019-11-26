@@ -92,8 +92,7 @@ test () {
 }
 
 unit-test-node () {
-	shadow-cljs compile node \
-	&& node target/node/test.js
+	shadow-cljs compile node
 	abort_on_error 'node tests failed'
 }
 

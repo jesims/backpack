@@ -3,38 +3,46 @@
   #?(:cljs (:require-macros [io.jesi.backpack.macros]))
   (:require
     [clojure.core]
-    [io.jesi.backpack.fn :refer [noop]]
-    [io.jesi.backpack.miscellaneous :refer [cljs-env?]])
+    [io.jesi.backpack.env :as env]
+    [io.jesi.backpack.fn :refer [noop]])
   #?(:cljs (:require [cljs.core :refer [IFn]]))
   #?(:clj
      (:import
        (clojure.lang IFn))))
 
-(defmacro import-vars
-  [& imports]
+(defmacro import-vars [& imports]
   `(do
      ~@(apply concat
-         (for [[ns & names] imports
-               name names
-               :let [src (symbol (str ns) (str name))
-                     meta (meta (resolve src))
-                     arglists (get meta :arglists)
-                     doc (get meta :doc "")]]
-           `(
-             (def ~name ~doc ~src)
-             (alter-meta! #'~name assoc :arglists '~arglists))))))
-
-(defmacro if-cljs
-  "Return `then` if we are generating cljs code, and `else` for Clojure code"
-  [then else]
-  (if (cljs-env? &env)
-    then
-    else))
+         (for [import imports
+               :let [vars (if (symbol? import)
+                            (do
+                              (require import)
+                              (vals (ns-publics import)))
+                            (let [ns (first import)]
+                              (map
+                                (fn [name]
+                                  (require ns)
+                                  (let [sym (symbol (str ns) (str name))
+                                        var (resolve sym)]
+                                    (when (nil? var)
+                                      (throw (ex-info (str "Could not resolve var " sym) {:symbol sym
+                                                                                          :ns     *ns*
+                                                                                          :env    &env})))
+                                    var))
+                                (rest import))))]]
+           (apply concat
+             (for [var vars
+                   :let [sym (symbol var)
+                         name (-> sym name symbol)
+                         {:keys [doc arglists]
+                          :or   {doc ""}} (meta var)]]
+               `[(def ~name ~doc ~sym)
+                 (alter-meta! #'~name assoc :arglists '~arglists)]))))))
 
 (defmacro catch-> [handle & body]
   `(try
      ~@body
-     (catch ~(if (cljs-env? &env) :default `Throwable) ~'ex
+     (catch ~(if (env/cljs? &env) :default `Throwable) ~'ex
        (~handle ~'ex))))
 
 (defmacro catch->identity [& body]
@@ -111,7 +119,7 @@
      ~body))
 
 (defmacro when-debug [body]
-  (if (cljs-env? &env)
+  (if (env/cljs? &env)
     `(when ~(vary-meta 'js/goog.DEBUG assoc :tag 'boolean)
        ~body)
     body))
@@ -120,7 +128,7 @@
   "Defines IFn invoke implementations to call as `(invoke-fn this [args])`"
   [invoke-fn & more]
   (let [arg (comp symbol (partial str "arg"))
-        cljs? (cljs-env? &env)
+        cljs? (env/cljs? &env)
         sym (if cljs? '-invoke 'invoke)
         protocol (if cljs? 'IFn 'clojure.lang.IFn)
         code `(reify

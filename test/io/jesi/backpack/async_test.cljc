@@ -1,15 +1,28 @@
 (ns io.jesi.backpack.async-test
+  (:refer-clojure :exclude [=])
   (:require
     #?(:clj [io.jesi.backpack.macros :refer [macro?]])
     [clojure.core.async :as core-async :refer [<!]]
     [clojure.string :as string]
-    [clojure.test :refer [deftest is testing]]
     [com.rpl.specter :as sp]
     [io.jesi.backpack.async :as async]
+    [io.jesi.backpack.env :as env]
     [io.jesi.backpack.macros :refer [shorthand]]
-    [io.jesi.backpack.miscellaneous :refer [env-specific namespaced?]]
-    [io.jesi.backpack.test.macros :refer [async-go is=]]
+    [io.jesi.backpack.test.macros :refer [async-go]]
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing thrown?]]
     [io.jesi.backpack.test.util :refer [is-macro=]]))
+
+(deftest go-test
+  (async-go
+
+    (testing "go"
+
+      #?(:cljs (testing "is a runtime specific `core.async/go` block"
+                 (let [expanded (macroexpand '(io.jesi.backpack.async/go 1))]
+                   (is (sp/select-one (sp/codewalker (partial = 'cljs.core.async/chan)) expanded)))))
+
+      (testing "is a go block"
+        (is (= 1 (<! (async/go 1))))))))
 
 (deftest closed?-test
 
@@ -56,13 +69,12 @@
         (is (async/closed? channel))
         (is (nil? (async/<? channel)))))))
 
+(defn- now []
+  #?(:cljs (js/Date.now)
+     :clj  (System/currentTimeMillis)))
+
 (defn ex []
   (ex-info "Exceptional" {}))
-
-(def list-walker (sp/recursive-path [] l (sp/if-path list? (sp/continue-then-stay sp/ALL l))))
-
-(defn transform-to-env [env quoted-form]
-  (sp/transform [list-walker sp/FIRST symbol? namespaced?] (partial env-specific env) quoted-form))
 
 (deftest go-retry-test
 
@@ -72,7 +84,7 @@
               (is (macro? `async/go-retry))))
 
     (testing "expands"
-      (let [expected '(clojure.core/let [delay# (clojure.core/* 1 1000)]
+      (let [expected '(let* [delay# (clojure.core/* 1 1000)]
                         (clojure.core.async/go-loop [retries# 5]
                           (clojure.core/let [res# (io.jesi.backpack.macros/catch->identity "foo")]
                             (if (clojure.core/and
@@ -80,12 +92,13 @@
                                   (clojure.core/pos? retries#))
                               (do
                                 (clojure.core/when (clojure.core/pos? delay#)
-                                  (clojure.core.async/<! (clojure.core.async/timeout delay#)))
+                                  (clojure.core.async/<!
+                                    (clojure.core.async/timeout delay#)))
                                 (recur (clojure.core/dec retries#)))
-                              res#))))
-            actual (macroexpand-1 '(io.jesi.backpack.async/go-retry {} "foo"))]
-        #?(:clj  (is-macro= expected actual)
-           :cljs (is-macro= (transform-to-env {:ns true} expected) actual))))
+                              res#))))]
+        (is-macro= #?(:clj  expected
+                      :cljs (env/transform* :cljs expected))
+                   (macroexpand '(io.jesi.backpack.async/go-retry {} "foo")))))
 
     (testing "is a go block"
       (let [value "The heart of a shrimp is located in its head"]
@@ -127,8 +140,6 @@
 
           (testing "can have a delay between retires"
             (let [delay 1
-                  now #?(:cljs #(js/Date.now)
-                         :clj #(System/currentTimeMillis))
                   start (now)]
               (<! (async/go-retry {:delay           1
                                    :should-retry-fn (constantly true)
@@ -138,8 +149,8 @@
                 (is (<= delay (/ run-time 1000)))))))))))
 
 (deftest go-call-test
-
   (async-go
+
     (testing "go-call"
 
       #?(:clj (testing "is a macro"

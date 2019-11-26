@@ -3,9 +3,9 @@
   (:require
     [clojure.core.async :as async]
     [clojure.core.async.impl.protocols :as proto]
+    [io.jesi.backpack.env :as env]
     [io.jesi.backpack.exceptions :as ex]
-    [io.jesi.backpack.macros :refer [catch->identity]]
-    [io.jesi.backpack.miscellaneous :refer [cljs-env? env-specific]]))
+    [io.jesi.backpack.macros :refer [catch->identity]]))
 
 (defn closed?
   "returns true if the channel is nil or closed"
@@ -47,8 +47,8 @@
   Returns a channel which will receive the result of the body when
   completed"
   [& body]
-  (let [go* (env-specific &env 'clojure.core.async/go)]
-    `(~go* ~@body)))
+  `(env/transform
+     (async/go ~@body)))
 
 (defn close!
   "Closes a channel. The channel will no longer accept any puts (they
@@ -96,17 +96,15 @@
   [{:keys [retries delay should-retry-fn]
     :or   {retries 5, delay 1, should-retry-fn `ex/exception?}}
    & body]
-  (let [go-loop* (env-specific &env 'clojure.core.async/go-loop)
-        <!* (env-specific &env 'clojure.core.async/<!)
-        timeout (env-specific &env 'clojure.core.async/timeout)]
-    `(let [delay# (* ~delay 1000)]
-       (~go-loop* [retries# ~retries]
+  `(env/transform
+     (let [delay# (* ~delay 1000)]
+       (async/go-loop [retries# ~retries]
          (let [res# (catch->identity ~@body)]
            (if (and (~should-retry-fn res#)
                     (pos? retries#))
              (do
                (when (pos? delay#)
-                 (~<!* (~timeout delay#)))
+                 (async/<! (async/timeout delay#)))
                (recur (dec retries#)))
              res#))))))
 
@@ -115,10 +113,10 @@
   "Same as core.async <! but throws an exception if the channel returns a
   throwable object. Also will not crash if channel is nil."
   [ch]
-  (let [<!* (env-specific &env 'clojure.core.async/<!)]
-    `(ex/throw-if-throwable
+  `(env/transform
+     (ex/throw-if-throwable
        (when-let [ch# ~ch]
-         (~<!* ch#)))))
+         (async/<! ch#)))))
 
 (defmacro go-call
   "Takes a function and a channel. Takes the value of the chanel using `<?` and applies it to `f`.

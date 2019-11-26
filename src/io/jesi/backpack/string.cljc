@@ -1,8 +1,8 @@
 (ns io.jesi.backpack.string
   (:refer-clojure :exclude [subs])
   (:require
-    [clojure.string :as string]
-    [io.jesi.backpack.fn :refer [if-fn or-fn]]))
+    [clojure.string :as str]
+    [io.jesi.backpack.fn :refer [and-fn if-fn or-fn]]))
 
 (defn- normalize-str-idx [length i]
   (if (neg? i)
@@ -47,14 +47,14 @@
 
   ([prefix separator s]
    (let [match (str prefix separator)]
-     (if (string/starts-with? s match)
+     (if (str/starts-with? s match)
        (subs s (count match))
        s))))
 
 (defn subs-to
   "Returns the substring of 's' up until the 'match'"
   [match s]
-  (let [index (string/index-of s match)]
+  (let [index (str/index-of s match)]
     (if (nil? index)
       s
       (subs s 0 index))))
@@ -62,7 +62,7 @@
 (defn subs-inc
   "Returns the substring of 's' up to and including the 'match' or nil"
   [match s]
-  (let [index (string/index-of s match)]
+  (let [index (str/index-of s match)]
     (if (nil? index)
       nil
       (subs s 0 (+ index (count match))))))
@@ -81,22 +81,22 @@
 
 (defn ->camelCase [s]
   (when s
-    (let [[head & tail] (string/split (->str s) #"-|(?=[A-Z])")]
-      (string/join (cons (string/lower-case head) (map string/capitalize tail))))))
+    (let [[head & tail] (str/split (->str s) #"-|(?=[A-Z])")]
+      (str/join (cons (str/lower-case head) (map str/capitalize tail))))))
 
 (defn ->kebab-case [s]
   (some-> s
           ->str
-          (string/replace #"([A-Z]{2,})([a-z])" "$1 $2")
-          (string/replace #"([a-z])([A-Z])" "$1 $2")
-          (string/replace \_ \-)
-          (string/replace #"\s" "-")
-          string/lower-case))
+          (str/replace #"([A-Z]{2,})([a-z])" "$1 $2")
+          (str/replace #"([a-z])([A-Z])" "$1 $2")
+          (str/replace \_ \-)
+          (str/replace #"\s" "-")
+          str/lower-case))
 
 (defn ->snake_case [s]
   (some-> s
           ->kebab-case
-          (string/replace \- \_)))
+          (str/replace \- \_)))
 
 (def ->kebab-case-key (comp keyword ->kebab-case))
 
@@ -111,6 +111,8 @@
         s
         (apply str (f args))))))
 
-(def prefix (create-affix string/starts-with? reverse))
+(def prefix (create-affix str/starts-with? reverse))
 
-(def suffix (create-affix string/ends-with? identity))
+(def suffix (create-affix str/ends-with? identity))
+
+(def not-blank? (and-fn string? (complement str/blank?)))

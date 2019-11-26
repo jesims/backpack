@@ -7,8 +7,7 @@
 
 (def excluded-vars #{'io.jesi.backpack.specter/path-walker})
 
-(def excluded-ns #{
-                   'io.jesi.backpack.async
+(def excluded-ns #{'io.jesi.backpack.async
                    'io.jesi.backpack.exceptions
                    'io.jesi.backpack.http.response
                    'io.jesi.backpack.http.status
@@ -16,7 +15,8 @@
                    'io.jesi.backpack.random
                    'io.jesi.backpack.spy
                    'io.jesi.backpack.test.macros
-                   'io.jesi.backpack.test.util})
+                   'io.jesi.backpack.test.util
+                   'io.jesi.backpack.clojurescript})
 
 (deftest core-test
   (let [models-ns (->> "src/io/jesi/backpack/"

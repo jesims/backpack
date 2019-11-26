@@ -1,10 +1,10 @@
 (ns io.jesi.backpack.spy-test
+  (:refer-clojure :exclude [=])
   (:require
-    [clojure.test :refer [deftest is testing use-fixtures]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.spy :as spy]
-    [io.jesi.backpack.test.macros :refer [is=]]))
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing use-fixtures]]))
 
 (defn- set-debug [v]
   #?(:cljs (set! js/goog.DEBUG v)))
@@ -14,16 +14,17 @@
     (f)
     (set-debug false)))
 
-(def file #?(:cljs "io.jesi.backpack.spy-test"
-             :clj  *file*))
+(def file #?(:clj  *file*
+             :cljs "io.jesi.backpack.spy-test"))
 
-(def line (atom nil))
+#?(:clj (def line (atom nil)))
 
+;TODO use macro to get the line number
 (defn- set-line [n]
-  (reset! line n))
+  #?(:clj (str \: (reset! line n))))
 
 (defn- add-line [n]
-  (swap! line + n))
+  #?(:clj (str \: (swap! line + n))))
 
 (def a 1)
 (def b 2)
@@ -41,19 +42,19 @@
         (set-debug true)
 
         (testing "the specified values"
-          (is= (str file ":" (set-line 45) " a: 1" \newline)
+          (is= (str file (set-line 46) " a: 1" \newline)
                (with-out-str (spy/prn a)))
-          (is= (str file ":" (add-line 2) " a: 1 b: 2" \newline)
+          (is= (str file (add-line 2) " a: 1 b: 2" \newline)
                (with-out-str (spy/prn a b))))
 
         (testing "literal expressions"
-          (is= (str file ":" (add-line 4) " 1: 1" \newline)
+          (is= (str file (add-line 4) " 1: 1" \newline)
                (with-out-str (spy/prn 1)))
-          (is= (str file ":" (add-line 2) " a: \"a\"" \newline)
+          (is= (str file (add-line 2) " a: \"a\"" \newline)
                (with-out-str (spy/prn "a")))
-          (is= (str file ":" (add-line 2) " (inc 1): 2" \newline)
+          (is= (str file (add-line 2) " (inc 1): 2" \newline)
                (with-out-str (spy/prn (inc 1))))
-          (is= (str file ":" (add-line 2) " ((comp inc dec) 1): 1" \newline)
+          (is= (str file (add-line 2) " ((comp inc dec) 1): 1" \newline)
                (with-out-str (spy/prn ((comp inc dec) 1))))))
 
       (testing "nothing when not"
@@ -78,22 +79,22 @@
         (set-debug true)
 
         (testing "the specified values"
-          (is= (str file ":" (set-line 83) " a:" \newline
+          (is= (str file (set-line 84) " a:" \newline
                  "1" \newline)
                (with-out-str (spy/pprint a)))
-          (is= (str file ":" (add-line 5) " a:" \newline
+          (is= (str file (add-line 5) " a:" \newline
                  "1" \newline
-                 file ":" @line " b:" \newline
+                 file #?(:clj (str ":" @line)) " b:" \newline
                  "2" \newline)
                (with-out-str (spy/pprint a b)))
-          (is= (str file ":" (add-line 3) " c:" \newline
+          (is= (str file (add-line 3) " c:" \newline
                  "{:a 1, :b 2}" \newline)
                (with-out-str (spy/pprint c))))
 
         ;cljs messes up the formatting, it adds a space after the :d line
         #?(:clj (testing "literal expressions"
                   (let [val {:a 0 :b 1 :c 2 :d 3 :e 4}]
-                    (is= (str file ":" (add-line 12) \space
+                    (is= (str file (add-line 12) \space
                            "{:a val, :b val, :c val, :d val, :e val}:" \newline
                            "{:a {:a 0, :b 1, :c 2, :d 3, :e 4}," \newline
                            " :b {:a 0, :b 1, :c 2, :d 3, :e 4}," \newline
@@ -124,7 +125,7 @@
       (spy/enabled
         (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 128) " a: 1" \newline)
+          (is= (str file (set-line 129) " a: 1" \newline)
                (with-out-str (reset! result (spy/peek a))))
           (is= a @result)
 
@@ -144,7 +145,7 @@
       (spy/enabled
         (set-debug true)
         (let [result (atom nil)]
-          (is= (str file ":" (set-line 148) " a:" \newline "1" \newline)
+          (is= (str file (set-line 149) " a:" \newline "1" \newline)
                (with-out-str (reset! result (spy/ppeek a))))
           (is= a @result)
 

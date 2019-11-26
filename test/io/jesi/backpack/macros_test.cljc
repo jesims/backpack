@@ -1,16 +1,14 @@
 (ns io.jesi.backpack.macros-test
-  (:refer-clojure :exclude [when-let])
+  (:refer-clojure :exclude [= when-let])
   (:require
     [clojure.string :as string]
-    [clojure.test :refer [deftest is testing use-fixtures]]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts fn1 shorthand try* when-debug when-let]]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.macros :refer [is=]]
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing use-fixtures]]
     [io.jesi.backpack.test.util :refer [is-macro=]])
-  #?(:clj
-     (:import (java.lang ArithmeticException
-                         SecurityException))))
+  #?(:clj (:import
+            (java.lang ArithmeticException SecurityException))))
 
 (defn- set-debug [v]
   #?(:cljs (set! js/goog.DEBUG v)))
@@ -186,8 +184,8 @@
          :cljs (is= '(clojure.core/when js/goog.DEBUG (prn "hello"))
                     (macroexpand-1 '(io.jesi.backpack.macros/when-debug (prn "hello"))))))
 
-    (testing "executes the body when debug mode is on"
-      #?(:cljs (do
+    #?(:cljs (testing "executes the body when debug mode is on"
+               (do
                  (set-debug false)
                  (when-debug
                    (throw (ex-info "Unexpected exception" {})))
