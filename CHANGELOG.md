@@ -1,3 +1,9 @@
+# 4.0.1
+
+Fixed:
+
+* `->camelCase` not correctly converting strings with a leading `-`
+
 # 4.0.0
 
 Moved:

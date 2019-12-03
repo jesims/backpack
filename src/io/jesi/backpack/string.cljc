@@ -81,8 +81,11 @@
 
 (defn ->camelCase [s]
   (when s
-    (let [[head & tail] (str/split (->str s) #"-|(?=[A-Z])")]
-      (str/join (cons (str/lower-case head) (map str/capitalize tail))))))
+    (let [s (->str s)
+          [head & rest] (str/split s #"-|(?=[A-Z])")]
+      (if (empty? head)
+        s
+        (str/join (cons (str/lower-case head) (map str/capitalize rest)))))))
 
 (defn ->kebab-case [s]
   (some-> s

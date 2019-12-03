@@ -53,7 +53,15 @@
 
   (is= "_actions"
        (bp/->camelCase :_actions)
-       (bp/->camelCase "_actions")))
+       (bp/->camelCase "_actions"))
+
+  (is= "-action-man"
+       (bp/->camelCase :-action-man)
+       (bp/->camelCase "-action-man"))
+
+  (is= "-actions"
+       (bp/->camelCase :-actions)
+       (bp/->camelCase "-actions")))
 
 (deftest ->kebab-case-test
   (is= "kebab-case"
@@ -85,7 +93,9 @@
 
   (is= "-actions"
        (bp/->kebab-case :_actions)
-       (bp/->kebab-case "_actions"))
+       (bp/->kebab-case "_actions")
+       (bp/->kebab-case :-actions)
+       (bp/->kebab-case "-actions"))
 
   (is= "-lots-of-yelling"
        (bp/->kebab-case "_LOTS_OF_YELLING"))
@@ -173,12 +183,12 @@
       (is (thrown? #?(:clj Error :cljs js/Error) (bp/subs s true))))
 
     (testing "returns empty string when start is after end"
-        (is= ""
-             (bp/subs s 5 1))
-        (is= ""
-             (bp/subs s -1 -5))
-        (is= ""
-             (bp/subs s -1 2)))
+      (is= ""
+           (bp/subs s 5 1))
+      (is= ""
+           (bp/subs s -1 -5))
+      (is= ""
+           (bp/subs s -1 2)))
 
     (testing "returns substring"
 
