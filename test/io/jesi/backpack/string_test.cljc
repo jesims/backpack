@@ -55,13 +55,25 @@
        (bp/->camelCase :_actions)
        (bp/->camelCase "_actions"))
 
-  (is= "-action-man"
+  (is= "-actionMan"
        (bp/->camelCase :-action-man)
-       (bp/->camelCase "-action-man"))
+       (bp/->camelCase "-action-man")
+       (bp/->camelCase "-Action-Man"))
+
+  ;TODO what about double - ?
+  (comment (is= "-action-Man"
+                (bp/->camelCase "-action--man")))
+
+  (is= "-actionMan-"
+       (bp/->camelCase "-action-man-"))
 
   (is= "-actions"
        (bp/->camelCase :-actions)
-       (bp/->camelCase "-actions")))
+       (bp/->camelCase "-actions"))
+
+  (is= "namespaced/kebabCase"
+       (bp/->camelCase :namespaced/kebab-case)
+       (bp/->camelCase "namespaced/kebab-case")))
 
 (deftest ->kebab-case-test
   (is= "kebab-case"
@@ -96,6 +108,11 @@
        (bp/->kebab-case "_actions")
        (bp/->kebab-case :-actions)
        (bp/->kebab-case "-actions"))
+
+  (is= "-action-man"
+       (bp/->kebab-case :-actionMan)
+       (bp/->kebab-case "-actionMan")
+       (bp/->kebab-case "-ActionMan"))
 
   (is= "-lots-of-yelling"
        (bp/->kebab-case "_LOTS_OF_YELLING"))

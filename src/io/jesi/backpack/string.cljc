@@ -82,10 +82,17 @@
 (defn ->camelCase [s]
   (when s
     (let [s (->str s)
-          [head & rest] (str/split s #"-|(?=[A-Z])")]
-      (if (empty? head)
-        s
-        (str/join (cons (str/lower-case head) (map str/capitalize rest)))))))
+          [head & rest] (->> (str/split s #"-|(?=[A-Z])")
+                             (remove empty?))
+          camel (cons (str/lower-case head) (map str/capitalize rest))
+          ;TODO improve adding in - prefix and suffix
+          camel (if (= \- (get s 0))
+                  (cons \- camel)
+                  camel)
+          camel (if (= \- (get s (dec (count s))))
+                  (concat camel [\-])
+                  camel)]
+      (str/join camel))))
 
 (defn ->kebab-case [s]
   (some-> s

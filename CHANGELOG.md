@@ -2,7 +2,7 @@
 
 Fixed:
 
-* `->camelCase` not correctly converting strings with a leading `-`
+* `->camelCase` not correctly converting strings with a leading and trailing `-`
 
 # 4.0.0
 
