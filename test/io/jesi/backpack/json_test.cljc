@@ -7,9 +7,9 @@
 (def clj {:base-url "https://"
           :v2       "is better than v1"
           :actions  [{:name "Next" :method "GET"}]
+          :-links   [{:rel "view/user"}]
           :geojson  #:geojson {:type :LineString}
           :a-cat    {:a-hat true}})
-
 
 (def json "{\"baseUrl\":\"https://\"}")
 

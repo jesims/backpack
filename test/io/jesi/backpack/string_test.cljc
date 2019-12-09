@@ -53,7 +53,27 @@
 
   (is= "_actions"
        (bp/->camelCase :_actions)
-       (bp/->camelCase "_actions")))
+       (bp/->camelCase "_actions"))
+
+  (is= "-actionMan"
+       (bp/->camelCase :-action-man)
+       (bp/->camelCase "-action-man")
+       (bp/->camelCase "-Action-Man"))
+
+  ;TODO what about double - ?
+  (comment (is= "-action-Man"
+                (bp/->camelCase "-action--man")))
+
+  (is= "-actionMan-"
+       (bp/->camelCase "-action-man-"))
+
+  (is= "-actions"
+       (bp/->camelCase :-actions)
+       (bp/->camelCase "-actions"))
+
+  (is= "namespaced/kebabCase"
+       (bp/->camelCase :namespaced/kebab-case)
+       (bp/->camelCase "namespaced/kebab-case")))
 
 (deftest ->kebab-case-test
   (is= "kebab-case"
@@ -85,7 +105,14 @@
 
   (is= "-actions"
        (bp/->kebab-case :_actions)
-       (bp/->kebab-case "_actions"))
+       (bp/->kebab-case "_actions")
+       (bp/->kebab-case :-actions)
+       (bp/->kebab-case "-actions"))
+
+  (is= "-action-man"
+       (bp/->kebab-case :-actionMan)
+       (bp/->kebab-case "-actionMan")
+       (bp/->kebab-case "-ActionMan"))
 
   (is= "-lots-of-yelling"
        (bp/->kebab-case "_LOTS_OF_YELLING"))
@@ -173,12 +200,12 @@
       (is (thrown? #?(:clj Error :cljs js/Error) (bp/subs s true))))
 
     (testing "returns empty string when start is after end"
-        (is= ""
-             (bp/subs s 5 1))
-        (is= ""
-             (bp/subs s -1 -5))
-        (is= ""
-             (bp/subs s -1 2)))
+      (is= ""
+           (bp/subs s 5 1))
+      (is= ""
+           (bp/subs s -1 -5))
+      (is= ""
+           (bp/subs s -1 2)))
 
     (testing "returns substring"
 
