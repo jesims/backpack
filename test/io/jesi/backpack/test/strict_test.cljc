@@ -163,7 +163,7 @@
       (is (= (is (= 1 1))
              (strict/is= 1 1))))))
 
-(strict/deftest ^:focus -deftest true)
+(strict/deftest ^:preserved -deftest true)
 
 (deftest deftest-test
 
@@ -204,7 +204,7 @@
              (macroexpand '(io.jesi.backpack.test.strict/deftest testing)))))
 
     (testing "retains metadata"
-      (is (true? (-> #'-deftest meta :focus))))))
+      (is (true? (-> #'-deftest meta :preserved))))))
 
 (deftest testing-test
 
