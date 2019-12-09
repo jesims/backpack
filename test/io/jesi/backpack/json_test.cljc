@@ -11,7 +11,6 @@
           :geojson  #:geojson {:type :LineString}
           :a-cat    {:a-hat true}})
 
-
 (def json "{\"baseUrl\":\"https://\"}")
 
 (def simple {:base-url "https://"})
