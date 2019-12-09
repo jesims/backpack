@@ -163,7 +163,7 @@
       (is (= (is (= 1 1))
              (strict/is= 1 1))))))
 
-(strict/deftest -deftest true)
+(strict/deftest ^:focus -deftest true)
 
 (deftest deftest-test
 
@@ -201,7 +201,10 @@
                 :cljs '(do
                          (def testing (clojure.core/fn [] (cljs.test/test-var (.-cljs$lang$var testing))))
                          (set! (.-cljs$lang$var testing) #'testing)))
-             (macroexpand '(io.jesi.backpack.test.strict/deftest testing)))))))
+             (macroexpand '(io.jesi.backpack.test.strict/deftest testing)))))
+
+    (testing "retains metadata"
+      (is (true? (-> #'-deftest meta :focus))))))
 
 (deftest testing-test
 
