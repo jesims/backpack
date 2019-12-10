@@ -48,7 +48,7 @@ lint () {
 ## Installs all required dependencies for Clojure and ClojureScript
 deps () {
 	echo_message 'Installing dependencies'
-	lein -U with-profile +clj +cljs deps
+	lein -U with-profile +clj,+cljs deps
 	abort_on_error
 	if is-ci;then
 		dry ci
