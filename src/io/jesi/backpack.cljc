@@ -3,7 +3,6 @@
   (:require
     #?(:clj  [io.jesi.backpack.clojure]
        :cljs [io.jesi.backpack.clojurescript])
-    [clojure.pprint :refer [pprint]]
     [io.jesi.backpack.collection]
     [io.jesi.backpack.exceptions]
     [io.jesi.backpack.fn]
