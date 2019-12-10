@@ -1,6 +1,7 @@
 # 4.1.0
 
 Added:
+
 * `io.jesi.backpack.transit`
 
 # 4.0.1

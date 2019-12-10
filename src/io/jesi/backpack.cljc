@@ -3,6 +3,7 @@
   (:require
     #?(:clj  [io.jesi.backpack.clojure]
        :cljs [io.jesi.backpack.clojurescript])
+    [clojure.pprint :refer [pprint]]
     [io.jesi.backpack.collection]
     [io.jesi.backpack.exceptions]
     [io.jesi.backpack.fn]
@@ -10,10 +11,9 @@
     [io.jesi.backpack.macros :refer [import-vars]]
     [io.jesi.backpack.miscellaneous]
     [io.jesi.backpack.number]
-    [io.jesi.backpack.transit]
     [io.jesi.backpack.specter]
     [io.jesi.backpack.string]
-    [clojure.pprint :refer [pprint]]))
+    [io.jesi.backpack.transit]))
 
 (import-vars
   io.jesi.backpack.collection

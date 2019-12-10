@@ -6,12 +6,17 @@ if [[ $? -ne 0 ]]; then
 	exit 1
 fi
 
+
 lein-clj () {
 	lein with-profile +clj $@
 }
 
 lein-cljs () {
 	lein with-profile +cljs $@
+}
+
+lein-all () {
+	lein with-profile +clj,+cljs $@
 }
 
 shadow-cljs () {
@@ -29,10 +34,10 @@ clean () {
 ## lint:
 lint () {
 	echo_message 'Clojure check'
-	lein check
+	lein-clj check
 	abort_on_error
 	echo_message 'Clojure lint'
-	lein lint
+	lein-clj lint
 	abort_on_error
 	if ! is-ci;then
 		echo_message 'Checking CircleCI config'
@@ -48,7 +53,7 @@ lint () {
 ## Installs all required dependencies for Clojure and ClojureScript
 deps () {
 	echo_message 'Installing dependencies'
-	lein -U with-profile +clj,+cljs deps
+	lein-all -U deps
 	abort_on_error
 	if is-ci;then
 		dry ci
@@ -62,7 +67,7 @@ deps () {
 ## Generate api documentation
 docs () {
 	echo_message 'Generating API documentation'
-	lein codox
+	lein-all codox
 	abort_on_error
 }
 
@@ -158,9 +163,9 @@ is-ci () {
 
 deploy () {
 	if is-ci;then
-		lein with-profile +install deploy clojars &>/dev/null
+		lein-all with-profile +install deploy clojars &>/dev/null
 	else
-		lein with-profile +install deploy clojars
+		lein-all with-profile +install deploy clojars
 	fi
 	abort_on_error
 }
@@ -180,7 +185,7 @@ snapshot () {
 		echo_message "Snapshotting $snapshot"
 		case $1 in
 			-l)
-				lein with-profile +install install
+				lein-all with-profile +install install
 				abort_on_error;;
 			*)
 				deploy;;

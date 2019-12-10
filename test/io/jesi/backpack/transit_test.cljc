@@ -1,11 +1,11 @@
 (ns io.jesi.backpack.transit-test
   (:refer-clojure :exclude [=])
   (:require
-    [io.jesi.backpack.test.strict :refer [deftest testing is is= =]]
-    [io.jesi.backpack.test.util :refer [pprint-str]]
-    [io.jesi.backpack.macros :refer [def-]]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.random :as rnd]))
+    [io.jesi.backpack.macros :refer [def-]]
+    [io.jesi.backpack.random :as rnd]
+    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]
+    [io.jesi.backpack.test.util :refer [pprint-str]]))
 
 (def- m {"[\"~#'\",\"foo\"]"      "foo"
          "[\"^ \",\"~:a\",[1,2]]" {:a [1 2]}})
