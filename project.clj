@@ -14,16 +14,20 @@
                  [com.rpl/specter]
                  [medley "1.2.0"]
                  [com.taoensso/encore "2.117.0"]
-                 [cheshire "5.9.0"]                         ;should only be needed by clj, but causes compile error if excluded
-                 [pjstadig/humane-test-output "0.10.0"]]
-  :profiles {:clj  {:dependencies [[org.clojure/clojure]
-                                   [org.clojure/core.cache "0.8.2"]
-                                   [com.cognitect/transit-clj "0.8.319"]]}
-             :cljs {:dependencies [[thheller/shadow-cljs :scope "provided"]
-                                   [org.clojars.mmb90/cljs-cache "0.1.4"]
-                                   [com.cognitect/transit-cljs "0.8.256"]
-                                   [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]}
-             :test {:dependencies [[org.clojure/tools.namespace "0.3.1"]]}
+                 [pjstadig/humane-test-output "0.10.0"]
+
+                 ;CLJ
+                 [cheshire "5.9.0"]
+                 [org.clojure/clojure]
+                 [org.clojure/core.cache "0.8.2"]
+                 [com.cognitect/transit-clj "0.8.319"]
+
+                 ;CLJS
+                 [thheller/shadow-cljs :scope "provided"]
+                 [org.clojars.mmb90/cljs-cache "0.1.4"]
+                 [com.cognitect/transit-cljs "0.8.256"]
+                 [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
+  :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.3.1"]]}
              :dev  {:injections [(require 'pjstadig.humane-test-output)
                                  (pjstadig.humane-test-output/activate!)]
                     :plugins    [[lein-codox "0.10.7"]

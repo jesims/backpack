@@ -6,21 +6,8 @@ if [[ $? -ne 0 ]]; then
 	exit 1
 fi
 
-
-lein-clj () {
-	lein with-profile +clj $@
-}
-
-lein-cljs () {
-	lein with-profile +cljs $@
-}
-
-lein-all () {
-	lein with-profile +clj,+cljs $@
-}
-
 shadow-cljs () {
-	lein-cljs trampoline run -m shadow.cljs.devtools.cli $@
+	lein trampoline run -m shadow.cljs.devtools.cli $@
 }
 
 ## clean:
@@ -34,10 +21,10 @@ clean () {
 ## lint:
 lint () {
 	echo_message 'Clojure check'
-	lein-clj check
+	lein check
 	abort_on_error
 	echo_message 'Clojure lint'
-	lein-clj lint
+	lein lint
 	abort_on_error
 	if ! is-ci;then
 		echo_message 'Checking CircleCI config'
@@ -53,7 +40,7 @@ lint () {
 ## Installs all required dependencies for Clojure and ClojureScript
 deps () {
 	echo_message 'Installing dependencies'
-	lein-all -U deps
+	lein -U deps
 	abort_on_error
 	if is-ci;then
 		dry ci
@@ -67,7 +54,7 @@ deps () {
 ## Generate api documentation
 docs () {
 	echo_message 'Generating API documentation'
-	lein-all codox
+	lein codox
 	abort_on_error
 }
 
@@ -84,9 +71,9 @@ _unit-test () {
 	clean
 	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
 	if [[ "${refresh}" = true ]];then
-		lein-clj test-refresh ${@:2}
+		lein test-refresh ${@:2}
 	else
-		lein-clj test ${@:2}
+		lein test ${@:2}
 	fi
 	abort_on_error 'Clojure tests failed'
 }
@@ -163,9 +150,9 @@ is-ci () {
 
 deploy () {
 	if is-ci;then
-		lein-all with-profile +install deploy clojars &>/dev/null
+		lein with-profile +install deploy clojars &>/dev/null
 	else
-		lein-all with-profile +install deploy clojars
+		lein with-profile +install deploy clojars
 	fi
 	abort_on_error
 }
@@ -185,7 +172,7 @@ snapshot () {
 		echo_message "Snapshotting $snapshot"
 		case $1 in
 			-l)
-				lein-all with-profile +install install
+				lein with-profile +install install
 				abort_on_error;;
 			*)
 				deploy;;
