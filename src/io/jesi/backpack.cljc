@@ -10,8 +10,10 @@
     [io.jesi.backpack.macros :refer [import-vars]]
     [io.jesi.backpack.miscellaneous]
     [io.jesi.backpack.number]
+    [io.jesi.backpack.transit]
     [io.jesi.backpack.specter]
-    [io.jesi.backpack.string]))
+    [io.jesi.backpack.string]
+    [clojure.pprint :refer [pprint]]))
 
 (import-vars
   io.jesi.backpack.collection
@@ -21,7 +23,8 @@
   io.jesi.backpack.miscellaneous
   io.jesi.backpack.number
   io.jesi.backpack.specter
-  io.jesi.backpack.string)
+  io.jesi.backpack.string
+  io.jesi.backpack.transit)
 
 #?(:clj  (import-vars
            io.jesi.backpack.clojure

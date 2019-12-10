@@ -6,8 +6,16 @@ if [[ $? -ne 0 ]]; then
 	exit 1
 fi
 
+lein-clj () {
+	lein with-profile +clj $@
+}
+
+lein-cljs () {
+	lein with-profile +cljs $@
+}
+
 shadow-cljs () {
-	lein trampoline run -m shadow.cljs.devtools.cli $@
+	lein-cljs trampoline run -m shadow.cljs.devtools.cli $@
 }
 
 ## clean:
@@ -40,7 +48,7 @@ lint () {
 ## Installs all required dependencies for Clojure and ClojureScript
 deps () {
 	echo_message 'Installing dependencies'
-	lein -U deps
+	lein -U with-profile +clj +cljs deps
 	abort_on_error
 	if is-ci;then
 		dry ci
@@ -71,9 +79,9 @@ _unit-test () {
 	clean
 	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
 	if [[ "${refresh}" = true ]];then
-		lein test-refresh ${@:2}
+		lein-clj test-refresh ${@:2}
 	else
-		lein test ${@:2}
+		lein-clj test ${@:2}
 	fi
 	abort_on_error 'Clojure tests failed'
 }
@@ -150,9 +158,9 @@ is-ci () {
 
 deploy () {
 	if is-ci;then
-		lein with-profile install deploy clojars &>/dev/null
+		lein with-profile +install deploy clojars &>/dev/null
 	else
-		lein with-profile install deploy clojars
+		lein with-profile +install deploy clojars
 	fi
 	abort_on_error
 }
@@ -172,7 +180,7 @@ snapshot () {
 		echo_message "Snapshotting $snapshot"
 		case $1 in
 			-l)
-				lein with-profile install install
+				lein with-profile +install install
 				abort_on_error;;
 			*)
 				deploy;;

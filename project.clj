@@ -10,24 +10,26 @@
   :plugins [[lein-parent "0.3.6"]]
   :parent-project {:coords  [io.jesi/parent "1.0.2"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies [:profiles :dev] :test-refresh :aliases]}
-  :dependencies [[thheller/shadow-cljs :scope "provided"]
-                 [org.clojure/clojure]
-                 [org.clojure/core.async]
+  :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
-                 [cheshire "5.9.0"]
-                 [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]
                  [medley "1.2.0"]
                  [com.taoensso/encore "2.117.0"]
-                 [org.clojure/core.cache "0.8.2"]
-                 [org.clojars.mmb90/cljs-cache "0.1.4"]
+                 [cheshire "5.9.0"]                         ;should only be needed by clj, but causes compile error if excluded
                  [pjstadig/humane-test-output "0.10.0"]]
-  :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.3.1"]]}
+  :profiles {:clj  {:dependencies [[org.clojure/clojure]
+                                   [org.clojure/core.cache "0.8.2"]
+                                   [com.cognitect/transit-clj "0.8.319"]]}
+             :cljs {:dependencies [[thheller/shadow-cljs :scope "provided"]
+                                   [org.clojars.mmb90/cljs-cache "0.1.4"]
+                                   [com.cognitect/transit-cljs "0.8.256"]
+                                   [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]}
+             :test {:dependencies [[org.clojure/tools.namespace "0.3.1"]]}
              :dev  {:injections [(require 'pjstadig.humane-test-output)
                                  (pjstadig.humane-test-output/activate!)]
                     :plugins    [[lein-codox "0.10.7"]
                                  [lein-auto "0.1.3"]
                                  [lein-shell "0.5.0"]]}}
-  :clean-targets ^{:protect false} ["target"]
+  :clean-targets ^{:protect false} ["target" ".shadow-cljs"]
   :release-tasks [["deploy"]]
   ;FIXME generate docs for cljc, clj and cljs
   :codox {:output-path "docs"
@@ -43,5 +45,4 @@
                         io.jesi.backpack.spy
                         io.jesi.backpack.test.macros
                         io.jesi.backpack.test.strict
-                        io.jesi.backpack.test.util]}
-  :aliases {"test-refresh" ["auto" "do" ["shell" "clear"] "test"]})
+                        io.jesi.backpack.test.util]})
