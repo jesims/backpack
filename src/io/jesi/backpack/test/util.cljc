@@ -4,6 +4,7 @@
     [clojure.pprint :as pprint]
     [clojure.string :as string]
     [clojure.test :refer [is]]
+    [io.jesi.backpack.macros :refer [shorthand]]
     [clojure.walk :refer [postwalk]]))
 
 (defn pprint-str [object]
@@ -34,21 +35,34 @@
    (defn- ^:dynamic *sleep* [ms-duration]
      (Thread/sleep ms-duration)))
 
-#?(:clj
-   (defn wait-for
-     "Waits for a `f` to resolve or truthy, checking every `interval` (in milliseconds; default 1s) or until a
-      `timeout` (in milliseconds; default 10s) has expired.
-
-      WARNING: Involves thread sleeping. Should NOT be used in production"
-     ([f] (wait-for f 1000))
-     ([f interval] (wait-for f interval 10000))
-     ([f interval timeout]
-      (let [end-time (+ (System/currentTimeMillis) timeout)]
-        (loop []
-          (if (< end-time (System/currentTimeMillis))
-            nil
-            (if-let [result (f)]
-              result
-              (do
-                (*sleep* interval)
-                (recur)))))))))
+;TODO convert to macro does a test report
+(defn wait-for
+  "Waits for a `f` to resolve to truthy, checking every
+  `interval` (in milliseconds; default 1s) or until a
+  `timeout` (in milliseconds; default 10s) has expired.
+  Throws an exception if `timeout` is exceeded.
+  Returns `nil`."
+  ([f] (wait-for f 1))
+  ([f interval] (wait-for f interval 10000))
+  ([f interval timeout]
+   (if (f)
+     nil
+     (let [throw-ex (fn wait-timeout [] (throw (ex-info "Wait timeout" (shorthand timeout f))))]
+       #?(:clj  (let [end-time (+ (System/currentTimeMillis) timeout)]
+                  (loop []
+                    (if (< end-time (System/currentTimeMillis))
+                      (throw-ex)
+                      (when-not (f)
+                        (*sleep* interval)
+                        (recur)))))
+          :cljs (let [interval-id (atom nil)
+                      timeout-id (js/setTimeout
+                                   #(do
+                                      (js/clearInterval @interval-id)
+                                      (throw-ex))
+                                   timeout)]
+                  (reset! interval-id (js/setInterval
+                                        #(when (f)
+                                           (js/clearTimeout timeout-id))
+                                        interval))))
+       nil))))

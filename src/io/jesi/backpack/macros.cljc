@@ -14,22 +14,23 @@
   `(do
      ~@(apply concat
          (for [import imports
-               :let [vars (if (symbol? import)
-                            (do
-                              (require import)
-                              (vals (ns-publics import)))
-                            (let [ns (first import)]
-                              (map
-                                (fn [name]
-                                  (require ns)
-                                  (let [sym (symbol (str ns) (str name))
-                                        var (resolve sym)]
-                                    (when (nil? var)
-                                      (throw (ex-info (str "Could not resolve var " sym) {:symbol sym
-                                                                                          :ns     *ns*
-                                                                                          :env    &env})))
-                                    var))
-                                (rest import))))]]
+               :let [vars (->> (if (symbol? import)
+                                 (do
+                                   (require import)
+                                   (vals (ns-publics import)))
+                                 (let [ns (first import)]
+                                   (map
+                                     (fn [name]
+                                       (require ns)
+                                       (let [sym (symbol (str ns) (str name))
+                                             var (resolve sym)]
+                                         (when (nil? var)
+                                           (throw (ex-info (str "Could not resolve var " sym) {:symbol sym
+                                                                                               :ns     *ns*
+                                                                                               :env    &env})))
+                                         var))
+                                     (rest import))))
+                               (remove (comp :import/exclude meta)))]]
            (apply concat
              (for [var vars
                    :let [sym (symbol var)

@@ -85,3 +85,7 @@
         (is= [1 2 3]
              (atom/conj! a 2 3)
              @a)))))
+
+(deftest toggle!-test
+
+  (testing "toggle!"))

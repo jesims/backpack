@@ -291,3 +291,16 @@
                       true?
                       (complement pos?))]
            (every? pred results))))))
+
+(defn sorted-map-by-index [idx]
+  (sorted-map-by (fn sorted-map-by-index-comparator [k1 k2]
+                   (let [count (count idx)
+                         by-index (fn by-index [k]
+                                    (str (get idx k (str count k))))]
+                     (compare (by-index k1) (by-index k2))))))
+
+(defn ^:import/exclude create-index [ks]
+  (into {} (map-indexed (comp vec reverse vector)) ks))
+
+(defn sorted-map-by-order [ks]
+  (sorted-map-by-index (create-index ks)))

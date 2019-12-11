@@ -655,3 +655,9 @@
                      (- (char-code left-char) (char-code right-char)))]
           (is (false? (bp/sorted? comp "adbc")))
           (is= \b @last-right-char))))))
+
+(deftest sorted-map-by-index-test)
+
+(deftest create-index-test)
+
+(deftest sorted-map-by-order-test)
