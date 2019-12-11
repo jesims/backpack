@@ -11,7 +11,8 @@
     [io.jesi.backpack.miscellaneous]
     [io.jesi.backpack.number]
     [io.jesi.backpack.specter]
-    [io.jesi.backpack.string]))
+    [io.jesi.backpack.string]
+    [io.jesi.backpack.transit]))
 
 (import-vars
   io.jesi.backpack.collection
@@ -21,7 +22,8 @@
   io.jesi.backpack.miscellaneous
   io.jesi.backpack.number
   io.jesi.backpack.specter
-  io.jesi.backpack.string)
+  io.jesi.backpack.string
+  io.jesi.backpack.transit)
 
 #?(:clj  (import-vars
            io.jesi.backpack.clojure

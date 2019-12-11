@@ -150,9 +150,9 @@ is-ci () {
 
 deploy () {
 	if is-ci;then
-		lein with-profile install deploy clojars &>/dev/null
+		lein with-profile +install deploy clojars &>/dev/null
 	else
-		lein with-profile install deploy clojars
+		lein with-profile +install deploy clojars
 	fi
 	abort_on_error
 }
@@ -172,7 +172,7 @@ snapshot () {
 		echo_message "Snapshotting $snapshot"
 		case $1 in
 			-l)
-				lein with-profile install install
+				lein with-profile +install install
 				abort_on_error;;
 			*)
 				deploy;;
