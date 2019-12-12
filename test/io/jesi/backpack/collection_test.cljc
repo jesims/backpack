@@ -2,8 +2,8 @@
   (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.random :as rnd]
     [io.jesi.backpack.collection :refer [create-index]]
+    [io.jesi.backpack.random :as rnd]
     [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
 (deftest safe-empty?-test

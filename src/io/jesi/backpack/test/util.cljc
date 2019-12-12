@@ -4,8 +4,8 @@
     [clojure.pprint :as pprint]
     [clojure.string :as string]
     [clojure.test :refer [is]]
-    [io.jesi.backpack.macros :refer [shorthand]]
-    [clojure.walk :refer [postwalk]]))
+    [clojure.walk :refer [postwalk]]
+    [io.jesi.backpack.macros :refer [shorthand]]))
 
 (defn pprint-str [object]
   (pprint/write object
