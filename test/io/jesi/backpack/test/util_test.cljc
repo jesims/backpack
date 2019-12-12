@@ -2,7 +2,9 @@
   (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]
-    [io.jesi.backpack.test.util :as util]))
+    [io.jesi.backpack.test.util :as util])
+  #?(:clj (:import
+            (clojure.lang ExceptionInfo))))
 
 (deftest wait-for-test
 
@@ -25,7 +27,7 @@
                                           (is= expected-interval duration))]
                    (let [actual (util/wait-for
                                   #(and
-                                     (= 4 (swap! f-invoke inc))
+                                     (= 5 (swap! f-invoke inc))
                                      (= 3 @sleep-invoke))
                                   expected-interval)]
                      (is (true? actual))))
@@ -34,8 +36,5 @@
     (testing "nil if the timeout expires and f is never truthy"
       (let [expected-interval 100]
         #?(:clj  (binding [util/*sleep* (fn [duration] (is= expected-interval duration))]
-                   (let [actual (util/wait-for (constantly false) 100 200)]
-                     (is (nil? actual))))
+                   (is (thrown-with-msg? ExceptionInfo #"Wait timeout" (util/wait-for (constantly false) 100 200))))
            :cljs (is false))))))
-
-
