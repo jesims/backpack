@@ -1,7 +1,6 @@
 (ns io.jesi.backpack.test.util-test
   (:refer-clojure :exclude [=])
   (:require
-    #?(:cljs [cljs.test :refer [async]])
     [io.jesi.backpack.random :as rnd]
     [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]
     [io.jesi.backpack.test.util :as util])
