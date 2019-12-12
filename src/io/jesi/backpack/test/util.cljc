@@ -83,7 +83,8 @@
                                       (*js-clear-interval* @interval-id)
                                       (throw-ex)))]
                   (reset! interval-id (*js-set-interval*
+                                        interval
                                         #(when (f)
-                                           (*js-clear-interval* timeout-id))
-                                        interval))
+                                           (*js-clear-interval* @interval-id)
+                                           (*js-clear-timeout* timeout-id))))
                   nil))))))
