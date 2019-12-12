@@ -12,7 +12,9 @@
       #?(:clj  (binding [util/*sleep* #(throw (Exception. "Shouldn't be Called"))]
                  (let [actual (util/wait-for (constantly true))]
                    (is (true? actual))))
-         :cljs (is false)))
+         :cljs (do
+                 (is (nil? (util/wait-for (constantly true))))
+                 (is false))))
 
     (testing "invokes the function every interval until truthy"
       (let [sleep-invoke (atom 0)

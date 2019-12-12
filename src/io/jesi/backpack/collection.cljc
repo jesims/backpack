@@ -292,15 +292,28 @@
                       (complement pos?))]
            (every? pred results))))))
 
-(defn sorted-map-by-index [idx]
-  (sorted-map-by (fn sorted-map-by-index-comparator [k1 k2]
-                   (let [count (count idx)
-                         by-index (fn by-index [k]
-                                    (str (get idx k (str count k))))]
-                     (compare (by-index k1) (by-index k2))))))
+(defn ^:import/exclude index-comparator
+  "Returns a comparator function that sorts based on the provided `idx` map.
+  Takes an optional `not-found-fn` that's called when a key is not found in the
+  `idx`, takes a key and returns a sort value. The default `not-found-fn` sorts
+   alphabetically after the index (based on `idx` count)."
+  ([idx]
+   (let [count (count idx)
+         not-found-fn (fn [k]
+                        (str count k))]
+     (index-comparator idx not-found-fn)))
+  ([idx not-found-fn]
+   (fn index-comparator-fn [k1 k2]
+     (let [by-index (fn by-index [k]
+                      (str (get idx k (not-found-fn k))))]
+       (compare (by-index k1) (by-index k2))))))
+
+(defn sorted-map-by-index [idx & keyvals]
+  (apply sorted-map-by (index-comparator idx) keyvals))
 
 (defn ^:import/exclude create-index [ks]
-  (into {} (map-indexed (comp vec reverse vector)) ks))
+  (when (seq ks)
+    (into {} (map-indexed (comp vec reverse vector)) ks)))
 
-(defn sorted-map-by-order [ks]
-  (sorted-map-by-index (create-index ks)))
+(defn sorted-map-by-order [ks & keyvals]
+  (apply sorted-map-by-index (create-index ks) keyvals))

@@ -27,6 +27,7 @@
 (def-test-type :LOTS_OF_YELLING true)
 
 (deftest defkw-type-test
+
   (testing "Registers keyword as type"
     ;FIXME fails in test refresh (but not the first time it runs)
     (is (instance? TestType tested))
