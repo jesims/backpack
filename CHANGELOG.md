@@ -2,6 +2,7 @@
 
 Added:
 
+* `io.jesi.backpack.collection/index-comparator`
 * `io.jesi.backpack.collection/sorted-map-by-index`
 * `io.jesi.backpack.collection/create-index`
 * `io.jesi.backpack.collection/sorted-map-by-order`
@@ -11,8 +12,8 @@ Changed:
 
 * `io.jesi.backpack.macros/import-vars` to exclude vars with `:import/exclude` meta
 * `io.jesi.backpack.test.util/wait-for`
-   * works in `:cljs`
-   * throws exception if timeout is reached
+  * works in `:cljs`
+  * throws exception if timeout is reached
 
 # 4.1.0
 
