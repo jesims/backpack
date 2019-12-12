@@ -33,7 +33,17 @@
 
 #?(:clj
    (defn- ^:dynamic *sleep* [ms-duration]
-     (Thread/sleep ms-duration)))
+     (Thread/sleep ms-duration))
+   :cljs
+   (do
+     (defn- ^:dynamic *js-set-timeout* [ms-duration f]
+       (js/setTimeout f ms-duration))
+
+     (defn- ^:dynamic *js-clear-interval* [interval-id]
+       (js/clearInterval interval-id))
+
+     (defn- ^:dynamic *js-set-interval* [ms-duration f]
+       (js/setInterval f ms-duration))))
 
 ;TODO convert to macro does a test report
 (defn wait-for
