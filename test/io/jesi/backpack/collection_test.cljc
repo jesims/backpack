@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack :as bp]
+    [io.jesi.backpack.collection :refer [create-index index-comparator]]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
@@ -655,3 +656,111 @@
                      (- (char-code left-char) (char-code right-char)))]
           (is (false? (bp/sorted? comp "adbc")))
           (is= \b @last-right-char))))))
+
+(deftest sorted-map-by-index-test
+
+  (testing "sorted-map-by-index"
+
+    (testing "is a function"
+      (is (fn? bp/sorted-map-by-index)))
+
+    (testing "creates a sorted map"
+      (let [m (bp/sorted-map-by-index nil)]
+        (is (sorted? m))
+        (is (map? m)))
+
+      (let [sorted-map-by-index #(bp/sorted-map-by-index % :c 1 :a 1 :b 1)]
+
+        (testing "sorted by the provided index map"
+          (is= {:a 1
+                :b 1
+                :c 1}
+               (sorted-map-by-index {:a 1
+                                     :b 2
+                                     :c 3}))
+          (is= {:b 1
+                :a 1
+                :c 1}
+               (sorted-map-by-index {:a 2
+                                     :b 1
+                                     :c 3})))
+
+        (testing "sorted alphabetically after the index if not found"
+          (is= {:c 1
+                :a 1
+                :b 1}
+               (sorted-map-by-index {:c 0}))
+          (is= {\z 1
+                \a 1
+                \b 1}
+               (bp/sorted-map-by-index {\z 0} \a 1 \b 1 \z 1)))))))
+
+(deftest create-index-test
+
+  (testing "create-index"
+
+    (testing "is a function"
+      (is (fn? create-index)))
+
+    (testing "is not in the `bp` ns"
+      (is (nil? (resolve `bp/create-index))))
+
+    (testing "returns nil if"
+      (testing "nil `ks`"
+        (is= nil (create-index nil)))
+
+      (testing "empty `ks`"
+        (is= nil (create-index {}))))
+
+    (testing "creates an index map from a sequence of keys"
+      (is= {:a 0 :b 1} (create-index [:a :b]))
+      (is= {:a 0 :b 1} (create-index [:a :b]))
+      (is= {\a 0 \b 1} (create-index [\a \b]))
+      (is= {"a" 0 "b" 1} (create-index ["a" "b"])))))
+
+(deftest sorted-map-by-order-test
+
+  (testing "sorted-map-by-order"
+
+    (testing "is a function"
+      (is (fn? bp/sorted-map-by-order)))
+
+    (testing "creates a sorted map"
+      (let [m (bp/sorted-map-by-order nil)]
+        (is (sorted? m))
+        (is (map? m)))
+
+      (testing "sorted by order of the ks"
+        (is= {:c 1 :b 1 :a 1} (bp/sorted-map-by-order [:c :b :a] :a 1 :b 1 :c 1))))))
+
+(deftest index-comparator-test
+
+  (testing "index-comparator"
+
+    (testing "sorts based on an index map"
+      (let [order [:first-name
+                   :last-name
+                   :title
+                   :email
+                   :mobile-number
+                   :status
+                   :created-at
+                   :default-team
+                   :teams
+                   :escalation-teams
+                   :role
+                   :creator]
+            comp (index-comparator (create-index order))]
+        (is= order
+             (sort-by identity comp (shuffle [:first-name
+                                              :last-name
+                                              :role
+                                              :creator
+                                              :title
+                                              :email
+                                              :mobile-number
+                                              :status
+                                              :created-at
+                                              :default-team
+                                              :teams
+                                              :escalation-teams])))))))

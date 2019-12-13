@@ -291,3 +291,25 @@
                       true?
                       (complement pos?))]
            (every? pred results))))))
+
+(defn ^:import/exclude index-comparator
+  "Returns a comparator function that sorts based on the provided `idx` map.
+  Takes an optional `not-found-fn` that's called when a key is not found in the
+  `idx`, takes a key and returns a sort index. The default `not-found-fn`
+  returns the count of `idx`."
+  ([idx] (index-comparator idx (constantly (count idx))))
+  ([idx not-found-fn]
+   (fn index-comparator-fn [k1 k2]
+     (let [by-index (fn by-index [k]
+                      [(get idx k (not-found-fn k)) k])]
+       (compare (by-index k1) (by-index k2))))))
+
+(defn sorted-map-by-index [idx & keyvals]
+  (apply sorted-map-by (index-comparator idx) keyvals))
+
+(defn ^:import/exclude create-index [ks]
+  (when (seq ks)
+    (into {} (map-indexed (comp vec reverse vector)) ks)))
+
+(defn sorted-map-by-order [ks & keyvals]
+  (apply sorted-map-by-index (create-index ks) keyvals))

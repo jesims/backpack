@@ -35,3 +35,6 @@
         updated (apply assoc-in base kvs)]
     (when (not= updated base)
       (reset! atom updated))))
+
+(defn toggle! [a]
+  (swap! a not))

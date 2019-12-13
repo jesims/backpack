@@ -85,3 +85,15 @@
         (is= [1 2 3]
              (atom/conj! a 2 3)
              @a)))))
+
+(deftest toggle!-test
+
+  (testing "toggle!"
+
+    (testing "toggles the value of an atom"
+      (is= true
+           (atom/toggle! (atom false))
+           (swap! (atom false) not))
+      (is= false
+           (atom/toggle! (atom true))
+           (swap! (atom true) not)))))
