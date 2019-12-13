@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.collection :refer [create-index]]
+    [io.jesi.backpack.collection :refer [create-index index-comparator]]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
 
@@ -732,3 +732,35 @@
 
       (testing "sorted by order of the ks"
         (is= {:c 1 :b 1 :a 1} (bp/sorted-map-by-order [:c :b :a] :a 1 :b 1 :c 1))))))
+
+(deftest index-comparator-test
+
+  (testing "index-comparator"
+
+    (testing "sorts based on an index map"
+      (let [order [:first-name
+                   :last-name
+                   :title
+                   :email
+                   :mobile-number
+                   :status
+                   :created-at
+                   :default-team
+                   :teams
+                   :escalation-teams
+                   :role
+                   :creator]
+            comp (index-comparator (create-index order))]
+        (is= order
+             (sort-by identity comp (shuffle [:first-name
+                                              :last-name
+                                              :role
+                                              :creator
+                                              :title
+                                              :email
+                                              :mobile-number
+                                              :status
+                                              :created-at
+                                              :default-team
+                                              :teams
+                                              :escalation-teams])))))))
