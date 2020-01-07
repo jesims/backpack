@@ -1,9 +1,9 @@
-(ns io.jesi.backpack.spy-test
+(ns io.jesi.backpack.test.spy-test
   (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.macros :refer [shorthand]]
-    [io.jesi.backpack.spy :as spy]
+    [io.jesi.backpack.test.spy :as spy]
     [io.jesi.backpack.test.strict :refer [= deftest is is= testing use-fixtures]]))
 
 (defn- set-debug [v]

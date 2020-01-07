@@ -1,4 +1,3 @@
-;TODO move to test utils library
 (ns io.jesi.backpack.test.runner.browser
   "Based on shadow.test.browser"
   {:dev/always true}

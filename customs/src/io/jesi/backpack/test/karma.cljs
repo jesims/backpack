@@ -1,4 +1,3 @@
-;TODO move to test utils library
 (ns io.jesi.backpack.test.karma
   (:require
     [cljs.test :as ct]

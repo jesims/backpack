@@ -21,15 +21,3 @@
 (defmacro is-nil<? [body]
   `(env/transform
      (test/is (nil? (async/<? ~body)))))
-
-(defmacro ^:deprecated is=
-  "DEPRECATED: Use `io.jesi.backpack.test.strict` ns"
-  [x y & more]
-  `(strict/is= ~x ~y ~@more))
-
-(defmacro ^:deprecated testing
-  "DEPRECATED: Use `io.jesi.backpack.test.strict` ns
-
-  Like `clojure.test/testing`, but will fail if `body` is empty."
-  [string & body]
-  `(strict/testing ~string ~@body))

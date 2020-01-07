@@ -1,3 +1,17 @@
+# 5.0.0
+
+Changed:
+
+* Moved `io.jesi.backpack.spy` to `io.jesi.backpack.test.spy`
+* Moved `io.jesi.backpack.test.*` to [customs](https://github.com/jesims/customs) project
+* Moved `pprint-str` and `pprint-str-code` to `io.jesi.backpack.miscellaneous`
+* Moved `project.sh` to [parent](https://github.com/jesims/parent) project
+
+Removed:
+* `io.jesi.backpack.miscellaneous/assoc-changed!`
+* `io.jesi.backpack.test.macros/is=`
+* `io.jesi.backpack.test.macros/testing`
+
 # 4.2.0
 
 Added:

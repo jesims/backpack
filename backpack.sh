@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 cd $(realpath $(dirname $0))
-# TODO: Source and load from common repository
-source ./project.sh
+#TODO: Source and load from common repository
+source project.sh
 if [[ $? -ne 0 ]]; then
 	exit 1
 fi
@@ -15,7 +15,6 @@ shadow-cljs () {
 clean () {
 	stop
 	lein clean
-	rm -rf .shadow-cljs/
 }
 
 ## lint:
@@ -24,7 +23,7 @@ lint () {
 	lein check
 	abort_on_error
 	echo_message 'Clojure lint'
-	lein lint
+	lein-dev lint
 	abort_on_error
 	if ! is-ci;then
 		echo_message 'Checking CircleCI config'
@@ -53,9 +52,7 @@ deps () {
 ## docs:
 ## Generate api documentation
 docs () {
-	echo_message 'Generating API documentation'
-	lein codox
-	abort_on_error
+	-docs
 }
 
 ## stop:
@@ -65,30 +62,19 @@ stop () {
 	pkill -f 'karma ' &>/dev/null
 }
 
-#TODO split into test and test-refresh
-_unit-test () {
-	refresh=$1
-	clean
-	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
-	if [[ "${refresh}" = true ]];then
-		lein test-refresh ${@:2}
-	else
-		lein test ${@:2}
-	fi
-	abort_on_error 'Clojure tests failed'
-}
-
 ## test:
 ## args: [-r]
 ## Runs the Clojure unit tests
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates
 test () {
+	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
 	case $1 in
 		-r)
-			_unit-test true ${@:2};;
+			lein test-refresh ${@:2};;
 		*)
-			_unit-test false ${@:2};;
+			lein test ${@:2};;
 	esac
+	abort_on_error 'Clojure tests failed'
 }
 
 unit-test-node () {
@@ -139,60 +125,18 @@ test-cljs () {
 	esac
 }
 
-is-snapshot () {
-	version=$(cat VERSION)
-	[[ "$version" == *SNAPSHOT ]]
-}
-
-is-ci () {
-	[[ -n "$CIRCLECI" ]]
-}
-
-deploy () {
-	if is-ci;then
-		lein with-profile +install deploy clojars &>/dev/null
-	else
-		lein with-profile +install deploy clojars
-	fi
-	abort_on_error
-}
-
 ## snapshot:
 ## args: [-l]
 ## Pushes a snapshot to Clojars
 ## [-l] local
 snapshot () {
-	if is-snapshot;then
-		echo_message 'SNAPSHOT suffix already defined... Aborting'
-		exit 1
-	else
-		version=$(cat VERSION)
-		snapshot="$version-SNAPSHOT"
-		echo ${snapshot} > VERSION
-		echo_message "Snapshotting $snapshot"
-		case $1 in
-			-l)
-				lein with-profile +install install
-				abort_on_error;;
-			*)
-				deploy;;
-		esac
-		echo "$version" > VERSION
-	fi
+	-snapshot $@
 }
 
 ## release:
 ## Pushes a release to Clojars
 release () {
-	version=$(cat VERSION)
-	if ! is-snapshot;then
-		version=$(cat VERSION)
-		echo_message "Releasing $version"
-		deploy
-	else
-		echo_message 'SNAPSHOT suffix already defined... Aborting'
-		exit 1
-	fi
+	-release
 }
 
 compare-file-from-master() {

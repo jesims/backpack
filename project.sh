@@ -59,3 +59,67 @@ script-invoke () {
 		exit 1
 	fi
 }
+
+is-snapshot () {
+	version=$(cat VERSION)
+	[[ "$version" == *SNAPSHOT ]]
+}
+
+is-ci () {
+	[[ -n "$CIRCLECI" ]]
+}
+
+deploy () {
+	if is-ci;then
+		lein-install deploy clojars &>/dev/null
+	else
+		lein-install deploy clojars
+	fi
+	abort_on_error
+}
+
+-snapshot () {
+	if is-snapshot;then
+		echo_message 'SNAPSHOT suffix already defined... Aborting'
+		exit 1
+	else
+		local version=$(cat VERSION)
+		local snapshot="$version-SNAPSHOT"
+		echo ${snapshot} > VERSION
+		echo_message "Snapshotting $snapshot"
+		case $1 in
+			-l)
+				lein-install install
+				abort_on_error;;
+			*)
+				deploy;;
+		esac
+		echo "$version" > VERSION
+	fi
+}
+
+lein-dev () {
+	lein with-profile +dev $@
+}
+
+lein-install () {
+	lein with-profile +install $@
+}
+
+-release () {
+	local version=$(cat VERSION)
+	if is-snapshot;then
+		echo_message 'SNAPSHOT suffix already defined... Aborting'
+		exit 1
+	else
+		echo_message "Releasing $version"
+		deploy
+	fi
+}
+
+-docs () {
+	echo_message 'Generating API documentation'
+	rm -rf docs
+	lein-dev codox
+	abort_on_error
+}

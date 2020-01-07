@@ -1,4 +1,3 @@
-;TODO move to test utils library
 (ns io.jesi.backpack.test.strict
   (:refer-clojure :exclude [=])
   #?(:cljs (:require-macros [io.jesi.backpack.test.strict :refer [is]]))
