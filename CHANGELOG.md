@@ -1,3 +1,9 @@
+# 4.2.1
+
+Fix:
+
+* cljsbuild compiler errors
+
 # 4.2.0
 
 Added:
