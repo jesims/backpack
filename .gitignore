@@ -5,8 +5,10 @@
 .lein-failures
 .nrepl-port
 .shadow-cljs/
+/out
 node_modules/
 package.json
 pom.xml
 target/
 trace.edn
+.cljs_node_repl

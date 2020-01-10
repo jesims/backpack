@@ -76,25 +76,13 @@ unit-test-cljs-refresh () {
 }
 
 ## test-cljs:
-## args: [-k|-b|-n|-r] [test-ns-regex]
-## Runs the ClojureScript unit tests
-## [-k] Watches and compiles tests for execution with karma (Default)
+## args: [-k|-b|-n|-r]
+## Runs the ClojureScript unit tests using Kaocha
+## [-n] Executes the tests targeting Node.js (Default)
 ## [-b] Watches and compiles tests for execution within a browser
-## [-n] Executes the tests targeting Node.js
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates with karma
-## [test-ns-regex] Watches tests and source files for changes, and subsequently re-evaluates
 test-cljs () {
-	export TEST_NS_REGEXP=${2:-'-test$'}
-	case $1 in
-		-r)
-			unit-test-cljs-refresh;;
-		-b)
-			unit-test-browser-refresh;;
-		-n)
-			unit-test-node;;
-		*)
-			unit-test-karma;;
-	esac
+	-test-cljs "$@"
 }
 
 ## snapshot:

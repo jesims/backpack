@@ -2,16 +2,16 @@
 
 Changed:
 
-* Moved `io.jesi.backpack.spy` to `io.jesi.backpack.test.spy`
-* Moved `io.jesi.backpack.test.*` to [customs](https://github.com/jesims/customs) project
+* Moved `io.jesi.backpack.spy` to `io.jesi.customs.spy`
+* Moved `io.jesi.customs.*` to [customs](https://github.com/jesims/customs) project
 * Moved `pprint-str` and `pprint-str-code` to `io.jesi.backpack.miscellaneous`
 * Moved `project.sh` to [parent](https://github.com/jesims/parent) project
 
 Removed:
 
 * `io.jesi.backpack.miscellaneous/assoc-changed!`
-* `io.jesi.backpack.test.macros/is=`
-* `io.jesi.backpack.test.macros/testing`
+* `io.jesi.customs.macros/is=`
+* `io.jesi.customs.macros/testing`
 
 Added:
 
@@ -36,7 +36,7 @@ Added:
 Changed: 
 
 * `io.jesi.backpack.macros/import-vars` to exclude vars with `:import/exclude` meta
-* `io.jesi.backpack.test.util/wait-for`
+* `io.jesi.customs.util/wait-for`
   * works in `:cljs`
   * throws exception if timeout is reached
 
@@ -56,7 +56,7 @@ Fixed:
 
 Moved:
 
-* `io.jesi.backpack.test.runner` to `io.jesi.backpack.test.runner.browser`
+* `io.jesi.customs.runner` to `io.jesi.customs.runner.browser`
 * `io.jesi.backpack.miscellaneous/cljs-env?` to `io.jesi.backpack.env/cljs?`
 * `io.jesi.backpack.clojurescript.cljs` to `io.jesi.backpack.clojurescript.cljc`
 
@@ -74,7 +74,7 @@ Changed:
 
 Added:
 
-* `io.jesi.backpack.test.strict`
+* `io.jesi.customs.strict`
 * `io.jesi.backpack.env`
 * `io.jesi.backpack.atom`
 * `io.jesi.backpack/named?`
@@ -84,7 +84,7 @@ Added:
 
 Added:
 
-* `io.jesi.backpack.test.macros/testing` macro
+* `io.jesi.customs.macros/testing` macro
 
 # 3.6.0
 

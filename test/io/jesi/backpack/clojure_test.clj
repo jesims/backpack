@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.test.strict :refer :all])
+    [io.jesi.customs.strict :refer :all])
   (:import
     (java.net URI)
     (java.util HashMap)))

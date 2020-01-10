@@ -4,8 +4,8 @@
     [io.jesi.backpack.cache :as cache]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.macros :refer [async-go]]
-    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]])
+    [io.jesi.customs.macros :refer [async-go]]
+    [io.jesi.customs.strict :refer [= deftest is is= testing]])
   #?(:clj
      (:import
        (clojure.lang ILookup))))

@@ -4,9 +4,9 @@
     [clojure.string :as str]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as random]
-    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]])
-  #?(:cljs (:require [cljs.core :refer [IDeref]])
-     :clj  (:import (clojure.lang ArityException IDeref))))
+    [io.jesi.customs.strict :refer [= deftest is is= testing]]
+    #?(:cljs [cljs.core :refer [IDeref]]))
+  #?(:clj (:import (clojure.lang ArityException IDeref))))
 
 
 (deftest partial-right-test
@@ -111,7 +111,7 @@
     (testing "is partial ="
       (let [=1 (partial = 1)]
         (is= (=1 1)
-             ((bp/p= 1) 1)))
+          ((bp/p= 1) 1)))
 
       (testing "that can take multiple arguments"
         (is ((bp/p= 1 1) 1))
