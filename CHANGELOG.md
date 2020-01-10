@@ -17,6 +17,12 @@ Added:
 
 * [Bindle](https://github.com/jesims/bindle) submodule
 
+# 4.2.1
+
+Fix:
+
+* cljsbuild compiler errors
+
 # 4.2.0
 
 Added:
