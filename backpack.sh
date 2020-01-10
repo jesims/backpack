@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-cd $(realpath $(dirname $0))
-#TODO: Source and load from common repository
-source project.sh
-if [[ $? -ne 0 ]]; then
+# shellcheck disable=2215
+cd "$(realpath "$(dirname "$0")")" || exit 1
+if ! source bindle/project.sh; then
 	exit 1
 fi
 
 shadow-cljs () {
-	lein trampoline run -m shadow.cljs.devtools.cli $@
+	lein trampoline run -m shadow.cljs.devtools.cli "$@"
 }
 
 ## clean:
@@ -19,34 +18,13 @@ clean () {
 
 ## lint:
 lint () {
-	echo_message 'Clojure check'
-	lein check
-	abort_on_error
-	echo_message 'Clojure lint'
-	lein-dev lint
-	abort_on_error
-	if ! is-ci;then
-		echo_message 'Checking CircleCI config'
-		circleci config validate
-		abort_on_error
-	fi
-	echo_message 'Formatting Markdown'
-	npx remark . --output
-	abort_on_error
+	-lint
 }
 
 ## deps:
 ## Installs all required dependencies for Clojure and ClojureScript
 deps () {
-	echo_message 'Installing dependencies'
-	lein -U deps
-	abort_on_error
-	if is-ci;then
-		dry ci
-	else
-		dry install
-	fi
-	abort_on_error
+	-deps
 }
 
 ## docs:
@@ -68,13 +46,7 @@ stop () {
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates
 test () {
 	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
-	case $1 in
-		-r)
-			lein test-refresh ${@:2};;
-		*)
-			lein test ${@:2};;
-	esac
-	abort_on_error 'Clojure tests failed'
+	-test-clj "$@"
 }
 
 unit-test-node () {
@@ -130,7 +102,7 @@ test-cljs () {
 ## Pushes a snapshot to Clojars
 ## [-l] local
 snapshot () {
-	-snapshot $@
+	-snapshot "$@"
 }
 
 ## release:
@@ -141,17 +113,19 @@ release () {
 
 compare-file-from-master() {
 	local branch;
-	if [[ -n $CIRCLE_BRANCH ]];then
-		branch=$CIRCLE_BRANCH
+	if [[ -n ${CIRCLE_BRANCH} ]];then
+		branch=${CIRCLE_BRANCH}
 	else
 		branch=$(git rev-parse --abbrev-ref HEAD)
 	fi
-	echo $(git --no-pager diff --name-only $branch..origin/master -- $1)
+	git --no-pager diff --name-only ${branch}..origin/master -- $1
 }
 
 check-docs () {
-	local changelog_changed=$(compare-file-from-master CHANGELOG.md)
-	local version_changed=$(compare-file-from-master VERSION)
+	local changelog_changed
+	changelog_changed=$(compare-file-from-master CHANGELOG.md)
+	local version_changed
+	version_changed=$(compare-file-from-master VERSION)
 	echo "$changelog_changed"
 	if [[ -n "$version_changed" && -z "$changelog_changed" ]];then
 		echo_error "Version has changed without updating CHANGELOG.md"
@@ -171,4 +145,4 @@ test-docs () {
 	fi
 }
 
-script-invoke $@
+script-invoke "$@"

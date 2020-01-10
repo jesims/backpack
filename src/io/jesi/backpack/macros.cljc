@@ -4,41 +4,41 @@
   (:require
     [clojure.core]
     [io.jesi.backpack.env :as env]
-    [io.jesi.backpack.fn :refer [noop]])
-  #?(:cljs (:require [cljs.core :refer [IFn]]))
+    [io.jesi.backpack.fn :refer [noop]]
+    #?(:cljs [cljs.core :refer [IFn]]))
   #?(:clj
      (:import
        (clojure.lang IFn))))
 
 (defmacro import-vars [& imports]
-  `(do
-     ~@(apply concat
-         (for [import imports
-               :let [vars (->> (if (symbol? import)
-                                 (do
-                                   (require import)
-                                   (vals (ns-publics import)))
-                                 (let [ns (first import)]
-                                   (map
-                                     (fn [name]
-                                       (require ns)
-                                       (let [sym (symbol (str ns) (str name))
-                                             var (resolve sym)]
-                                         (when (nil? var)
-                                           (throw (ex-info (str "Could not resolve var " sym) {:symbol sym
-                                                                                               :ns     *ns*
-                                                                                               :env    &env})))
-                                         var))
-                                     (rest import))))
-                               (remove (comp :import/exclude meta)))]]
-           (apply concat
-             (for [var vars
-                   :let [sym (symbol var)
-                         name (-> sym name symbol)
-                         {:keys [doc arglists]
-                          :or   {doc ""}} (meta var)]]
-               `[(def ~name ~doc ~sym)
-                 (alter-meta! #'~name assoc :arglists '~arglists)]))))))
+  #?(:clj `(do
+             ~@(apply concat
+                 (for [import imports
+                       :let [vars (->> (if (symbol? import)
+                                         (do
+                                           (require import)
+                                           (vals (ns-publics import)))
+                                         (let [ns (first import)]
+                                           (map
+                                             (fn [name]
+                                               (require ns)
+                                               (let [sym (symbol (str ns) (str name))
+                                                     var (resolve sym)]
+                                                 (when (nil? var)
+                                                   (throw (ex-info (str "Could not resolve var " sym) {:symbol sym
+                                                                                                       :ns     *ns*
+                                                                                                       :env    &env})))
+                                                 var))
+                                             (rest import))))
+                                       (remove (comp :import/exclude meta)))]]
+                   (apply concat
+                     (for [var vars
+                           :let [sym (symbol var)
+                                 name (-> sym name symbol)
+                                 {:keys [doc arglists]
+                                  :or   {doc ""}} (meta var)]]
+                       `[(def ~name ~doc ~sym)
+                         (alter-meta! #'~name assoc :arglists '~arglists)])))))))
 
 (defmacro catch-> [handle & body]
   `(try

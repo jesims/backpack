@@ -8,7 +8,7 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.7"]]
-  :parent-project {:coords  [io.jesi/parent "2.2.0-SNAPSHOT"] ;FIXME remove snapshot
+  :parent-project {:coords  [io.jesi/parent "3.0.0-SNAPSHOT"] ;FIXME remove snapshot
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
@@ -26,11 +26,11 @@
                  [org.clojars.mmb90/cljs-cache "0.1.4"]     ;TODO move to separate cache project
                  [com.cognitect/transit-cljs "0.8.256"]     ;TODO move to separate http project
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
-  :profiles {:test {:dependencies [[org.clojure/tools.namespace "0.3.1"]]}
-             :dev  [:parent/dev {:injections   [(require 'pjstadig.humane-test-output)
-                                                (pjstadig.humane-test-output/activate!)]
-                                 :dependencies [[pjstadig/humane-test-output "0.10.0"]
-                                                [io.jesi/backpack-test "1.0.0-SNAPSHOT"]]}]} ;FIXME remove snapshot
+  :profiles {:dev [:parent/dev {:injections   [(require 'pjstadig.humane-test-output)
+                                               (pjstadig.humane-test-output/activate!)]
+                                :dependencies [[pjstadig/humane-test-output "0.10.0"]
+                                               [org.clojure/tools.namespace "0.3.1"]
+                                               [io.jesi/backpack-test "1.0.0-SNAPSHOT"]]}]} ;FIXME remove snapshot
   :clean-targets ^{:protect false} ["target" ".shadow-cljs"]
   :release-tasks [["deploy"]]
   ;TODO generate docs for cljc, clj and cljs
