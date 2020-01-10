@@ -8,8 +8,9 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.7"]]
-  :parent-project {:coords  [io.jesi/parent "3.0.0-SNAPSHOT"] ;FIXME remove snapshot
+  :parent-project {:coords  [io.jesi/parent "3.0.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
+  :managed-dependencies [[io.jesi/customs "1.0.0-SNAPSHOT"]] ;FIXME Remove after release
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
                  [medley "1.2.0"]

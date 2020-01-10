@@ -13,7 +13,7 @@ shadow-cljs () {
 ## Cleans up the compiled and generated sources
 clean () {
 	stop
-	lein clean
+	lein-clean
 }
 
 ## lint:
@@ -30,7 +30,7 @@ deps () {
 ## docs:
 ## Generate api documentation
 docs () {
-	-docs
+	lein-docs
 }
 
 ## stop:
@@ -45,7 +45,7 @@ stop () {
 ## Runs the Clojure unit tests
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates
 test () {
-	echo_message 'In the animal kingdom, the rule is, eat or be eaten.'
+	echo-message 'In the animal kingdom, the rule is, eat or be eaten.'
 	-test-clj "$@"
 }
 
@@ -70,7 +70,7 @@ unit-test-browser-refresh () {
 
 unit-test-cljs-refresh () {
 	clean
-	echo_message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
+	echo-message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
 	shadow-cljs watch node
 	abort_on_error
 }
@@ -102,13 +102,25 @@ test-cljs () {
 ## Pushes a snapshot to Clojars
 ## [-l] local
 snapshot () {
-	-snapshot "$@"
+	if is-snapshot;then
+		echo-message 'SNAPSHOT suffix already defined... Aborting'
+		exit 1
+	else
+		-snapshot
+	fi
 }
 
 ## release:
 ## Pushes a release to Clojars
 release () {
-	-release
+	local version=$(get-version)
+	if is-snapshot;then
+		echo-message 'SNAPSHOT suffix already defined... Aborting'
+		exit 1
+	else
+		echo-message "Releasing $version"
+		deploy
+	fi
 }
 
 compare-file-from-master() {
@@ -128,7 +140,7 @@ check-docs () {
 	version_changed=$(compare-file-from-master VERSION)
 	echo "$changelog_changed"
 	if [[ -n "$version_changed" && -z "$changelog_changed" ]];then
-		echo_error "Version has changed without updating CHANGELOG.md"
+		echo-error "Version has changed without updating CHANGELOG.md"
 		exit 1
 	fi
 }
@@ -138,11 +150,20 @@ check-docs () {
 test-docs () {
 	check-docs
 	docs
-	echo_message 'Verifying animal facts...'
+	echo-message 'Verifying animal facts...'
 	if ! git diff --quiet --exit-code docs;then
-		echo_error 'Uncommitted changes to docs'
+		echo-error 'Uncommitted changes to docs'
 		exit 1
 	fi
+}
+
+deploy () {
+	if is-ci;then
+		lein-install deploy clojars &>/dev/null
+	else
+		lein-install deploy clojars
+	fi
+	abort_on_error
 }
 
 script-invoke "$@"
