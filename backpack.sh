@@ -163,7 +163,7 @@ deploy () {
 	else
 		lein-install deploy clojars
 	fi
-	abort_on_error
+	abort-on-error
 }
 
 script-invoke "$@"
