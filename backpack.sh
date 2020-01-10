@@ -102,42 +102,32 @@ test-cljs () {
 ## Pushes a snapshot to Clojars
 ## [-l] local
 snapshot () {
-	if is-snapshot;then
-		echo-message 'SNAPSHOT suffix already defined... Aborting'
-		exit 1
-	else
-		-snapshot
-	fi
+	-snapshot "$@"
 }
 
 ## release:
 ## Pushes a release to Clojars
 release () {
-	local version=$(get-version)
-	if is-snapshot;then
-		echo-message 'SNAPSHOT suffix already defined... Aborting'
-		exit 1
-	else
-		echo-message "Releasing $version"
-		deploy
-	fi
+	-release
 }
 
 compare-file-from-master() {
 	local branch;
-	if [[ -n ${CIRCLE_BRANCH} ]];then
-		branch=${CIRCLE_BRANCH}
+	if [[ -n $CIRCLE_BRANCH ]];then
+		branch=$CIRCLE_BRANCH
 	else
 		branch=$(git rev-parse --abbrev-ref HEAD)
 	fi
-	git --no-pager diff --name-only ${branch}..origin/master -- $1
+	git --no-pager diff --name-only "$branch..origin/master" -- "$1"
 }
 
 check-docs () {
 	local changelog_changed
 	changelog_changed=$(compare-file-from-master CHANGELOG.md)
+	abort-on-error
 	local version_changed
 	version_changed=$(compare-file-from-master VERSION)
+	abort-on-error
 	echo "$changelog_changed"
 	if [[ -n "$version_changed" && -z "$changelog_changed" ]];then
 		echo-error "Version has changed without updating CHANGELOG.md"
@@ -151,19 +141,11 @@ test-docs () {
 	check-docs
 	docs
 	echo-message 'Verifying animal facts...'
-	if ! git diff --quiet --exit-code docs;then
-		echo-error 'Uncommitted changes to docs'
-		exit 1
-	fi
+	require-committed docs
 }
 
 deploy () {
-	if is-ci;then
-		lein-install deploy clojars &>/dev/null
-	else
-		lein-install deploy clojars
-	fi
-	abort-on-error
+	deploy-clojars
 }
 
 script-invoke "$@"

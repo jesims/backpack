@@ -2,10 +2,10 @@
   (:refer-clojure :exclude [when-let])
   #?(:cljs (:require-macros [io.jesi.backpack.macros]))
   (:require
+    #?(:cljs [cljs.core :refer [IFn]])
     [clojure.core]
     [io.jesi.backpack.env :as env]
-    [io.jesi.backpack.fn :refer [noop]]
-    #?(:cljs [cljs.core :refer [IFn]]))
+    [io.jesi.backpack.fn :refer [noop]])
   #?(:clj
      (:import
        (clojure.lang IFn))))

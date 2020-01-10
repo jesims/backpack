@@ -8,9 +8,14 @@ Changed:
 * Moved `project.sh` to [parent](https://github.com/jesims/parent) project
 
 Removed:
+
 * `io.jesi.backpack.miscellaneous/assoc-changed!`
 * `io.jesi.backpack.test.macros/is=`
 * `io.jesi.backpack.test.macros/testing`
+
+Added:
+
+* [Bindle](https://github.com/jesims/bindle) submodule
 
 # 4.2.0
 
