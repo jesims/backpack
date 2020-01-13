@@ -22,12 +22,15 @@ aliases:
       run:
         name: Check & Cancel Redundant Build
         command: 'cancel-redundant-builds.sh'
+    submodule: &SUBMODULE
+      run: git submodule update --init
 jobs:
   deps:
     docker: *DEFAULT
     steps:
       - *CANCEL_REDUNDANT
       - checkout
+      - *SUBMODULE
       - restore_cache:
           <<: *LEIN_CACHE
       - restore_cache:
@@ -42,6 +45,7 @@ jobs:
     steps:
       - *CANCEL_REDUNDANT
       - checkout
+      - *SUBMODULE
       - restore_cache:
           <<: *LEIN_CACHE
       - restore_cache:
@@ -52,6 +56,7 @@ jobs:
     steps:
       - *CANCEL_REDUNDANT
       - checkout
+      - *SUBMODULE
       - restore_cache:
           <<: *LEIN_CACHE
       - restore_cache:
@@ -62,6 +67,7 @@ jobs:
     steps:
       - *CANCEL_REDUNDANT
       - checkout
+      - *SUBMODULE
       - restore_cache:
           <<: *LEIN_CACHE
       - restore_cache:
@@ -72,6 +78,7 @@ jobs:
     steps:
       - *CANCEL_REDUNDANT
       - checkout
+      - *SUBMODULE
       - restore_cache:
           <<: *LEIN_CACHE
       - restore_cache:
@@ -82,6 +89,7 @@ jobs:
     steps:
       - *CANCEL_REDUNDANT
       - checkout
+      - *SUBMODULE
       - restore_cache:
           <<: *LEIN_CACHE
       - restore_cache:
@@ -92,6 +100,7 @@ jobs:
     steps:
       - *CANCEL_REDUNDANT
       - checkout
+      - *SUBMODULE
       - restore_cache:
           <<: *LEIN_CACHE
       - restore_cache:
