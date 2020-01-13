@@ -1,11 +1,11 @@
 (ns io.jesi.backpack.fn-test
   (:refer-clojure :exclude [=])
   (:require
+    #?(:cljs [cljs.core :refer [IDeref]])
     [clojure.string :as str]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as random]
-    [io.jesi.customs.strict :refer [= deftest is is= testing]]
-    #?(:cljs [cljs.core :refer [IDeref]]))
+    [io.jesi.customs.strict :refer [= deftest is is= testing]])
   #?(:clj (:import (clojure.lang ArityException IDeref))))
 
 
