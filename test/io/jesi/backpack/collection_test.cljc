@@ -426,7 +426,7 @@
            (bp/diff
              {:a {:b [0 1 2]}}
              {:a {:b [0 3 2]}}))
-      ;FIXME do we want the nil leaf-pred to do this?:
+      ;TODO do we want the nil leaf-pred to do this?:
       (comment (is= {:added {[:a :b :cheese] [1 2 3]}}
                     (bp/diff
                       {:a {:b {:c 1

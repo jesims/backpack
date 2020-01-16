@@ -29,7 +29,7 @@
 (deftest defkw-type-test
 
   (testing "Registers keyword as type"
-    ;FIXME fails in test refresh (but not the first time it runs)
+    ;TODO fails in test refresh (but not the first time it runs)
     (is (instance? TestType tested))
     (is (instance? TestType and-worked))
     (is (instance? TestType lots-of-yelling)))

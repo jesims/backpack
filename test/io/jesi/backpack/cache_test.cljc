@@ -78,7 +78,7 @@
             (is= expected actual)))
 
         (testing "can be invoked with many args"
-          ;FIXME. Would be nice to have a macro, but I can't get it to spread local args (i.e. args defined with let)
+          ;TODO Would be nice to have a macro, but I can't get it to spread local args (i.e. args defined with let)
           (comment (defmacro spread [sym args]
                      (cons sym (eval args))))
 
