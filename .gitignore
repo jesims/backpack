@@ -1,4 +1,5 @@
 *.iml
+.cljs_node_repl
 .idea/dictionaries/
 .idea/libraries/
 .idea/workspace.xml
@@ -10,5 +11,5 @@ node_modules/
 package.json
 pom.xml
 target/
+tests.edn
 trace.edn
-.cljs_node_repl
