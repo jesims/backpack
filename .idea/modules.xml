@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/backpack.iml" filepath="$PROJECT_DIR$/backpack.iml" />
-      <module fileurl="file://$PROJECT_DIR$/backpack-test/backpack-test.iml" filepath="$PROJECT_DIR$/backpack-test/backpack-test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/customs/backpack-test-1.iml" filepath="$PROJECT_DIR$/customs/backpack-test-1.iml" />
     </modules>
   </component>
 </project>
