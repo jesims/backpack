@@ -3,8 +3,8 @@
     [clojure.java.io :as io]
     [clojure.test :refer :all]
     [clojure.tools.namespace.find :as ns-find]
-    [io.jesi.backpack.macros :refer [def-]]
-    [io.jesi.backpack]))
+    [io.jesi.backpack]
+    [io.jesi.backpack.macros :refer [def-]]))
 
 (def- excluded-vars #{'io.jesi.backpack.specter/path-walker})
 
