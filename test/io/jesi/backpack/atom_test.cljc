@@ -191,5 +191,3 @@
                     :something {:else "value"}
                     :meaning   {:of {:life 42}}})
         (is-called-once?)))))
-
-
