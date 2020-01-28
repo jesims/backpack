@@ -1,0 +1,13 @@
+;See https://github.com/borkdude/clj-kondo/blob/master/doc/config.md
+;from bindle/.clj-kondo/config.edn
+{:output  {:progress true}
+ :lint-as {io.jesi.backpack.macros/def-        clojure.core/def
+           io.jesi.customs.strict/are          clojure.test/are
+           io.jesi.customs.strict/deftest      clojure.test/deftest
+           io.jesi.customs.strict/is           clojure.test/is
+           io.jesi.customs.strict/testing      clojure.test/testing
+           io.jesi.customs.strict/use-fixtures clojure.test/use-fixtures
+           io.jesi.backpack.macros/reify-ifn   clojure.core/reify}
+ :linters {:unresolved-symbol {:level :off}
+           :refer-all         {:level :off}
+           :unused-binding    {:level :off}}}

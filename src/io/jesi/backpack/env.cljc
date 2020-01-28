@@ -75,7 +75,7 @@
     (sp/if-path (or-fn list? seq?)
       (sp/continue-then-stay sp/ALL-WITH-META l))))
 
-(defn- quoted? [[fn :as form]]
+(defn- quoted? [[fn]]
   (and (named? fn)
        (= "quote" (name fn))))
 

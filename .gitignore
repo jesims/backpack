@@ -1,5 +1,5 @@
 *.iml
-.clj-kondo/
+.clj-kondo/.cache/
 .cljs_node_repl
 .idea/dictionaries/
 .idea/libraries/
@@ -8,9 +8,11 @@
 .nrepl-port
 .shadow-cljs/
 /out
+*-init.clj
 node_modules/
 package.json
 pom.xml
+project.edn
 target/
 tests.edn
 trace.edn

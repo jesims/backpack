@@ -8,7 +8,7 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.7"]]
-  :parent-project {:coords  [io.jesi/parent "3.0.2"]
+  :parent-project {:coords  [io.jesi/parent "3.3.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
   :managed-dependencies [[io.jesi/backpack "4.2.0"]]        ;TODO use manged version once 5.0 is released
   :dependencies [[org.clojure/core.async]

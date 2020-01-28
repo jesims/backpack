@@ -55,7 +55,7 @@
     (apply str)))
 
 (defn- gen-str [chars size]
-  (apply str (take size (repeatedly #(rand-nth chars)))))
+  (clojure.string/join (repeatedly size (fn* [] (rand-nth chars)))))
 
 (defn string
   "Generates a random string of size (24 character length default)"

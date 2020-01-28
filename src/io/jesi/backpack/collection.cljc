@@ -67,8 +67,7 @@
             (fn remove-empty-postwalk [x]
               (condp #(%1 %2) x
                 safe-empty? nil
-                map-entry? (if (safe-empty? (second x))
-                             nil
+                map-entry? (when-not (safe-empty? (second x))
                              x)
                 coll? (into (empty x) (remove safe-empty? x))
                 seq? (remove safe-empty? x)
@@ -182,8 +181,9 @@
        ntcoll))))
 
 ; Came from camel-snake-kebab
-(defn transform-keys [f coll]
+(defn transform-keys
   "Recursively transforms all map keys in coll with f"
+  [f coll]
   (letfn [(transform [[k v]] [(f k) v])]
     (prewalk (fn [x]
                (if (or (map? x)
@@ -239,7 +239,7 @@
 
 (def default-comparator =)
 
-(def default-changed-merger (fn [old new] new))
+(def default-changed-merger (fn [_ new] new))
 
 ;TODO rename to `diff-leaves`?
 (defn diff
@@ -252,7 +252,7 @@
          changed (volatile! (transient {}))
          same (volatile! (transient []))
          removed (volatile! (reduce-leaves
-                              (fn [s path val]
+                              (fn [s path _]
                                 (conj! s path))
                               (transient #{})
                               leaf-pred

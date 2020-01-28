@@ -1,14 +1,15 @@
 (ns io.jesi.backpack.clojure
   (:require
     [io.jesi.backpack.collection :refer [transform-keys]]
+    [io.jesi.backpack.macros :refer [catch->nil]]
     [io.jesi.backpack.string :refer [->kebab-case ->kebab-case-key]])
   (:import
-    (java.net MalformedURLException URI)))
+    (java.net URI)))
 
 (defn ->uri [s]
   (cond
     (uri? s) s
-    (and (string? s)) (try (URI. s) (catch MalformedURLException _ nil))
+    (string? s) (catch->nil (URI. s))
     :else nil))
 
 (defn defkw-type [type kw & args]
@@ -22,4 +23,4 @@
    (java->clj j ->kebab-case-key))
   ([j key-fn]
    (some->> j
-     (transform-keys key-fn))))
+            (transform-keys key-fn))))

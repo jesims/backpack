@@ -55,23 +55,23 @@
     (when-let [x true
                y false
                z true]
-      (is (true? false))))
+      (is false "should not be called")))
 
   (testing "Won't evaluate block if any assign fails"
     (when-let [x true
                y nil
                z true]
-      (is (true? false)))
+      (is false "should not be called"))
 
     (when-let [x true
                y nil
                z nil]
-      (is (true? false)))
+      (is false "should not be called"))
 
     (when-let [x nil
                y nil
                z nil]
-      (is (true? false)))))
+      (is false "should not be called"))))
 
 (deftest defkw-test
 

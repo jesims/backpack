@@ -2,8 +2,6 @@
   (:refer-clojure :exclude [assoc-in])
   (:require
     [clojure.pprint :as pprint]
-    [io.jesi.backpack.atom :as atom]
-    [io.jesi.backpack.collection :refer [assoc-in]]
     [io.jesi.backpack.fn :refer [call]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
