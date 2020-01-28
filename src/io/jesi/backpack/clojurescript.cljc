@@ -1,9 +1,9 @@
 (ns io.jesi.backpack.clojurescript
   #?(:cljs (:refer-clojure :exclude [clj->js js->clj]))
   (:require
-    [io.jesi.backpack.string :refer [->camelCase ->kebab-case-key]]
     #?(:cljs [goog.object :as gobj])
-    #?(:cljs [io.jesi.backpack.collection :refer [transform-keys]])))
+    #?(:cljs [io.jesi.backpack.collection :refer [transform-keys]])
+    [io.jesi.backpack.string :refer [->camelCase ->kebab-case-key]]))
 
 #?(:cljs
    (extend-type UUID
