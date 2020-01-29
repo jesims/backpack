@@ -111,7 +111,7 @@
     (testing "is partial ="
       (let [=1 (partial = 1)]
         (is= (=1 1)
-          ((bp/p= 1) 1)))
+             ((bp/p= 1) 1)))
 
       (testing "that can take multiple arguments"
         (is ((bp/p= 1 1) 1))
