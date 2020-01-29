@@ -1,5 +1,6 @@
+*-init.clj
 *.iml
-.clj-kondo/.cache/
+.clj-kondo/
 .cljs_node_repl
 .idea/dictionaries/
 .idea/libraries/
@@ -8,7 +9,6 @@
 .nrepl-port
 .shadow-cljs/
 /out
-*-init.clj
 node_modules/
 package.json
 pom.xml
