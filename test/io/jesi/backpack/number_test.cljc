@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]])
+    [io.jesi.customs.strict :refer [= deftest is is= testing]])
   #?(:clj
      (:import (java.lang Integer))))
 

@@ -63,8 +63,7 @@
   "Returns the substring of 's' up to and including the 'match' or nil"
   [match s]
   (let [index (str/index-of s match)]
-    (if (nil? index)
-      nil
+    (when-not (nil? index)
       (subs s 0 (+ index (count match))))))
 
 (defn true-string?
@@ -82,8 +81,7 @@
 (defn ->camelCase [s]
   (when s
     (let [s (->str s)
-          [head & rest] (->> (str/split s #"-|(?=[A-Z])")
-                             (remove empty?))
+          [head & rest] (remove empty? (str/split s #"-|(?=[A-Z])"))
           camel (cons (str/lower-case head) (map str/capitalize rest))
           ;TODO improve adding in - prefix and suffix
           camel (if (= \- (get s 0))
@@ -119,7 +117,7 @@
     (let [[s :as args] (map str [s substr])]
       (if (apply bipred args)
         s
-        (apply str (f args))))))
+        (str/join (f args))))))
 
 (def prefix (create-affix str/starts-with? reverse))
 

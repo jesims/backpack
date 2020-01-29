@@ -5,8 +5,8 @@
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts fn1 shorthand try* when-debug when-let]]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.strict :refer [= deftest is is= testing use-fixtures]]
-    [io.jesi.backpack.test.util :refer [is-macro=]])
+    [io.jesi.customs.strict :refer [= deftest is is= testing use-fixtures]]
+    [io.jesi.customs.util :refer [is-macro=]])
   #?(:clj (:import
             (java.lang ArithmeticException SecurityException))))
 
@@ -55,23 +55,23 @@
     (when-let [x true
                y false
                z true]
-      (is (true? false))))
+      (is false "should not be called")))
 
   (testing "Won't evaluate block if any assign fails"
     (when-let [x true
                y nil
                z true]
-      (is (true? false)))
+      (is false "should not be called"))
 
     (when-let [x true
                y nil
                z nil]
-      (is (true? false)))
+      (is false "should not be called"))
 
     (when-let [x nil
                y nil
                z nil]
-      (is (true? false)))))
+      (is false "should not be called"))))
 
 (deftest defkw-test
 

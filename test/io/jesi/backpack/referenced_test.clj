@@ -3,20 +3,18 @@
     [clojure.java.io :as io]
     [clojure.test :refer :all]
     [clojure.tools.namespace.find :as ns-find]
-    [io.jesi.backpack]))
+    [io.jesi.backpack]
+    [io.jesi.backpack.macros :refer [def-]]))
 
-(def excluded-vars #{'io.jesi.backpack.specter/path-walker})
+(def- excluded-vars #{'io.jesi.backpack.specter/path-walker})
 
-(def excluded-ns #{'io.jesi.backpack.async
-                   'io.jesi.backpack.exceptions
-                   'io.jesi.backpack.http.response
-                   'io.jesi.backpack.http.status
-                   'io.jesi.backpack.macros
-                   'io.jesi.backpack.random
-                   'io.jesi.backpack.spy
-                   'io.jesi.backpack.test.macros
-                   'io.jesi.backpack.test.util
-                   'io.jesi.backpack.clojurescript})
+(def- excluded-ns #{'io.jesi.backpack.async
+                    'io.jesi.backpack.exceptions
+                    'io.jesi.backpack.http.response
+                    'io.jesi.backpack.http.status
+                    'io.jesi.backpack.macros
+                    'io.jesi.backpack.random
+                    'io.jesi.backpack.clojurescript})
 
 (deftest core-test
   (let [models-ns (->> "src/io/jesi/backpack/"

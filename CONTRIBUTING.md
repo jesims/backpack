@@ -4,13 +4,11 @@
 
 **DO** ensure the CI checks pass.
 
-**DO** update the [CHANGELOG](CHANGELOG.md) to reflect changes (include your Github identifier).
+**DO** update the [CHANGELOG](CHANGELOG.md) to reflect changes.
 
 **DO** update the [CONTRIBUTORS](CONTRIBUTORS.md) to append your name (if not already present).
 
 **DO** notify the project maintainers about any PR that has become stale. We're human and sometimes miss notifications.
-
-**DO** search [crossclj.info](https://crossclj.info/) when considering new additions to see if something already exists.
 
 **Don't** include more than one feature or fix in a single PR.
 
@@ -21,12 +19,12 @@
 ## Testing
 
 All utilities should be written to support both Clojure and ClojureScript with unit tests written in **CLJC** where practical.
-Unit tests can then be run by invoking `backpack.sh unit-test` or `backpack.sh unit-test-cljs` respectively.
+Unit tests can then be run by invoking `backpack.sh test` or `backpack.sh test-cljs` respectively.
 
 ### Theme: Animal Safari
 
 We like to have a theme when testing code that requires data. This projects theme is animal facts (bonus points for Sir David Attenborough quotes).
-[View an example](./test/io/jesi/backpack/collection_test.cljc#L35)
+[View an example](./test/io/jesi/backpack/collection_test.cljc#L42)
 
 ## Helper Utilities
 

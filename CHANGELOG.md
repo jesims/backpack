@@ -1,3 +1,22 @@
+# 5.0.0
+
+Changed:
+
+* Moved `pprint-str` and `pprint-str-code` to `io.jesi.backpack.miscellaneous`
+* Moved `io.jesi.backpack.spy` to `io.jesi.backpack.test.spy`
+* Moved `io.jesi.backpack.test.*` to [customs](https://github.com/jesims/customs) project
+
+Removed:
+
+* Deprecated `io.jesi.backpack.miscellaneous/assoc-changed!`
+* Deprecated `io.jesi.customs.macros/is=`
+* Deprecated `io.jesi.customs.macros/testing`
+
+Added:
+
+* [Bindle](https://github.com/jesims/bindle) submodule
+* [customs](https://github.com/jesims/customs) dependency
+
 # 4.2.1
 
 Fix:

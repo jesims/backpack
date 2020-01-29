@@ -4,7 +4,7 @@
     [io.jesi.backpack.macros :refer [def-]])
   #?(:clj (:import
             (java.io ByteArrayInputStream ByteArrayOutputStream Writer)
-            (java.nio.charset Charset StandardCharsets))))
+            (java.nio.charset StandardCharsets))))
 
 (def- write-opts {:transform transit/write-meta})
 

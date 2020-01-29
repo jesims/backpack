@@ -1,7 +1,7 @@
 (ns io.jesi.backpack.number
   (:refer-clojure :exclude [mod])
-  (:require
-    [clojure.string :as str]))
+  #?(:cljs (:require
+             [clojure.string :as str])))
 
 (def infinity "Java's Integer/MAX_VALUE for consistence use in Clojure(Script) projects" 2147483647)
 
@@ -11,10 +11,10 @@
   (let [factor (Math/pow 10 precision)]
     (/ (Math/round (* d factor)) factor)))
 
-(defn- decimal-places [v]
-  ;TODO support other separators e.g. in France they use , instead of .
-  (let [[whole decimal] (str/split (str v) \.)]
-    (count decimal)))
+#?(:cljs (defn- decimal-places [v]
+           ;TODO support other separators e.g. in France they use , instead of .
+           (let [[_ decimal] (str/split (str v) \.)]
+             (count decimal))))
 
 (defn mod
   "Modulus of num and div supporting float and decimal values. Truncates toward negative infinity."

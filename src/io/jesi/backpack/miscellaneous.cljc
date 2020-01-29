@@ -1,8 +1,7 @@
 (ns io.jesi.backpack.miscellaneous
   (:refer-clojure :exclude [assoc-in])
   (:require
-    [io.jesi.backpack.atom :as atom]
-    [io.jesi.backpack.collection :refer [assoc-in]]
+    [clojure.pprint :as pprint]
     [io.jesi.backpack.fn :refer [call]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
@@ -28,13 +27,6 @@
 (defn ->uuid-or-not [id]
   (or (->uuid id) id))
 
-(defn ^:deprecated assoc-changed!
-  "DEPRECATED: Use atom ns
-
-   assoc(-in) the atom when the value has changed"
-  [atom & kvs]
-  (apply atom/assoc-changed! atom kvs))
-
 (defn named?
   "Returns true if `x` is named (can be passed to `name`)"
   [x]
@@ -56,3 +48,14 @@
      nil? nil
      coll? v
      [v])))
+
+(defn pprint-str [object]
+  (pprint/write object
+    :pretty true
+    :stream nil))
+
+(defn pprint-str-code [object]
+  (pprint/write object
+    :pretty true
+    :stream nil
+    :dispatch pprint/code-dispatch))

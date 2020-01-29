@@ -4,8 +4,8 @@
     [io.jesi.backpack.cache :as cache]
     [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.macros :refer [async-go]]
-    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]])
+    [io.jesi.customs.macros :refer [async-go]]
+    [io.jesi.customs.strict :refer [= deftest is is= testing]])
   #?(:clj
      (:import
        (clojure.lang ILookup))))
@@ -78,7 +78,7 @@
             (is= expected actual)))
 
         (testing "can be invoked with many args"
-          ;FIXME. Would be nice to have a macro, but I can't get it to spread local args (i.e. args defined with let)
+          ;TODO Would be nice to have a macro, but I can't get it to spread local args (i.e. args defined with let)
           (comment (defmacro spread [sym args]
                      (cons sym (eval args))))
 

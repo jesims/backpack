@@ -4,7 +4,7 @@
     [clojure.string :as string]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]]))
+    [io.jesi.customs.strict :refer [= deftest is is= testing]]))
 
 (defn- assert-random [fn]
   (let [actuals (take 1000 (repeatedly fn))]

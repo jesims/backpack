@@ -1,12 +1,12 @@
 (ns io.jesi.backpack.fn-test
   (:refer-clojure :exclude [=])
   (:require
+    #?(:cljs [cljs.core :refer [IDeref]])
     [clojure.string :as str]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as random]
-    [io.jesi.backpack.test.strict :refer [= deftest is is= testing]])
-  #?(:cljs (:require [cljs.core :refer [IDeref]])
-     :clj  (:import (clojure.lang ArityException IDeref))))
+    [io.jesi.customs.strict :refer [= deftest is is= testing thrown?]])
+  #?(:clj (:import (clojure.lang ArityException IDeref))))
 
 
 (deftest partial-right-test
@@ -137,7 +137,7 @@
   (testing "and-fn"
 
     (testing "throws an exception if no parameters are given"
-      (is (thrown? #?(:clj ArityException :cljs js/Error) (bp/and-fn))))
+      (is (thrown? #?(:clj ArityException :cljs js/Error) (eval `(bp/and-fn)))))
 
     (testing "returns the predicate function when only given one"
       (is (identical? odd? (bp/and-fn odd?)))
@@ -162,7 +162,7 @@
   (testing "or-fn"
 
     (testing "throws an exception if no parameters are given"
-      (is (thrown? #?(:clj Exception :cljs js/Error) (bp/or-fn))))
+      (is (thrown? #?(:clj Exception :cljs js/Error) (eval `(bp/or-fn)))))
 
     (testing "returns the predicate function when only given one"
       (is (identical? odd? (bp/or-fn odd?)))

@@ -3,12 +3,12 @@
   #?(:clj
      (:require
        [clojure.set :as set]
-       [clojure.string :as string])
+       [clojure.string :as str])
      :cljs
      (:require
        [cljs-uuid-utils.core :as UUID]
        [clojure.set :as set]
-       [clojure.string :as string]
+       [clojure.string :as str]
        [goog.string :refer [format]]
        [goog.string.format]))
   #?(:clj
@@ -55,7 +55,7 @@
     (apply str)))
 
 (defn- gen-str [chars size]
-  (apply str (take size (repeatedly #(rand-nth chars)))))
+  (str/join (repeatedly size #(rand-nth chars))))
 
 (defn string
   "Generates a random string of size (24 character length default)"
@@ -83,8 +83,8 @@
 ;Todo: Feels hackish
 (defn- fmt [val]
   (-> (format "%.8f" val)
-      (string/replace #"0+$" "")                            ; Removes trailing zeros
-      (string/replace #"\.$" ".0")))                        ; Restores end zero if necessary
+      (str/replace #"0+$" "")                            ; Removes trailing zeros
+      (str/replace #"\.$" ".0")))                        ; Restores end zero if necessary
 
 (defn wkt-linestring
   "Generates a random WellKnownText linestring value"
@@ -92,5 +92,5 @@
   ([min max]
    (let [size (+ min (rand-int (+ max min)))]
      (->> (repeatedly size lnglat)
-          (map (comp (partial string/join " ") #(mapv fmt %)))
-          (string/join ",")))))
+          (map (comp (partial str/join " ") #(mapv fmt %)))
+          (str/join ",")))))

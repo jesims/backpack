@@ -1,0 +1,3 @@
+[submodule "bindle"]
+	path = bindle
+	url = git@github.com:jesims/bindle.git
