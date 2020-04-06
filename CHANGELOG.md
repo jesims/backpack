@@ -1,3 +1,12 @@
+# 5.1.0
+
+Added:
+
+* `io.jesi.backpack.collection/conj-some!`
+* `io.jesi.backpack.collection/assoc-some!`
+* `io.jesi.backpack.collection/update-some!`
+* `io.jesi.backpack.collection/remove-nil-vals`
+
 # 5.0.0
 
 Changed:
