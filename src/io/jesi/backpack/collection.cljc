@@ -336,8 +336,8 @@
 (defn remove-nil-vals
   "Shallowly removes nil values from a map"
   [map]
-  (trans-reduce
-    (fn [tmap [k v]]
+  (trans-reduce-kv
+    (fn [tmap k v]
       (if (nil? v)
         (dissoc! tmap k)
         tmap))
