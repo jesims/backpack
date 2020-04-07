@@ -764,3 +764,54 @@
                                               :default-team
                                               :teams
                                               :escalation-teams])))))))
+
+(deftest conj-some!-test
+
+  (testing "conj-some!"
+    (let [t-col (transient [])
+          expected [:a]
+          actual (-> t-col
+                     (bp/conj-some! nil)
+                     (bp/conj-some! :a)
+                     (bp/conj-some! nil)
+                     persistent!)]
+      (is= expected actual))))
+
+(deftest assoc-some!-test
+
+  (testing "assoc-some!"
+    (let [t-col (transient {})
+          expected {:a 1}
+          actual (-> t-col
+                     (bp/assoc-some! :a nil)
+                     (bp/assoc-some! :a 1)
+                     (bp/assoc-some! :b nil)
+                     persistent!)]
+      (is= expected actual))))
+
+(deftest update-some!-test
+
+  (testing "update-some!"
+    (let [t-col (transient {:a 1 :b 3})
+          expected {:a 2 :b 3}
+          actual (-> t-col
+                     (bp/update-some! :a inc)
+                     (bp/update-some! :b (constantly nil))
+                     persistent!)]
+      (is= expected actual))))
+
+(deftest remove-nil-vals-test
+
+  (testing "remove-nil-vals"
+    (let [col {:a nil :b nil :c 3}
+          expected {:c 3}
+          actual (bp/remove-nil-vals col)]
+      (is= expected actual))))
+
+(deftest select-vals-test
+
+  (testing "select-vals"
+    (let [col {:a 1 :b 2 "c" 3}
+          expected [2 nil 3 1]
+          actual (bp/select-vals col [:b :d "c" :a])]
+      (is= expected actual))))

@@ -313,3 +313,38 @@
 
 (defn sorted-map-by-order [ks & keyvals]
   (apply sorted-map-by-index (create-index ks) keyvals))
+
+(defn conj-some!
+  "Adds a value to the transitive collection if some"
+  [tcoll v]
+  (if (nil? v)
+    tcoll
+    (conj! tcoll v)))
+
+(defn assoc-some!
+  "Assocs some value into a transitive map"
+  [tmap k v]
+  (if (nil? v)
+    tmap
+    (assoc! tmap k v)))
+
+(defn update-some!
+  "Replaces the value of a key in a transitive map if the result of the function is some"
+  [tmap k f]
+  (assoc-some! tmap k (f (get tmap k))))
+
+(defn remove-nil-vals
+  "Shallowly removes nil values from a map"
+  [map]
+  (trans-reduce-kv
+    (fn [tmap k v]
+      (if (nil? v)
+        (dissoc! tmap k)
+        tmap))
+    map
+    map))
+
+(defn select-vals
+  "Selects all values from a map using specified keys. Missing keys return nil"
+  [m ks]
+  (map (partial get m) ks))

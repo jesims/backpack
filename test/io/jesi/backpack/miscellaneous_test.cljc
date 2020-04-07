@@ -29,7 +29,6 @@
     (let [id "just a string"]
       (is= id (bp/->uuid-or-not id)))))
 
-
 (deftest collify-test
 
   (testing "collify"

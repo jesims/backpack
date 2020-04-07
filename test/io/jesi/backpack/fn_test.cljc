@@ -8,7 +8,6 @@
     [io.jesi.customs.strict :refer [= deftest is is= testing thrown?]])
   #?(:clj (:import (clojure.lang ArityException IDeref))))
 
-
 (deftest partial-right-test
 
   (testing "partial-right"
@@ -76,7 +75,6 @@
 
     (testing "derefs when not derefable"
       (assert-deref identity))))
-
 
 (deftest if-fn-test
 
