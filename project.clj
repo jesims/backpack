@@ -8,7 +8,7 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.7"]]
-  :parent-project {:coords  [io.jesi/parent "3.7.0-SNAPSHOT"]
+  :parent-project {:coords  [io.jesi/parent "3.7.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
   :javac-options ["--release 14"
                   "-source" "8"
