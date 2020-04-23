@@ -5,7 +5,8 @@
     [clojure.string :as str]
     [com.rpl.specter :as sp]
     [io.jesi.backpack.fn :refer [or-fn]]
-    [io.jesi.backpack.miscellaneous :refer [named? namespaced?]]))
+    [io.jesi.backpack.miscellaneous :refer [named? namespaced?]]
+    [clojure.walk :as walk]))
 
 (defn cljs?
   "Take the &env from a macro, and tell whether we are expanding into CLJS."
@@ -38,6 +39,7 @@
 (defmethod converter :cljs [_]
   ;TODO use (-> &env :ns :ns-aliases) for converting to cljs?
   ;TODO convert `catch` clause also?
+  ;TODO use cljs.analyzer ns?
   (fn ->cljs [sym]
     (let [ns (namespace sym)]
       (if (and (str/starts-with? ns "clojure.")
@@ -79,6 +81,18 @@
   (and (named? fn)
        (= "quote" (name fn))))
 
+(defn- convert [converter quoted-form]
+  ;FIXME produces StackOverflow compile errors in jesi-web tests
+  ;(sp/transform [list-walker (sp/if-path quoted? (sp/nthpath 1) sp/FIRST) symbol? namespaced?] converter quoted-form))
+  (walk/postwalk
+    (fn [form]
+      (if-not (or (seq? form)
+                  (list? form))
+        form
+        ;FIXME complete
+        form))
+    quoted-form))
+
 (defn transform*
   "Transforms the symbols in a quoted form to runtime specific symbols.
   Takes an `env` (from `&env` or runtime keyword), and a `quoted-form`
@@ -88,7 +102,7 @@
   (let [converter (converter (runtime env))]
     (if (identical? identity converter)
       quoted-form
-      (sp/transform [list-walker (sp/if-path quoted? (sp/nthpath 1) sp/FIRST) symbol? namespaced?] converter quoted-form))))
+      (convert converter quoted-form))))
 
 ;TODO figure how to keep line numbers. macros are removing line numbers, by removing &from metadata
 

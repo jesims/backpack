@@ -10,9 +10,7 @@
   :plugins [[lein-parent "0.3.7"]]
   :parent-project {:coords  [io.jesi/parent "3.7.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
-  :javac-options ["--release 14"
-                  "-source" "8"
-                  "-target" "14"]
+  :managed-dependencies [[io.jesi/backpack "5.1.0"]]
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
                  [medley "1.2.0"]
