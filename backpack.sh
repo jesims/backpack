@@ -6,37 +6,38 @@ if [ $? -ne 0 ];then
 	exit 1
 fi
 
-shadow-cljs () {
-	lein trampoline run -m shadow.cljs.devtools.cli "$@"
+shadow-cljs(){
+	lein-dev trampoline run -m shadow.cljs.devtools.cli "$@"
 }
 
 ## clean:
 ## Cleans up the compiled and generated sources
-clean () {
+clean(){
 	stop
 	lein-clean
 }
 
 ## lint:
-lint () {
+lint(){
 	-lint
 }
 
 ## deps:
 ## Installs all required dependencies for Clojure and ClojureScript
-deps () {
+deps(){
 	-deps "$@"
 }
 
 ## docs:
 ## Generate api documentation
-docs () {
+docs(){
 	lein-docs
 }
 
 ## stop:
 ## Stops shadow-cljs and karma
-stop () {
+stop(){
+	echo-message 'Stopping'
 	shadow-cljs stop &>/dev/null
 	pkill -f 'karma ' &>/dev/null
 }
@@ -45,35 +46,37 @@ stop () {
 ## args: [-r]
 ## Runs the Clojure unit tests
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates
-test () {
+test(){
 	echo-message 'In the animal kingdom, the rule is, eat or be eaten.'
 	-test-clj "$@"
 }
 
-unit-test-node () {
-	shadow-cljs compile node
-	abort_on_error 'node tests failed'
+unit-test-node(){
+	echo-message 'Running shadow-cljs tests on nodejs'
+	shadow-cljs compile node-test
+	abort-on-error 'node tests failed'
 }
 
-unit-test-karma () {
+unit-test-node-refresh(){
+	echo-message 'Running shadow-cljs tests on nodejs'
+	shadow-cljs watch node-test
+	abort-on-error 'node tests failed'
+}
+
+unit-test-karma(){
+	echo-message 'Running shadow-cljs tests on karma'
 	shadow-cljs compile karma \
 	&& npx karma start --single-run
-	abort_on_error 'kamra tests failed'
+	abort-on-error 'kamra tests failed'
 }
 
-unit-test-browser-refresh () {
-	clean
+unit-test-browser-refresh(){
+	echo-message 'Running shadow-cljs tests in browser'
+	stop
 	trap stop EXIT
 	open http://localhost:8091/
-	shadow-cljs watch browser
-	abort_on_error
-}
-
-unit-test-cljs-refresh () {
-	clean
-	echo-message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
-	shadow-cljs watch node
-	abort_on_error
+	shadow-cljs watch browser-test
+	abort-on-error
 }
 
 ## test-cljs:
@@ -82,21 +85,40 @@ unit-test-cljs-refresh () {
 ## [-n] Executes the tests targeting Node.js (Default)
 ## [-b] Watches and compiles tests for execution within a browser
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates with karma
-test-cljs () {
+test-cljs(){
 	-test-cljs "$@"
+}
+
+## test-shadow:
+## args: [-k|-b|-n|-r]
+## Runs the ClojureScript unit tests using shadow-cljs
+## [-n] Executes the tests targeting Node.js (Default)
+## [-b] Watches and compiles tests for execution within a browser
+## [-r] Watches tests and source files for changes, and subsequently re-evaluates with node
+test-shadow(){
+	case $1 in
+		-k)
+			unit-test-karma;;
+		-b)
+			unit-test-browser-refresh;;
+		-r)
+			unit-test-node-refresh;;
+		*)
+			unit-test-node;;
+	esac
 }
 
 ## snapshot:
 ## args: [-l]
 ## Pushes a snapshot to Clojars
 ## [-l] local
-snapshot () {
+snapshot(){
 	-snapshot "$@"
 }
 
 ## release:
 ## Pushes a release to Clojars
-release () {
+release(){
 	-release
 }
 
@@ -110,7 +132,7 @@ compare-file-from-master() {
 	git --no-pager diff --name-only "$branch..origin/master" -- "$1"
 }
 
-check-docs () {
+check-docs(){
 	local changelog_changed
 	changelog_changed=$(compare-file-from-master CHANGELOG.md)
 	abort-on-error
@@ -126,19 +148,24 @@ check-docs () {
 
 ## test-docs:
 ## Checks that the committed api documentation is up to date with the latest code
-test-docs () {
+test-docs(){
 	check-docs
 	docs
 	echo-message 'Verifying animal facts...'
 	require-committed docs
 }
 
-deploy () {
+deploy(){
 	deploy-clojars
 }
 
-deploy-snapshot () {
+deploy-snapshot(){
 	deploy-clojars
+}
+
+## outdated:
+outdated(){
+	-outdated
 }
 
 script-invoke "$@"

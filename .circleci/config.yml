@@ -74,6 +74,28 @@ jobs:
       - restore_cache:
           <<: *NODE_CACHE
       - run: './backpack.sh test-cljs'
+  test_shadow:
+    docker: *DEFAULT
+    steps:
+      - *CANCEL_REDUNDANT
+      - checkout
+      - *SUBMODULE
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - restore_cache:
+          <<: *NODE_CACHE
+      - run: './backpack.sh test-shadow -n'
+  test_karma:
+    docker: *DEFAULT
+    steps:
+      - *CANCEL_REDUNDANT
+      - checkout
+      - *SUBMODULE
+      - restore_cache:
+          <<: *LEIN_CACHE
+      - restore_cache:
+          <<: *NODE_CACHE
+      - run: './backpack.sh test-shadow -k'
   test_docs:
     docker: *DEFAULT
     steps:
@@ -121,6 +143,12 @@ workflows:
       - test_cljs:
           requires:
             - lint
+      - test_shadow:
+          requires:
+            - lint
+      - test_karma:
+          requires:
+            - lint
       - test_docs:
           requires:
             - lint
@@ -129,6 +157,8 @@ workflows:
           requires:
             - test_clj
             - test_cljs
+            - test_shadow
+            - test_karma
             - test_docs
           filters:
             branches:

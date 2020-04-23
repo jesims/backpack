@@ -123,4 +123,5 @@
   Returns a channel which contains the result (or exception)."
   [f chan]
   `(go-try
-     (~f (<? ~chan))))
+     (when ~f
+       (~f (<? ~chan)))))

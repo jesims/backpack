@@ -1,3 +1,14 @@
+# 5.1.1
+
+Fix:
+
+* `io.jesi.backpack.async/go-try` producing compile errors when `f` is `nil`
+
+Added:
+
+* Tests in [shadow-cljs](https://github.com/thheller/shadow-cljs)
+* `./backpack.sh outdated`
+
 # 5.1.0
 
 Added:

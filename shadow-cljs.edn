@@ -1,0 +1,13 @@
+{:lein   true
+ :builds {:node-test    {:target    :node-test
+                         :output-to "target/node/test.js"
+                         :autorun   true}
+          :karma        {:target    :karma
+                         :output-to "target/karma/test.js"}
+          :browser-test {:target          :browser-test
+                         :test-dir        "target/browser-test/"
+                         :ignore-warnings true
+                         :runner-ns       io.jesi.customs.runner.browser
+                         :closure-defines {cljs-test-display.core/notifications true}
+                         :devtools        {:http-port 8091
+                                           :http-root "target/browser-test/"}}}}
