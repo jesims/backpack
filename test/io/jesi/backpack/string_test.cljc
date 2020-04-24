@@ -42,7 +42,7 @@
     (is (false? (bp/true-string? "")))
     (is (false? (bp/true-string? nil)))))
 
-(deftest ^:focus ->camelCase-test
+(deftest ->camelCase-test
   (is= "v2"
        (bp/->camelCase :v2)
        (bp/->camelCase "v2"))
@@ -78,7 +78,7 @@
        (bp/->camelCase :namespaced/kebab-case)
        (bp/->camelCase "namespaced/kebab-case")))
 
-(deftest ^:focus ->kebab-case-test
+(deftest ->kebab-case-test
   (is= "kebab-case"
        (bp/->kebab-case :kebab-case)
        (bp/->kebab-case "kebab-case"))
