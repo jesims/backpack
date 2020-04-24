@@ -1,3 +1,9 @@
+# 5.1.1
+
+Fix:
+
+* `io.jesi.backpack.string/->kebab-case` Correctly convert strings that have letters and digits
+
 # 5.1.0
 
 Added:

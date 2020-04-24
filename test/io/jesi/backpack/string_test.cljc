@@ -60,6 +60,9 @@
        (bp/->camelCase "-action-man")
        (bp/->camelCase "-Action-Man"))
 
+  (is= "covid19Enabled"
+       (bp/->camelCase :covid19-enabled)
+       (bp/->camelCase "covid19-enabled"))
   ;TODO what about double - ?
   (comment (is= "-action-Man"
                 (bp/->camelCase "-action--man")))
@@ -118,7 +121,11 @@
        (bp/->kebab-case "_LOTS_OF_YELLING"))
 
   (is= "lots-of-yelling"
-       (bp/->kebab-case :LOTS_OF_YELLING)))
+       (bp/->kebab-case :LOTS_OF_YELLING))
+
+  (is= "covid19-enabled"
+       (bp/->kebab-case :covid19Enabled)
+       (bp/->kebab-case "covid19Enabled")))
 
 (deftest ->kebab-case-key-test
   (is= :turtles.can.breathe.through/their-anus
