@@ -42,7 +42,7 @@
     (is (false? (bp/true-string? "")))
     (is (false? (bp/true-string? nil)))))
 
-(deftest ->camelCase-test
+(deftest ^:focus ->camelCase-test
   (is= "v2"
        (bp/->camelCase :v2)
        (bp/->camelCase "v2"))
@@ -60,6 +60,9 @@
        (bp/->camelCase "-action-man")
        (bp/->camelCase "-Action-Man"))
 
+  (is= "covid19Enabled"
+       (bp/->camelCase :covid19-enabled)
+       (bp/->camelCase "covid19-enabled"))
   ;TODO what about double - ?
   (comment (is= "-action-Man"
                 (bp/->camelCase "-action--man")))
@@ -75,7 +78,7 @@
        (bp/->camelCase :namespaced/kebab-case)
        (bp/->camelCase "namespaced/kebab-case")))
 
-(deftest ->kebab-case-test
+(deftest ^:focus ->kebab-case-test
   (is= "kebab-case"
        (bp/->kebab-case :kebab-case)
        (bp/->kebab-case "kebab-case"))
@@ -118,7 +121,11 @@
        (bp/->kebab-case "_LOTS_OF_YELLING"))
 
   (is= "lots-of-yelling"
-       (bp/->kebab-case :LOTS_OF_YELLING)))
+       (bp/->kebab-case :LOTS_OF_YELLING))
+
+  (is= "covid19-enabled"
+       (bp/->kebab-case :covid19Enabled)
+       (bp/->kebab-case "covid19Enabled")))
 
 (deftest ->kebab-case-key-test
   (is= :turtles.can.breathe.through/their-anus

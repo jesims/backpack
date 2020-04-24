@@ -97,6 +97,7 @@
           ->str
           (str/replace #"([A-Z]{2,})([a-z])" "$1 $2")
           (str/replace #"([a-z])([A-Z])" "$1 $2")
+          (str/replace #"([0-9])([A-Z])" "$1 $2")
           (str/replace \_ \-)
           (str/replace #"\s" "-")
           str/lower-case))
