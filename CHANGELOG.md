@@ -2,7 +2,7 @@
 
 Fix:
 
-* `io.jesi.backpack.string/->kebab-case` converting strings with numbers
+* `io.jesi.backpack.string/->kebab-case` Correctly convert strings with digits contained
 
 # 5.1.0
 
