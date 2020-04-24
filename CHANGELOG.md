@@ -1,3 +1,9 @@
+# 5.1.1
+
+Fix:
+
+* `io.jesi.backpack.string/->kebab-case` converting strings with numbers
+
 # 5.1.0
 
 Added:
