@@ -252,3 +252,27 @@
         (testing "nil"
           (is= "Repti"
                (bp/subs s nil 5)))))))
+
+(deftest ->proper-case-test
+
+  (testing "->proper-case"
+
+    (testing "converts words into proper case"
+      (is (nil? (bp/->proper-case nil)))
+      (is= "" (bp/->proper-case ""))
+      (is= "Whales Are Warm-Blooded Creatures That Nurse Their Young"
+           (bp/->proper-case "Whales are warm-blooded creatures that nurse their young"))
+      (is= "Blue-Whales-Are-The-Largest-Animals-To-Have-Ever-Existed"
+           (bp/->proper-case "blue-whales-are-the-largest-animals-to-have-ever-existed"))
+      (is= "The Heart Of A Blue Whale Is As Big As A Small Car"
+           (bp/->proper-case "The heart of a Blue Whale is as big as a small car")))))
+
+(deftest kebab->proper-case-test
+
+  (testing "kebab->proper-case"
+
+    (testing "converts kebab cased keywords to proper case"
+      (is (nil? (bp/kebab->proper-case nil)))
+      (is= "" (bp/kebab->proper-case ""))
+      (is= "A Meercat Can Live For 12 14 Years In Captivity"
+           (bp/kebab->proper-case "a-meercat-can-live-for-12-14-years-in-captivity")))))
