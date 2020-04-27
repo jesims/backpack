@@ -24,7 +24,7 @@
           (is= form (env/transform* nil form))
           (is= form (env/transform* :cljs form))))
 
-      (testing "even if inner symbols are quotes"
+      (testing "even if inner symbols are quoted"
         (let [form '(clojure.core/cons 'clojure.core/= (clojure.core/list 1 1))]
           (is= form (env/transform* :clj form))
           (is= form (env/transform* :default form))

@@ -51,34 +51,6 @@ test(){
 	-test-clj "$@"
 }
 
-unit-test-node(){
-	echo-message 'Running shadow-cljs tests on nodejs'
-	shadow-cljs compile node-test
-	abort-on-error 'node tests failed'
-}
-
-unit-test-node-refresh(){
-	echo-message 'Running shadow-cljs tests on nodejs'
-	shadow-cljs watch node-test
-	abort-on-error 'node tests failed'
-}
-
-unit-test-karma(){
-	echo-message 'Running shadow-cljs tests on karma'
-	shadow-cljs compile karma \
-	&& npx karma start --single-run
-	abort-on-error 'kamra tests failed'
-}
-
-unit-test-browser-refresh(){
-	echo-message 'Running shadow-cljs tests in browser'
-	stop
-	trap stop EXIT
-	open http://localhost:8091/
-	shadow-cljs watch browser-test
-	abort-on-error
-}
-
 ## test-cljs:
 ## args: [-k|-b|-n|-r]
 ## Runs the ClojureScript unit tests using Kaocha
@@ -90,22 +62,14 @@ test-cljs(){
 }
 
 ## test-shadow:
-## args: [-k|-b|-n|-r]
-## Runs the ClojureScript unit tests using shadow-cljs
-## [-n] Executes the tests targeting Node.js (Default)
-## [-b] Watches and compiles tests for execution within a browser
+## args: [-r] [-k|-n|-b]
+## Runs the ClojureScript unit tests using shadow-cljs and
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates with node
+## [-k] Executes the tests targeting the browser running in karma (default)
+## [-n] Executes the tests targeting Node.js
+## [-b] Watches and compiles tests for execution within a browser
 test-shadow(){
-	case $1 in
-		-k)
-			unit-test-karma;;
-		-b)
-			unit-test-browser-refresh;;
-		-r)
-			unit-test-node-refresh;;
-		*)
-			unit-test-node;;
-	esac
+	-test-shadow-cljs "$@"
 }
 
 ## snapshot:

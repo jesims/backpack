@@ -24,7 +24,7 @@ aliases:
         name: Check & Cancel Redundant Build
         command: 'cancel-redundant-builds.sh'
     submodule: &SUBMODULE
-      run: git submodule update --init
+      run: git submodule update --init --recursive
 jobs:
   deps:
     docker: *DEFAULT

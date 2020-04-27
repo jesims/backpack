@@ -8,9 +8,9 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.7"]]
-  :parent-project {:coords  [io.jesi/parent "3.7.0"]
+  :parent-project {:coords  [io.jesi/parent "3.9.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
-  :managed-dependencies [[io.jesi/backpack "5.1.0"]]
+  :managed-dependencies [[io.jesi/backpack "5.2.0"]]
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
                  [medley "1.2.0"]
@@ -24,10 +24,9 @@
 
                  ;CLJS
                  [thheller/shadow-cljs :scope "provided"]
-                 [org.clojure/clojurescript :scope "provided"]
                  [org.clojars.mmb90/cljs-cache "0.1.4"]     ;TODO move to separate cache project
                  [com.cognitect/transit-cljs "0.8.256"]     ;TODO move to separate http project
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
   :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs]
                                                [org.clojure/tools.namespace "0.3.1"]]}]}
-  :clean-targets ^{:protect false} ["target" ".shadow-cljs"])
+  :clean-targets ^{:protect false} [".shadow-cljs" "out" :target-path])

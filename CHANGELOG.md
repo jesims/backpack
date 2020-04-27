@@ -1,13 +1,26 @@
-# 5.1.1
+# 5.2.1
 
 Fix:
 
-* `io.jesi.backpack.async/go-try` producing compile errors when `f` is `nil`
+* StackOverflowError by not using `env/transform`
 
 Added:
 
 * Tests in [shadow-cljs](https://github.com/thheller/shadow-cljs)
 * `./backpack.sh outdated`
+
+# 5.2.0
+
+Added:
+
+* `io.jesi.backpack.string/->proper-case`
+* `io.jesi.backpack.string/kebab->proper-case`
+
+# 5.1.1
+
+Fix:
+
+* `io.jesi.backpack.string/->kebab-case` Correctly convert strings that have letters and digits
 
 # 5.1.0
 

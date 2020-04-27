@@ -9,10 +9,14 @@
 .nrepl-port
 .shadow-cljs/
 /out
+karma.conf.js
 node_modules/
+out
+package-dry.json
 package.json
 pom.xml
 project.edn
+shadow-cljs.edn
 target/
 tests.edn
 trace.edn

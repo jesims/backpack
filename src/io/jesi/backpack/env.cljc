@@ -5,8 +5,7 @@
     [clojure.string :as str]
     [com.rpl.specter :as sp]
     [io.jesi.backpack.fn :refer [or-fn]]
-    [io.jesi.backpack.miscellaneous :refer [named? namespaced?]]
-    [clojure.walk :as walk]))
+    [io.jesi.backpack.miscellaneous :refer [named? namespaced?]]))
 
 (defn cljs?
   "Take the &env from a macro, and tell whether we are expanding into CLJS."
@@ -15,29 +14,27 @@
   (boolean (:ns env)))
 
 ;TODO better runtime detection that doesn't require predicates
+;TODO is "runtimes" the correct term? https://clojure.org/guides/reader_conditionals calls them "platforms"
 
 (def runtimes
   "An atom containing the runtime specific predicates. Is an array-map of predicates,
   and their runtime keyword value. The predicate should take a macro `&env` and return a
   boolean. The runtime keyword should be a reader conditional platform tag.
   See https://clojure.org/guides/reader_conditionals"
-  (atom (array-map cljs? :cljs)))
+  (atom (hash-map cljs? :cljs)))
 
-(defn- runtime [env]
+(defn- platform [env]
   (if (keyword? env)
     env
-    (or (->> @runtimes
-             (filter (fn [[pred]]
-                       (pred env)))
-             first
-             second)
-        :default)))
+    (->> @runtimes
+         (filter (fn [[pred]]
+                   (pred env)))
+         first
+         second)))
 
-(defmulti converter "Runtime specific converters"
-  (fn [runtime] runtime))
+(defmulti converter "Platform specific converters" platform :default :-default)
 
-(defmethod converter :cljs [_]
-  ;TODO use (-> &env :ns :ns-aliases) for converting to cljs?
+(defmethod converter :cljs [env]
   ;TODO convert `catch` clause also?
   ;TODO use cljs.analyzer ns?
   (fn ->cljs [sym]
@@ -63,14 +60,20 @@
           (meta sym))
         sym))))
 
-(defmethod converter :default [_]
-  identity)
+(defmethod converter :-default [_]
+  nil)
 
-(defn- symbol [env sym]
+(defn symbol
+  "Takes the target `env` (from `&env` or platform keyword), and a quoted symbol.
+  Transforms the symbol to platform specific symbol.
+
+  `(symbol :cljs 'clojure.core.async)` => `cljs.core.async`"
+  [env sym]
   {:pre [(symbol? sym)
          (namespaced? sym)]}
-  (let [converter (converter (runtime env))]
-    (converter sym)))
+  (if-let [converter (converter env)]
+    (converter sym)
+    sym))
 
 (def ^:private list-walker
   (sp/recursive-path [] l
@@ -82,33 +85,32 @@
        (= "quote" (name fn))))
 
 (defn- convert [converter quoted-form]
-  ;FIXME produces StackOverflow compile errors in jesi-web tests
-  ;(sp/transform [list-walker (sp/if-path quoted? (sp/nthpath 1) sp/FIRST) symbol? namespaced?] converter quoted-form))
-  (walk/postwalk
-    (fn [form]
-      (if-not (or (seq? form)
-                  (list? form))
-        form
-        ;FIXME complete
-        form))
-    quoted-form))
+  ;FIXME throws StackOverflowError for deeply nested forms e.g. jesi-web tests
+  (sp/transform [list-walker (sp/if-path quoted? (sp/nthpath 1) sp/FIRST) symbol? namespaced?] converter quoted-form))
 
 (defn transform*
-  "Transforms the symbols in a quoted form to runtime specific symbols.
-  Takes an `env` (from `&env` or runtime keyword), and a `quoted-form`
-  to be transformed."
+  "Transforms the symbols in a quoted form to platform specific symbols.
+  Takes an `env` (from `&env` or platform keyword), and a `quoted-form`
+  to be transformed.
+
+  WARNING: Will throw StackOverflowError for deeply nested forms
+  Use `io.jesi.backpack.env/symbol` to transform individual symbols"
   [env quoted-form]
   {:pre [(not (symbol? quoted-form))]}
-  (let [converter (converter (runtime env))]
-    (if (identical? identity converter)
+  (let [converter (converter env)]
+    (if (nil? converter)
       quoted-form
       (convert converter quoted-form))))
 
 ;TODO figure how to keep line numbers. macros are removing line numbers, by removing &from metadata
+; use https://github.com/ztellman/riddley ?
 
 (defmacro transform
-  "Transforms the symbols in a quoted form to runtime specific symbols.
+  "Transforms the symbols in a quoted form to platform specific symbols.
   Takes a `quoted-form` to be transformed. Use this in macros.
-  e.g. `(defmacro go [& body] `(env/transform (async/go ~@body)))`"
+  e.g. `(defmacro go [& body] `(env/transform (async/go ~@body)))`
+
+  WARNING: Will throw StackOverflowError for deeply nested forms.
+  Use `io.jesi.backpack.env/symbol` to transform individual symbols"
   ([quoted-form]
    (transform* &env quoted-form)))
