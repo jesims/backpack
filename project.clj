@@ -29,4 +29,5 @@
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
   :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs]
                                                [org.clojure/tools.namespace "0.3.1"]]}]}
-  :clean-targets ^{:protect false} [".shadow-cljs" "out" :target-path])
+  :clean-targets ^{:protect false} [".shadow-cljs" "out" :target-path]
+  :codox {:namespaces [#"^io\.jesi\.backpack\.(?!walk)"]})
