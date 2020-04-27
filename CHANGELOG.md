@@ -1,3 +1,10 @@
+# 5.2.0
+
+Added:
+
+* `io.jesi.backpack.string/->proper-case`
+* `io.jesi.backpack.string/kebab->proper-case`
+
 # 5.1.1
 
 Fix:

@@ -125,3 +125,13 @@
 (def suffix (create-affix str/ends-with? identity))
 
 (def not-blank? (and-fn string? (complement str/blank?)))
+
+(defn ->proper-case [s]
+  (some-> s
+          (str/replace #"\b." #?(:clj  #(.toUpperCase %1)
+                                 :cljs str/upper-case))))
+
+(defn kebab->proper-case [s]
+  (some-> s
+          (str/replace \- \space)
+          (->proper-case)))
