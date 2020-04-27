@@ -3,6 +3,7 @@
 Fix:
 
 * StackOverflowError by not using `env/transform`
+* `go-call` throwing an error if `f` is nil
 
 Added:
 
