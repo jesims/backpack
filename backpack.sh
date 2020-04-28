@@ -52,11 +52,12 @@ test(){
 }
 
 ## test-cljs:
-## args: [-k|-b|-n|-r]
+## args: [-r|--refresh|--watch] [-n|--node|-b|--browser] <focus>
 ## Runs the ClojureScript unit tests using Kaocha
-## [-n] Executes the tests targeting Node.js (Default)
-## [-b] Watches and compiles tests for execution within a browser
-## [-r] Watches tests and source files for changes, and subsequently re-evaluates with karma
+## [-r|--refresh|--watch] Watches tests and source files for changes, and subsequently re-evaluates
+## [-n|--node] Executes the tests targeting Node.js (default)
+## [-b|--browser] Compiles the tests for execution within a browser
+## <focus> Suite/namespace/var to focus on
 test-cljs(){
 	-test-cljs "$@"
 }

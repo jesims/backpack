@@ -128,8 +128,7 @@
 
 (defn ->proper-case [s]
   (some-> s
-          (str/replace #"\b." #?(:clj  #(.toUpperCase %1)
-                                 :cljs str/upper-case))))
+          (str/replace #"\b." str/upper-case)))
 
 (defn kebab->proper-case [s]
   (some-> s
