@@ -47,8 +47,8 @@
   Returns a channel which will receive the result of the body when
   completed"
   [& body]
-  `(env/transform
-     (async/go ~@body)))
+  (let [go (env/symbol &env `async/go)]
+    `(~go ~@body)))
 
 (defn close!
   "Closes a channel. The channel will no longer accept any puts (they
@@ -96,15 +96,17 @@
   [{:keys [retries delay should-retry-fn]
     :or   {retries 5, delay 1, should-retry-fn `ex/exception?}}
    & body]
-  `(env/transform
-     (let [delay# (* ~delay 1000)]
-       (async/go-loop [retries# ~retries]
+  (let [go-loop (env/symbol &env `async/go-loop)
+        <! (env/symbol &env `async/<!)
+        timeout (env/symbol &env `async/timeout)]
+    `(let [delay# (* ~delay 1000)]
+       (~go-loop [retries# ~retries]
          (let [res# (catch->identity ~@body)]
            (if (and (~should-retry-fn res#)
                     (pos? retries#))
              (do
                (when (pos? delay#)
-                 (async/<! (async/timeout delay#)))
+                 (~<! (~timeout delay#)))
                (recur (dec retries#)))
              res#))))))
 
@@ -113,14 +115,15 @@
   "Same as core.async <! but throws an exception if the channel returns a
   throwable object. Also will not crash if channel is nil."
   [ch]
-  `(env/transform
-     (ex/throw-if-throwable
+  (let [<! (env/symbol &env `async/<!)]
+    `(ex/throw-if-throwable
        (when-let [ch# ~ch]
-         (async/<! ch#)))))
+         (~<! ch#)))))
 
 (defmacro go-call
   "Takes a function and a channel. Takes the value of the chanel using `<?` and applies it to `f`.
   Returns a channel which contains the result (or exception)."
   [f chan]
   `(go-try
-     (~f (<? ~chan))))
+     (when ~f
+       (~f (<? ~chan)))))

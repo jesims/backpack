@@ -1,3 +1,16 @@
+# 5.2.1
+
+Fix:
+
+* StackOverflowError by not using `env/transform`
+* `go-call` throwing an error if `f` is nil
+
+Added:
+
+* `io.jesi.backpack.env/symbol`
+* Tests in [shadow-cljs](https://github.com/thheller/shadow-cljs)
+* `./backpack.sh outdated`
+
 # 5.2.0
 
 Added:

@@ -8,12 +8,11 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.7"]]
-  :parent-project {:coords  [io.jesi/parent "3.3.0"]
+  :parent-project {:coords  [io.jesi/parent "3.9.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
-  :managed-dependencies [[io.jesi/backpack "4.2.0"]]        ;TODO use manged version once 5.0 is released
+  :managed-dependencies [[io.jesi/backpack "5.2.0"]]
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
-                 [medley "1.2.0"]
                  [com.taoensso/encore "2.117.0"]
 
                  ;CLJ
@@ -27,6 +26,8 @@
                  [org.clojars.mmb90/cljs-cache "0.1.4"]     ;TODO move to separate cache project
                  [com.cognitect/transit-cljs "0.8.256"]     ;TODO move to separate http project
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
-  :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs "1.0.0-SNAPSHOT"] ;FIXME use managed version
-                                               [org.clojure/tools.namespace "0.3.1"]]}]}
-  :clean-targets ^{:protect false} ["target" ".shadow-cljs"])
+  :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs]
+                                               [org.clojure/tools.namespace "0.3.1"]
+                                               [thheller/shadow-cljs]]}]}
+  :clean-targets ^{:protect false} [".shadow-cljs" ".cljs_node_repl" "out" :target-path]
+  :codox {:namespaces [#"^io\.jesi\.backpack\.(?!walk)"]})

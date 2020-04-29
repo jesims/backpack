@@ -6,37 +6,38 @@ if [ $? -ne 0 ];then
 	exit 1
 fi
 
-shadow-cljs () {
-	lein trampoline run -m shadow.cljs.devtools.cli "$@"
+shadow-cljs(){
+	lein-dev trampoline run -m shadow.cljs.devtools.cli "$@"
 }
 
 ## clean:
 ## Cleans up the compiled and generated sources
-clean () {
+clean(){
 	stop
 	lein-clean
 }
 
 ## lint:
-lint () {
+lint(){
 	-lint
 }
 
 ## deps:
 ## Installs all required dependencies for Clojure and ClojureScript
-deps () {
+deps(){
 	-deps "$@"
 }
 
 ## docs:
 ## Generate api documentation
-docs () {
+docs(){
 	lein-docs
 }
 
 ## stop:
 ## Stops shadow-cljs and karma
-stop () {
+stop(){
+	echo-message 'Stopping'
 	shadow-cljs stop &>/dev/null
 	pkill -f 'karma ' &>/dev/null
 }
@@ -45,58 +46,44 @@ stop () {
 ## args: [-r]
 ## Runs the Clojure unit tests
 ## [-r] Watches tests and source files for changes, and subsequently re-evaluates
-test () {
+test(){
 	echo-message 'In the animal kingdom, the rule is, eat or be eaten.'
 	-test-clj "$@"
 }
 
-unit-test-node () {
-	shadow-cljs compile node
-	abort_on_error 'node tests failed'
-}
-
-unit-test-karma () {
-	shadow-cljs compile karma \
-	&& npx karma start --single-run
-	abort_on_error 'kamra tests failed'
-}
-
-unit-test-browser-refresh () {
-	clean
-	trap stop EXIT
-	open http://localhost:8091/
-	shadow-cljs watch browser
-	abort_on_error
-}
-
-unit-test-cljs-refresh () {
-	clean
-	echo-message 'In a few special places, these clojure changes create some of the greatest transformation spectacles on earth'
-	shadow-cljs watch node
-	abort_on_error
-}
-
 ## test-cljs:
-## args: [-k|-b|-n|-r]
+## args: [-r|--refresh|--watch] [-n|--node|-b|--browser] <focus>
 ## Runs the ClojureScript unit tests using Kaocha
-## [-n] Executes the tests targeting Node.js (Default)
-## [-b] Watches and compiles tests for execution within a browser
-## [-r] Watches tests and source files for changes, and subsequently re-evaluates with karma
-test-cljs () {
+## [-r|--refresh|--watch] Watches tests and source files for changes, and subsequently re-evaluates
+## [-n|--node] Executes the tests targeting Node.js (default)
+## [-b|--browser] Compiles the tests for execution within a browser
+## <focus> Suite/namespace/var to focus on
+test-cljs(){
 	-test-cljs "$@"
+}
+
+## test-shadow:
+## args: [-r] [-k|-n|-b]
+## Runs the ClojureScript unit tests using shadow-cljs and
+## [-r] Watches tests and source files for changes, and subsequently re-evaluates with node
+## [-k] Executes the tests targeting the browser running in karma (default)
+## [-n] Executes the tests targeting Node.js
+## [-b] Watches and compiles tests for execution within a browser
+test-shadow(){
+	-test-shadow-cljs "$@"
 }
 
 ## snapshot:
 ## args: [-l]
 ## Pushes a snapshot to Clojars
 ## [-l] local
-snapshot () {
+snapshot(){
 	-snapshot "$@"
 }
 
 ## release:
 ## Pushes a release to Clojars
-release () {
+release(){
 	-release
 }
 
@@ -110,7 +97,7 @@ compare-file-from-master() {
 	git --no-pager diff --name-only "$branch..origin/master" -- "$1"
 }
 
-check-docs () {
+check-docs(){
 	local changelog_changed
 	changelog_changed=$(compare-file-from-master CHANGELOG.md)
 	abort-on-error
@@ -126,19 +113,24 @@ check-docs () {
 
 ## test-docs:
 ## Checks that the committed api documentation is up to date with the latest code
-test-docs () {
+test-docs(){
 	check-docs
 	docs
 	echo-message 'Verifying animal facts...'
 	require-committed docs
 }
 
-deploy () {
+deploy(){
 	deploy-clojars
 }
 
-deploy-snapshot () {
+deploy-snapshot(){
 	deploy-clojars
+}
+
+## outdated:
+outdated(){
+	-outdated
 }
 
 script-invoke "$@"
