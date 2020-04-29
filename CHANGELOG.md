@@ -7,6 +7,7 @@ Fix:
 
 Added:
 
+* `io.jesi.backpack.env/symbol`
 * Tests in [shadow-cljs](https://github.com/thheller/shadow-cljs)
 * `./backpack.sh outdated`
 
