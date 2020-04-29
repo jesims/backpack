@@ -13,7 +13,6 @@
 karma.conf.js
 node_modules/
 out
-package-dry.json
 package.json
 pom.xml
 project.edn

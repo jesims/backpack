@@ -1,0 +1,8 @@
+{
+  "dry": {
+    "extends": "@io.jesi/parent/package-dry.json",
+    "dependencies": {
+      "@io.jesi/parent": "0.1.0"
+    }
+  }
+}

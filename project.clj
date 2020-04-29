@@ -13,7 +13,6 @@
   :managed-dependencies [[io.jesi/backpack "5.2.0"]]
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
-                 [medley "1.2.0"]
                  [com.taoensso/encore "2.117.0"]
 
                  ;CLJ
