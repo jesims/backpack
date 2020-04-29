@@ -14,29 +14,35 @@
   (boolean (:ns env)))
 
 ;TODO better runtime detection that doesn't require predicates
-;TODO is "runtimes" the correct term? https://clojure.org/guides/reader_conditionals calls them "platforms"
 
-(def runtimes
-  "An atom containing the runtime specific predicates. Is an array-map of predicates,
-  and their runtime keyword value. The predicate should take a macro `&env` and return a
-  boolean. The runtime keyword should be a reader conditional platform tag.
-  See https://clojure.org/guides/reader_conditionals"
+(def platforms
+  "An atom containing the platform specific predicates. Is an map of predicates,
+  and their platform keyword value. The predicate should take a macro `&env` and return a
+  boolean. See https://clojure.org/guides/reader_conditionals for platform keywords."
   (atom (hash-map cljs? :cljs)))
+
+(def ^:deprecated runtimes platforms)
 
 (defn- platform [env]
   (if (keyword? env)
     env
-    (->> @runtimes
-         (filter (fn [[pred]]
-                   (pred env)))
-         first
-         second)))
+    (some->> @platforms
+             (filter (fn [e]
+                       (let [pred (key e)]
+                         (pred env))))
+             first
+             val)))
 
-(defmulti converter "Platform specific converters" platform :default :-default)
+;TODO rename to `->converter`
+(defmulti converter
+  "Platform specific converters.
+  Takes the `env` (from `&env` or platform keyword) and returns a converter function.
+  The converter function takes a symbol and returns the platform specific version of that symbol."
+  platform)
 
 (defmethod converter :cljs [env]
   ;TODO convert `catch` clause also?
-  ;TODO use cljs.analyzer ns?
+  ;TODO make conversion automatic. Use value in `env` or use cljs.analyzer ns
   (fn ->cljs [sym]
     (let [ns (namespace sym)]
       (if (and (str/starts-with? ns "clojure.")
@@ -60,7 +66,7 @@
           (meta sym))
         sym))))
 
-(defmethod converter :-default [_]
+(defmethod converter :default [_]
   nil)
 
 (defn symbol
@@ -98,8 +104,8 @@
   [env quoted-form]
   {:pre [(not (symbol? quoted-form))]}
   (if-let [converter (converter env)]
-      quoted-form
-      (convert converter quoted-form))))
+    (convert converter quoted-form)
+    quoted-form))
 
 ;TODO figure how to keep line numbers. macros are removing line numbers, by removing &from metadata
 ; use https://github.com/ztellman/riddley ?
