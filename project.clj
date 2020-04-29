@@ -23,11 +23,12 @@
                  [com.cognitect/transit-clj "0.8.319"]      ;TODO move to separate http project
 
                  ;CLJS
-                 [thheller/shadow-cljs :scope "provided"]
+                 [org.clojure/clojurescript :scope "provided"]
                  [org.clojars.mmb90/cljs-cache "0.1.4"]     ;TODO move to separate cache project
                  [com.cognitect/transit-cljs "0.8.256"]     ;TODO move to separate http project
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
   :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs]
-                                               [org.clojure/tools.namespace "0.3.1"]]}]}
+                                               [org.clojure/tools.namespace "0.3.1"]
+                                               [thheller/shadow-cljs]]}]}
   :clean-targets ^{:protect false} [".shadow-cljs" ".cljs_node_repl" "out" :target-path]
   :codox {:namespaces [#"^io\.jesi\.backpack\.(?!walk)"]})
