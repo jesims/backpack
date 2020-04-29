@@ -97,8 +97,7 @@
   Use `io.jesi.backpack.env/symbol` to transform individual symbols"
   [env quoted-form]
   {:pre [(not (symbol? quoted-form))]}
-  (let [converter (converter env)]
-    (if (nil? converter)
+  (if-let [converter (converter env)]
       quoted-form
       (convert converter quoted-form))))
 
