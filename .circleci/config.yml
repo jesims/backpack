@@ -153,6 +153,8 @@ workflows:
           requires:
             - test_clj
             - test_cljs
+            - test_karma
+            - test_docs
           filters:
             branches:
               only: master
