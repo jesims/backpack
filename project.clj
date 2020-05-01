@@ -30,4 +30,5 @@
                                                [org.clojure/tools.namespace "0.3.1"]
                                                [thheller/shadow-cljs]]}]}
   :clean-targets ^{:protect false} [".shadow-cljs" ".cljs_node_repl" "out" :target-path]
-  :codox {:namespaces [#"^io\.jesi\.backpack\.(?!walk)"]})
+  :codox {:metadata   {:doc/format :markdown}
+          :namespaces [#"^io\.jesi\.backpack\.(?!walk)"]})
