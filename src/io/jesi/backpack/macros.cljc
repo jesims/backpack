@@ -10,7 +10,16 @@
      (:import
        (clojure.lang IFn))))
 
-(defmacro import-vars [& imports]
+(defmacro import-vars
+  "Imports a all symbols (including various metadata) from one namespace into the current namespace.
+   Supports Clojure and ClojureScript. Similar to https://github.com/ztellman/potemkin
+```clojure
+(import-vars
+  [io.jesi.backpack.collection
+   io.jesi.backpack.fn
+   ...])
+```"
+  [& imports]
   #?(:clj `(do
              ~@(apply concat
                  (for [import imports
@@ -35,10 +44,11 @@
                      (for [var vars
                            :let [sym (symbol var)
                                  name (-> sym name symbol)
-                                 {:keys [doc arglists]
-                                  :or   {doc ""}} (meta var)]]
+                                 {:keys [doc]
+                                  :or   {doc ""}
+                                  :as   sym-meta} (meta var)]]
                        `[(def ~name ~doc ~sym)
-                         (alter-meta! #'~name assoc :arglists '~arglists)])))))))
+                         (alter-meta! #'~name (partial merge (meta #'~sym)))])))))))
 
 (defmacro catch-> [handle & body]
   `(try
@@ -46,40 +56,77 @@
      (catch ~(if (env/cljs? &env) :default `Throwable) ~'ex
        (~handle ~'ex))))
 
-(defmacro catch->identity [& body]
+(defmacro catch->identity
+  "Wraps the `body` in a catch block, returning the result of the `body` or any thrown exception"
+  [& body]
   `(catch-> identity ~@body))
 
-(defmacro catch->nil [& body]
+(defmacro catch->nil
+  "Wraps the `body` in a catch block, returning all thrown exceptions as `nil`"
+  [& body]
   `(catch-> noop ~@body))
 
-(defmacro ns-of [f]
-  `(-> ~f var meta :ns str))
+(defmacro ns-of
+  "Gets the namespace (as string) of the provided symbol"
+  [sym]
+  `(-> ~sym var meta :ns str))
 
-#?(:clj (defn macro? [sym]
+#?(:clj (defn macro?
+          "True if the provided `sym` is a macro"
+          [sym]
           (:macro (meta (find-var sym)))))
 
-(defmacro fn1 [& exprs]
+(defmacro fn1
+  {:deprecated true
+   :no-doc     true}
+  [& exprs]
   `(fn [_#] ~@exprs))
 
-(defmacro fn2 [& exprs]
+(defmacro fn2
+  {:deprecated true
+   :no-doc     true}
+  [& exprs]
   `(fn [_# _#] ~@exprs))
 
-(defmacro fn3 [& exprs]
+(defmacro fn3
+  {:deprecated true
+   :no-doc     true}
+  [& exprs]
   `(fn [_# _# _#] ~@exprs))
 
 (defmacro when-let
+  {:deprecated true
+   :doc        "An enhanced version of `clojure.core/when-let`.
+    Evaluates the body only when **all** bindings are truthy.
+
+    Use http://ptaoussanis.github.io/encore/taoensso.encore.html#var-when-lets instead
+    "}
   ([bindings & body]
    (if (seq bindings)
      `(clojure.core/when-let [~(first bindings) ~(second bindings)]
         (when-let ~(drop 2 bindings) ~@body))
      `(do ~@body))))
 
-(defmacro defkw [kw]
+(defmacro defkw
+  "Defines a symbol as the name of the given keyword in the current namespace"
+  [kw]
   `(def ~(symbol (name kw)) ~kw))
 
 ;TODO this should not be used by cljs
 ; Source https://gist.github.com/Gonzih/5814945
 (defmacro try*
+  "Macro to catch multiple exceptions within a single body
+```clojure
+(try*
+  (condp = x
+    0 (throw (Exception. \"Exception\"))
+    1 (throw (RuntimeException. \"Runtime\"))
+    3 (throw (ArithmeticException. \"Arithmetic\"))
+    \"Not Caught\")
+  (catch ArithmeticException _ \"ArithmeticException\")
+  (catch-any [RuntimeException SecurityException] _ \"Multi\")
+  (catch Exception _ \"Exception\"))))
+```"
   [& body]
   (letfn [(catch-any? [form]
             (and (seq form)
@@ -93,15 +140,25 @@
     (cons 'try (mapcat transform body))))
 
 (defmacro shorthand
-  "returns a map with the keywords from the symbol names"
+  "Returns a map with the keywords from the symbol names"
   [& symbols]
   (into (array-map)
-    (map
-      (fn [sym]
-        [(keyword (name sym)) sym])
-      symbols)))
+        (map
+          (fn [sym]
+            [(keyword (name sym)) sym])
+          symbols)))
 
-(defmacro condf [v & clauses]
+(defmacro condf
+  "Takes a value, and a set of binary predicate clauses.
+For each clause `(clause v)` is evaluated. If it returns logical true, the clause is a match and the result-expr is returned.
+A single default expression can follow the clauses, and its value will be returned if no clause matches.
+```clojure
+(condf {:map 1}
+  map? \"map\"
+  string? \"string\"
+  nil)
+```"
+  [v & clauses]
   `(condp apply [~v]
      ~@clauses))
 

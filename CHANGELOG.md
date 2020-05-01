@@ -1,3 +1,13 @@
+# 5.2.2
+
+Fix:
+
+* `import-vars` brings in depreciation metadata to the namespace
+
+Misc:
+
+* Added docs strings and markdown doc output formatting
+
 # 5.2.1
 
 Fix:
