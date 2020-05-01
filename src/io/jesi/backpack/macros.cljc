@@ -48,7 +48,7 @@
                                   :or   {doc ""}
                                   :as   sym-meta} (meta var)]]
                        `[(def ~name ~doc ~sym)
-                         (alter-meta! #'~name merge (select-keys '~sym-meta [:arglists :deprecated :no-doc]))])))))))
+                         (alter-meta! #'~name merge (meta #'~sym))])))))))
 
 (defmacro catch-> [handle & body]
   `(try
