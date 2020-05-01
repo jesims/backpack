@@ -48,7 +48,7 @@
                                   :or   {doc ""}
                                   :as   sym-meta} (meta var)]]
                        `[(def ~name ~doc ~sym)
-                         (alter-meta! #'~name #(merge (meta #'~sym) %))])))))))
+                         (alter-meta! #'~name (partial merge (meta #'~sym)))])))))))
 
 (defmacro catch-> [handle & body]
   `(try
