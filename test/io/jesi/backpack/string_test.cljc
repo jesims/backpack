@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack :as bp]
+    [io.jesi.backpack.string :refer [c0-control-char-codes c1-control-char-codes]]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [= deftest is is= testing]]))
 
@@ -276,3 +277,16 @@
       (is= "" (bp/kebab->proper-case ""))
       (is= "A Meercat Can Live For 12 14 Years In Captivity"
            (bp/kebab->proper-case "a-meercat-can-live-for-12-14-years-in-captivity")))))
+
+(deftest strip-control-chars-test
+
+  (testing "strip-control-chars"
+
+    (testing "removes invalid control chars from a string"
+      (let [control-chars (->> (concat c0-control-char-codes c1-control-char-codes)
+                               sort
+                               (map char)
+                               (apply str))
+            rand-str (rnd/string 1000)]
+        (is= (str \backspace \tab \newline \formfeed \return (char 133) rand-str)
+             (bp/strip-control-chars (str control-chars rand-str)))))))

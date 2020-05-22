@@ -1,6 +1,7 @@
 (ns io.jesi.backpack.string
   (:refer-clojure :exclude [subs])
   (:require
+    [clojure.set :as set]
     [clojure.string :as str]
     [io.jesi.backpack.fn :refer [and-fn if-fn or-fn]]))
 
@@ -134,3 +135,28 @@
   (some-> s
           (str/replace \- \space)
           (->proper-case)))
+
+(defn- char-code [c]
+  #?(:cljs (.charCodeAt ^String c 0)
+     :clj  (int c)))
+
+(def ^:private valid-control-chars (conj (->> [\newline \tab \formfeed \backspace \return]
+                                              (map char-code)
+                                              set)
+                                     133)); Next Line
+
+(def c0-control-char-codes (range 0 32))
+(def c1-control-char-codes (range 127 160))
+
+(def ^:private invalid-control-chars
+  (-> (concat c0-control-char-codes c1-control-char-codes)
+      set
+      (set/difference valid-control-chars)))
+
+(defn strip-control-chars
+  "Removes C0 and C1 control characters from the provided string excluding:
+  New Line, Tab, Form Feed, Backspace, Return, and Next Line"
+  [^String s]
+  (some->> s
+           (remove (comp invalid-control-chars char-code))
+           (apply str)))

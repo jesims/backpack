@@ -7,8 +7,8 @@
             :url          "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo
             :comments     "same as Clojure"}
-  :plugins [[lein-parent "0.3.7"]]
-  :parent-project {:coords  [io.jesi/parent "3.9.0"]
+  :plugins [[lein-parent "0.3.8"]]
+  :parent-project {:coords  [io.jesi/parent "3.10.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
   :managed-dependencies [[io.jesi/backpack "5.2.0"]]
   :dependencies [[org.clojure/core.async]

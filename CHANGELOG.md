@@ -1,3 +1,9 @@
+# 5.3.0
+
+Added:
+
+* `io.jesi.backpack.string/strip-control-chars`
+
 # 5.2.2
 
 Fix:
