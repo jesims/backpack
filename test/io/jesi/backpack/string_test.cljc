@@ -2,8 +2,8 @@
   (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.string :refer [c0-control-char-codes c1-control-char-codes]]
     [io.jesi.backpack.random :as rnd]
+    [io.jesi.backpack.string :refer [c0-control-char-codes c1-control-char-codes]]
     [io.jesi.customs.strict :refer [= deftest is is= testing]]))
 
 (deftest uuid-str?-test
