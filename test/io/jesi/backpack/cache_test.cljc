@@ -133,3 +133,32 @@
               (reset! captor nil)
               (is= "not found" (get simple-cache :skip "not found"))
               (is= :skip @captor))))))))
+
+(deftest ->Simple-Fn-Cache-test
+
+  (testing "->Simple-Fn-Cache"
+    (let [store (atom {})
+          calls (atom {:miss      0
+                       :cache-get 0
+                       :cache-set 0})
+          [key1 val1] (repeatedly rnd/string)
+          [key2 val2] (repeatedly #(rand-int 2000))
+          impl (cache/->Simple-Fn-Cache {:miss-fn  (fn [key]
+                                                     (swap! calls update :miss inc)
+                                                     (if (= key1 key)
+                                                       val1
+                                                       val2))
+                                         :cache-fn (fn
+                                                     ([key]
+                                                      (swap! calls update :cache-get inc)
+                                                      (get @store key))
+                                                     ([key entry]
+                                                      (swap! calls update :cache-set inc)
+                                                      (swap! store assoc key entry)))})]
+      (doseq [_ (range 10)]
+        (is (= val1 (impl key1)))
+        (is (= val2 (impl key2))))
+      (is= {:miss      2
+            :cache-get 20
+            :cache-set 2}
+           @calls))))

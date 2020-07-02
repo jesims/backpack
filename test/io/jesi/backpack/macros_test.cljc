@@ -3,7 +3,7 @@
   (:require
     [clojure.string :as string]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts fn1 shorthand try* when-debug when-let reify-ifn]]
+    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts fn1 reify-ifn shorthand try* when-debug when-let]]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [= deftest is is= testing use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])

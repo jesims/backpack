@@ -1,8 +1,12 @@
-# 5.2.3
+# 5.3.0
+
+Added:
+
+* `io.jesi.backpack.cache/->Simple-Fn-Cache`
 
 Fix:
 
-* `reify-ifn` no longer invokes protocol implementation with a seq of args. Throws exception if invalid arity during runtime
+* `io.jesi.backpack.macros/reify-ifn` to no longer invokes protocol implementation with a seq of args. Throws exception if invalid arity during runtime
 
 # 5.2.2
 
