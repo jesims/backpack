@@ -72,7 +72,7 @@
 
        (get [_ entry]
          (let [res (volatile! nil)]
-           (swap! cache hit-or-miss res entry (when miss #(apply miss entry)))
+           (swap! cache hit-or-miss res entry (when miss #(miss entry)))
            @res))
 
        (set [_ entry value]
