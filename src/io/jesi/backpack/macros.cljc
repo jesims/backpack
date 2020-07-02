@@ -183,7 +183,8 @@ A single default expression can follow the clauses, and its value will be return
     body))
 
 (defmacro reify-ifn
-  "Defines IFn invoke implementations to call as `(invoke-fn this [args])`"
+  "Defines IFn invoke implementations to call as `(invoke-fn this [args])`.
+  Note: Protocols do not support var args"
   [invoke-fn & more]
   (let [arg (comp symbol (partial str "arg"))
         cljs? (env/cljs? &env)

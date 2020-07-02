@@ -1,3 +1,9 @@
+# 5.2.3
+
+Fix:
+
+* `reify-ifn` no longer invokes protocol implementation with a seq of args. Throws exception if invalid arity during runtime
+
 # 5.2.2
 
 Fix:
