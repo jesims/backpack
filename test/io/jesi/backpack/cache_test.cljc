@@ -68,22 +68,10 @@
                            (Thread/sleep timeout)
                            (f)))))))))
 
-    (testing "can be applied to"
+    (testing "can be applied and invoked to"
       (let [cached-sum (cache/->Simple (cache/create-default) +)]
-        (comment
-          (doseq [v (range 1 #?(:clj  100
-                                :cljs 21))]
-            (let [args (range v)
-                  expected (apply + args)
-                  actual (apply cached-sum args)]
-              (is= expected actual))))
-
-        (testing "can be invoked with many args"
-          ;TODO Would be nice to have a macro, but I can't get it to spread local args (i.e. args defined with let)
-          (comment (defmacro spread [sym args]
-                     (cons sym (eval args))))
-
-          (is= 1 (cached-sum 1)))))
+        (is= 1 (apply cached-sum [1]))
+        (is= 1 (cached-sum 1))))
 
     (testing "without miss fn"
       (let [default {:c 3}
