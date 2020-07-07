@@ -7,6 +7,8 @@ Added:
 Changed:
 
 * `io.jesi.backpack/->uri` now supports CLJS
+* Moved `io.jesi.backpack.miscellaneous/named?` to `io.jesi.backpack.common/named?`
+* Moved `io.jesi.backpack.miscellaneous/namespaced?` to `io.jesi.backpack.common/namespaced?`
 * Deprecated `io.jesi.backpack/json->clj`
 * Deprecated `io.jesi.backpack/clj->json`
 * Deprecated `io.jesi.backpack/transit->clj`
