@@ -143,10 +143,10 @@
   "Returns a map with the keywords from the symbol names"
   [& symbols]
   (into (array-map)
-        (map
-          (fn [sym]
-            [(keyword (name sym)) sym])
-          symbols)))
+    (map
+      (fn [sym]
+        [(keyword (name sym)) sym])
+      symbols)))
 
 (defmacro condf
   "Takes a value, and a set of binary predicate clauses.
@@ -183,7 +183,8 @@ A single default expression can follow the clauses, and its value will be return
     body))
 
 (defmacro reify-ifn
-  "Defines IFn invoke implementations to call as `(invoke-fn this [args])`"
+  "Defines IFn invoke implementations to call as `(invoke-fn this [args])`.
+  Note: Protocols do not support var args"
   [invoke-fn & more]
   (let [arg (comp symbol (partial str "arg"))
         cljs? (env/cljs? &env)
@@ -195,7 +196,7 @@ A single default expression can follow the clauses, and its value will be return
                 ~@(for [arity (range 1 21)
                         :let [args (mapv arg (range arity))]]
                     `(~sym [this# ~@args]
-                       (~invoke-fn this# ~args)))
+                       (apply ~invoke-fn this# ~args)))
                 ~(let [args (mapv arg (range 1 21))]
                    (if cljs?
                      ; ShadowCLJS warns if using & to define more. But more than 20 args can be used
@@ -206,16 +207,16 @@ A single default expression can follow the clauses, and its value will be return
                      ; - https://github.com/reagent-project/reagent/issues/358
                      ; - https://clojure.atlassian.net/browse/CLJS-2710
                      `(~sym [this# ~@args more#]
-                        (if (seq? more#)
-                          (~invoke-fn this# (list* ~@args more#))
-                          (~invoke-fn this# (concat ~args (list more#)))))
+                        (apply ~invoke-fn this# (concat ~args (if (seq? more#)
+                                                                more#
+                                                                (list more#)))))
                      `(~sym [this# ~@args more#]
-                        (~invoke-fn this# (list* ~@args more#))))))]
+                        (apply ~invoke-fn this# (concat ~args more#))))))]
     (if cljs?
       code
       (concat code `(
                      (applyTo [this# args#]
-                       (~invoke-fn this# args#)))))))
+                       (apply ~invoke-fn this# args#)))))))
 
 (defn- private [sym]
   (vary-meta sym assoc :private true))

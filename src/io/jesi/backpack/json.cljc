@@ -7,13 +7,15 @@
     #?(:cljs [io.jesi.backpack.clojurescript :refer [clj->js js->clj]])
     [io.jesi.backpack.string :refer [->camelCase ->kebab-case-key]]))
 
-(defn clj->json
+(defn ^:deprecated clj->json
+  "DEPRECATED: Use exchange project"
   ([o] (clj->json o ->camelCase))
   ([o key-fn]
    #?(:cljs (js/JSON.stringify (clj->js o key-fn))
       :clj  (generate-string o (shorthand key-fn)))))
 
-(defn json->clj
+(defn ^:deprecated json->clj
+  "DEPRECATED: Use exchange project"
   ([s] (json->clj s ->kebab-case-key))
   ([s key-fn]
    #?(:cljs (when-not (str/blank? s)

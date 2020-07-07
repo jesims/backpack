@@ -26,10 +26,14 @@
                  (transit/reader type)
                  (transit/read)))))
 
-(defn clj->transit [o]
+(defn ^:deprecated clj->transit
+  "DEPRECATED: Use exchange project"
+  [o]
   #?(:clj  (->transit o :json)
      :cljs (transit/write transit-writer o)))
 
-(defn transit->clj [s]
+(defn ^:deprecated transit->clj
+  "DEPRECATED: Use exchange project"
+  [s]
   #?(:clj  (->clj s :json)
      :cljs (transit/read transit-reader s)))

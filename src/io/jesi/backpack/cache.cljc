@@ -4,6 +4,7 @@
   (:require
     #?(:clj  [clojure.core.cache :as cache]
        :cljs [cljs.cache :as cache :refer [CacheProtocol]])
+    [io.jesi.backpack.fn :refer [noop]]
     [io.jesi.backpack.macros :refer [reify-ifn]])
   #?(:clj
      (:import
@@ -72,7 +73,7 @@
 
        (get [_ entry]
          (let [res (volatile! nil)]
-           (swap! cache hit-or-miss res entry (when miss #(apply miss entry)))
+           (swap! cache hit-or-miss res entry (when miss #(miss entry)))
            @res))
 
        (set [_ entry value]
@@ -97,3 +98,35 @@
                   (or (get this entry) not-found))
           :clj  (valAt [this entry not-found]
                   (or (get this entry) not-found)))))))
+
+(defn ->Simple-Fn-Cache
+  "Constructs a function-backed `SimpleCache`. The `miss` function will be invoked with the entry to determine
+  and set the value if not found. Implements IFn as an alternative to invoking `SimpleCache/get`"
+  [{:keys [key-fn cache-fn miss-fn evict-fn reset-fn]
+    :or   {key-fn identity}}]
+  (let [key-fn (or key-fn identity)
+        evict-fn (or evict-fn noop)
+        reset-fn (or reset-fn noop)]
+    (reify-ifn
+      get
+      SimpleCache
+
+      (get [this entry]
+        (let [key (key-fn entry)]
+          (if-some [match (cache-fn key)]
+            match
+            (let [result (miss-fn entry)]
+              (set this entry result)
+              result))))
+
+      (set [_ entry value]
+        (cache-fn (key-fn entry) value)
+        value)
+
+      (evict [_ entry]
+        (evict-fn entry)
+        nil)
+
+      (reset [_]
+        (reset-fn)
+        nil))))

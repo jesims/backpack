@@ -3,11 +3,12 @@
   (:require
     [clojure.string :as string]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts fn1 shorthand try* when-debug when-let]]
+    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts fn1 reify-ifn shorthand try* when-debug when-let]]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [= deftest is is= testing use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])
   #?(:clj (:import
+            (clojure.lang ArityException)
             (java.lang ArithmeticException SecurityException))))
 
 (defn- set-debug [v]
@@ -222,3 +223,69 @@
              (is= val @v))
            :cljs
            (is= val v))))))
+
+;Note: Protocols do not support var args
+(defprotocol MultiArity
+  (invoked
+    [this arg1]
+    [this arg1 arg2]
+    [this arg1 arg2 arg3]
+    [this arg1 arg2 arg3 arg4]
+    ;Note, can't specify more than 20 params
+    [this arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9 arg10 arg11 arg12 arg13 arg14 arg15 arg16 arg17 arg18 arg19]))
+
+(deftest reify-ifn-test
+
+  (testing "reify-ifn"
+
+    (testing "varied arity"
+      (let [impl (reify-ifn
+                   invoked
+                   MultiArity
+                   (invoked [_ arg1]
+                     arg1)
+                   (invoked [_ arg1 arg2]
+                     (+ arg1 arg2))
+                   (invoked [_ arg1 arg2 arg3]
+                     (+ arg1 arg2 arg3))
+                   (invoked [_ arg1 arg2 arg3 arg4]
+                     (+ arg1 arg2 arg3 arg4))
+                   (invoked [this arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9 arg10 arg11 arg12 arg13 arg14 arg15 arg16 arg17 arg18 arg19]
+                     (+ arg1 arg2 arg3 arg4 arg4 arg5 arg6 arg7 arg8 arg9 arg10 arg11 arg12 arg13 arg14 arg15 arg16 arg17 arg18)))]
+
+        (testing "can be invoked/applied with many args"
+          (is= 1 (impl 1))
+          (is= 1 (apply impl [1]))
+          (is= 2 (impl 1 1))
+          (is= 2 (apply impl [1 1]))
+          (is= 3 (impl 1 1 1))
+          (is= 3 (apply impl [1 1 1]))
+          (is= 4 (impl 1 1 1 1))
+          (is= 4 (apply impl [1 1 1 1]))
+          (is= 19 (impl 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1))
+          (is= 19 (apply impl [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1])))
+
+        (testing "invoking with unknown arity throws exception"
+          (is (thrown? #?(:clj ArityException :cljs js/Error) (impl 1 1 1 1 1))))
+
+        (testing "applying with unknown arity throws exception"
+          (is (thrown? #?(:clj ArityException :cljs js/Error) (apply impl (range 100)))))))
+
+    (testing "calls any other defined pure? symbol. But why would you?"
+      (let [invoke-me (fn [_this_ & args]
+                        (apply + args))
+            impl (reify-ifn invoke-me)]
+
+        (testing "can be invoked/applied with many args"
+          (is= 1 (impl 1))
+          (is= 2 (impl 1 1))
+          (is= 3 (impl 1 1 1))
+          (is= 4 (impl 1 1 1 1))
+          (is= 19 (impl 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1)))
+
+        (doseq [v (range 1 #?(:clj  100
+                              :cljs 21))]
+          (let [args (range v)
+                expected (apply + args)
+                actual (apply impl args)]
+            (is= expected actual)))))))

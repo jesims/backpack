@@ -80,7 +80,7 @@
     [(remove-exponential-chance lng)
      (remove-exponential-chance lat)]))
 
-;Todo: Feels hackish
+;TODO: Feels hackish
 (defn- fmt [val]
   (-> (format "%.8f" val)
       (str/replace #"0+$" "")                            ; Removes trailing zeros
