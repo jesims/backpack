@@ -5,7 +5,7 @@
     [clojure.string :as str]
     [com.rpl.specter :as sp]
     [io.jesi.backpack.fn :refer [or-fn]]
-    [io.jesi.backpack.miscellaneous :refer [named? namespaced?]]))
+    [io.jesi.backpack.common :refer [named? namespaced?]]))
 
 (defn cljs?
   "Take the &env from a macro, and tell whether we are expanding into CLJS."

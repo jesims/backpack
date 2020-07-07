@@ -4,8 +4,10 @@
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [= are deftest is is= testing]])
-  #?(:clj (:import
-            (clojure.lang Named))))
+  #?(:clj
+     (:import
+       (java.net URI)
+       (clojure.lang Named))))
 
 (deftest ->uuid-test
   (testing "Converts the first parameter to a UUID object, or returns ::s/invalid"
@@ -74,3 +76,24 @@
         1
         {}
         []))))
+
+(deftest ->uri-test
+
+  (testing "Converts URI and strings into URI objects"
+    (let [uri "https://www.thefactsite.com/2010/09/300-random-animal-facts.html"
+          expected #?(:clj (new URI uri)
+                      :cljs (goog.Uri. uri))]
+      (is (uri? expected))
+      #?(:clj  (do
+                 (is= expected (bp/->uri expected))
+                 (is= expected (bp/->uri uri))
+                 (is (identical? expected (bp/->uri expected))))
+         :cljs (is= uri
+                    (-> uri bp/->uri str)
+                    (-> expected str)
+                    (-> expected bp/->uri str)))
+      (is (uri? (bp/->uri "asdf")))))
+
+  (testing "Returns nil if the URI is invalid"
+    (is (nil? (bp/->uri 123)))
+    (is (nil? (bp/->uri true)))))

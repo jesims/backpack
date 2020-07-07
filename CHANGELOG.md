@@ -4,6 +4,14 @@ Added:
 
 * `io.jesi.backpack.cache/->Simple-Fn-Cache`
 
+Changed:
+
+* `io.jesi.backpack/->uri` now supports CLJS
+* Deprecated `io.jesi.backpack/json->clj`
+* Deprecated `io.jesi.backpack/clj->json`
+* Deprecated `io.jesi.backpack/transit->clj`
+* Deprecated `io.jesi.backpack/clj->transit`
+
 Fix:
 
 * `io.jesi.backpack.macros/reify-ifn` to no longer invokes protocol implementation with a seq of args. Throws exception if invalid arity during runtime
