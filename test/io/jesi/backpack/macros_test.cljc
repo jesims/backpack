@@ -8,6 +8,7 @@
     [io.jesi.customs.strict :refer [= deftest is is= testing use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])
   #?(:clj (:import
+            (clojure.lang ArityException)
             (java.lang ArithmeticException SecurityException))))
 
 (defn- set-debug [v]
@@ -265,20 +266,10 @@
           (is= 19 (apply impl [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1])))
 
         (testing "invoking with unknown arity throws exception"
-          (try
-            (impl 1 1 1 1 1)
-            (is false)
-            (catch #?(:clj  Exception
-                      :cljs :default) _
-              (is true))))
+          (is (thrown? #?(:clj ArityException :cljs js/Error) (impl 1 1 1 1 1))))
 
         (testing "applying with unknown arity throws exception"
-          (try
-            (apply impl (range 100))
-            (is false)
-            (catch #?(:clj  Exception
-                      :cljs :default) _
-              (is true))))))
+          (is (thrown? #?(:clj ArityException :cljs js/Error) (apply impl (range 100)))))))
 
     (testing "calls any other defined pure? symbol. But why would you?"
       (let [invoke-me (fn [_this_ & args]
