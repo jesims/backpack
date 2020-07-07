@@ -6,8 +6,8 @@
     [io.jesi.customs.strict :refer [= are deftest is is= testing]])
   #?(:clj
      (:import
-       (java.net URI)
-       (clojure.lang Named))))
+       (clojure.lang Named)
+       (java.net URI))))
 
 (deftest ->uuid-test
   (testing "Converts the first parameter to a UUID object, or returns ::s/invalid"

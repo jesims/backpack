@@ -1,11 +1,11 @@
 (ns io.jesi.backpack.miscellaneous
   (:refer-clojure :exclude [assoc-in])
   (:require
+    #?(:cljs [goog.Uri :as uri])
     [clojure.pprint :as pprint]
     [io.jesi.backpack.fn :refer [call]]
     [io.jesi.backpack.macros :refer [catch->nil]]
-    [io.jesi.backpack.string :refer [uuid-str?]]
-    #?(:cljs [goog.Uri :as uri]))
+    [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
      (:import
        (java.net URI)

@@ -4,8 +4,8 @@
   (:require
     [clojure.string :as str]
     [com.rpl.specter :as sp]
-    [io.jesi.backpack.fn :refer [or-fn]]
-    [io.jesi.backpack.common :refer [named? namespaced?]]))
+    [io.jesi.backpack.common :refer [named? namespaced?]]
+    [io.jesi.backpack.fn :refer [or-fn]]))
 
 (defn cljs?
   "Take the &env from a macro, and tell whether we are expanding into CLJS."
