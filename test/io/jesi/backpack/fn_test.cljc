@@ -186,9 +186,8 @@
   (testing "->comparator"
 
     (testing "returns comparator"
-      ;FIXME ask andre why this doesn't compile
       (let [order-comparator (bp/->comparator :order)]
-        (is (= -1 ((bp/->comparator :order) {:order 1} {:order 2})))
+        (is= -1 (order-comparator {:order 1} {:order 2}))
         (is= 1 (order-comparator {:order 2} {:order 1}))
         (is= 0 (order-comparator {:order 1} {:order 1}))))))
 
