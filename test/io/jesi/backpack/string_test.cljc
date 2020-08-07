@@ -259,8 +259,21 @@
 
     (testing "returns"
 
-      (testing "nil when cannot find split"
-        (is (nil? (bp/split-at-first "-" "I am intoxicated by animals."))))
+      (testing "nil when given"
+        (let [assert-args (fn [test-val]
+                            (is (nil? (bp/split-at-first test-val "I am intoxicated by animals.")))
+                            (is (nil? (bp/split-at-first "I am intoxicated by animals." test-val)))
+                            (is (nil? (bp/split-at-first test-val test-val))))]
+
+          (testing "empty string delimiter"
+            (assert-args ""))
+
+          (testing "nil"
+            (assert-args nil))
+
+          (testing "non-existent delimiter"
+            (is (nil? (bp/split-at-first "--" "I am intoxicated by animals.")))
+            (is (nil? (bp/split-at-first "I am intoxicated by animals." "--"))))))
 
       (testing "a vector of strings split before and after the first occurrence of"
         (let [assert-delimiter (fn [delimiter]
