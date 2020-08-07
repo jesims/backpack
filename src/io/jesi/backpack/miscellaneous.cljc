@@ -30,6 +30,7 @@
 (defn ->uuid-or-not [id]
   (or (->uuid id) id))
 
+;TODO move to collection
 (defn collify
   "Puts value `v` in a vector if it is not a collection. Returns `nil` if no value"
   ([] nil)

@@ -1,3 +1,11 @@
+# 5.3.1
+
+Added:
+
+FIXME: add comparator changelog notes
+* `io.jesi.backpack.string/split-at-first`
+
+
 # 5.3.0
 
 Added:

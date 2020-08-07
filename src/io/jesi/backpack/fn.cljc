@@ -102,3 +102,9 @@
        and returns true if ANY individual predicates return true, else return false."}
   or-fn
   (partial apply-predicates (comp boolean some)))
+
+(defn ->comparator
+  "Returns a comparator where values returing from a value function are compared against"
+  [val-fn]
+  (fn [x y]
+    (compare (val-fn x) (val-fn y))))
