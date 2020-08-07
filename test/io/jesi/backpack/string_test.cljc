@@ -253,6 +253,30 @@
           (is= "Repti"
                (bp/subs s nil 5)))))))
 
+(deftest split-at-first-test
+
+  (testing "split-at-first"
+
+    (testing "returns"
+
+      (testing "nil when cannot find split"
+        (is (nil? (bp/split-at-first "-" "I am intoxicated by animals."))))
+
+      (testing "a vector of strings split before and after the first occurrence of"
+        (let [assert-delimiter (fn [delimiter]
+                                 (let [expected-first "I don't run a car"
+                                       expected-second (str "have never run a car. I could say that this is because I have this extremely tender environmentalist conscience" delimiter " but the fact is I hate driving.")
+                                       result (bp/split-at-first delimiter (str expected-first delimiter expected-second))]
+                                   (is= expected-first (first result))
+                                   (is= expected-second (second result))))]
+
+          (testing "a single value"
+            (assert-delimiter ","))
+
+          (testing "multiple values"
+            (assert-delimiter "--")))))))
+
+
 (deftest ->proper-case-test
 
   (testing "->proper-case"
