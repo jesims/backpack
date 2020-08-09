@@ -2,9 +2,9 @@
 
 Added:
 
-FIXME: add comparator changelog notes
 * `io.jesi.backpack.string/split-at-first`
-
+* `io.jesi.backpack.fn/any?`
+* `io.jesi.backpack.fn/->comparator`
 
 # 5.3.0
 
