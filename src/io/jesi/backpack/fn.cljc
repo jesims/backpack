@@ -1,4 +1,5 @@
 (ns io.jesi.backpack.fn
+  (:refer-clojure :exclude [any?])
   #?(:cljs
      (:require [cljs.core :refer [IDeref]])
      :clj
@@ -104,7 +105,10 @@
   (partial apply-predicates (comp boolean some)))
 
 (defn ->comparator
-  "Returns a comparator where values returing from a value function are compared against"
+  "Returns a comparator where values returning from a value function are compared against"
   [val-fn]
   (fn [x y]
     (compare (val-fn x) (val-fn y))))
+
+(def any? (complement not-any?))
+
