@@ -110,5 +110,7 @@
   (fn [x y]
     (compare (val-fn x) (val-fn y))))
 
-(def any? (complement not-any?))
+(def any? ^{:arglists '([pred coll])
+            :doc      "Returns true if any item in coll passes predicate pred"}
+  (complement not-any?))
 
