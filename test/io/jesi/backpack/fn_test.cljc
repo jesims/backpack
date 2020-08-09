@@ -191,3 +191,17 @@
         (is= 1 (order-comparator {:order 2} {:order 1}))
         (is= 0 (order-comparator {:order 1} {:order 1}))))))
 
+(deftest ^:focus any?-test
+
+  (testing "any?"
+
+    (testing "is a function"
+      (is (fn? bp/any?)))
+
+    (testing "returns"
+
+      (testing "true if any item in collection matches returns true"
+        (is (true? (bp/any? odd? [2 2 1]))))
+
+      (testing "false if any item in collection returns false"
+        (is (false? (bp/any? odd? [2 2 2])))))))

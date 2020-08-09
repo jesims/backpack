@@ -110,6 +110,7 @@
   (fn [x y]
     (compare (val-fn x) (val-fn y))))
 
+;A logical form of clojure.core/any?
 (def any? ^{:arglists '([pred coll])
             :doc      "Returns true if any item in coll passes predicate pred"}
   (complement not-any?))
