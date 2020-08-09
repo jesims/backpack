@@ -200,8 +200,8 @@
 
     (testing "returns"
 
-      (testing "true if any item in collection matches returns true"
+      (testing "true if any item in collection returns true for pred"
         (is (true? (bp/any? odd? [2 2 1]))))
 
-      (testing "false if any item in collection returns false"
+      (testing "false if any item in collection returns false for pred"
         (is (false? (bp/any? odd? [2 2 2])))))))
