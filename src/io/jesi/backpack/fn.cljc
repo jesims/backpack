@@ -111,7 +111,7 @@
     (compare (val-fn x) (val-fn y))))
 
 (def ^{:arglists '([pred coll])
-       :doc      "Returns true if any item in coll returns true for pred"}
+       :doc      "Returns true if any item in coll returns true for pred, otherwise false"}
   any?
   (comp boolean some))
 
