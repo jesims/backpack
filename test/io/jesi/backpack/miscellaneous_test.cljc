@@ -31,8 +31,6 @@
     (let [id "just a string"]
       (is= id (bp/->uuid-or-not id)))))
 
-
-
 (deftest named?-test
 
   (testing "named?"
