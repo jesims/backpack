@@ -138,9 +138,12 @@
 (defn split-at-first
   "Splits s at the first occurrence of value"
   [value s]
-  (when (and (not-blank? value) (not-blank? s))
-    (when-let [idx (str/index-of s value)]
-      (let [val-length (count value)
-            before-split (subs s 0 idx)
-            after-split (subs s (+ idx val-length))]
-        [before-split after-split]))))
+  (cond
+    (str/blank? s) []
+    (str/blank? value) [s]
+    :else (if-let [idx (str/index-of s value)]
+            (let [val-length (count value)
+                  before-split (subs s 0 idx)
+                  after-split (subs s (+ idx val-length))]
+              [before-split after-split])
+            [s])))

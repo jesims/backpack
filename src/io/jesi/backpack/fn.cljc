@@ -114,4 +114,3 @@
        :doc      "Returns true if any item in coll returns true for pred, otherwise false"}
   any?
   (comp boolean some))
-

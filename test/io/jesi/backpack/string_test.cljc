@@ -259,22 +259,19 @@
 
     (testing "returns"
 
-      (testing "nil when given"
+      (testing "empty vector when no string"
+        (is= [] (bp/split-at-first "" ""))
+        (is= [] (bp/split-at-first "" nil)))
+
+      (testing "string as first arg when given"
         (let [quote "I am intoxicated by animals."
-              assert-args (fn [test-val]
-                            (is (nil? (bp/split-at-first test-val quote)))
-                            (is (nil? (bp/split-at-first quote test-val)))
-                            (is (nil? (bp/split-at-first test-val test-val))))]
+              expected-no-split-found [quote]]
 
-          (testing "empty string delimiter"
-            (assert-args ""))
+          (testing "blank string to split on"
+            (is= expected-no-split-found (bp/split-at-first "" quote)))
 
-          (testing "nil"
-            (assert-args nil))
-
-          (testing "non-existent delimiter"
-            (is (nil? (bp/split-at-first "--" quote)))
-            (is (nil? (bp/split-at-first quote "--"))))))
+          (testing "non-existent idx"
+            (is= expected-no-split-found (bp/split-at-first "--" quote)))))
 
       (testing "a vector of strings split before and after the first occurrence of"
         (let [assert-delimiter (fn [delimiter]
@@ -289,7 +286,6 @@
 
           (testing "multiple values"
             (assert-delimiter "--")))))))
-
 
 (deftest ->proper-case-test
 
