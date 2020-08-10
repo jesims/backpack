@@ -191,7 +191,7 @@
         (is= 1 (order-comparator {:order 2} {:order 1}))
         (is= 0 (order-comparator {:order 1} {:order 1}))))))
 
-(deftest ^:focus any?-test
+(deftest any?-test
 
   (testing "any?"
 
