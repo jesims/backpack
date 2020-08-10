@@ -113,5 +113,5 @@
 (def ^{:arglists '([pred coll])
        :doc      "Returns true if any item in coll returns true for pred"}
   any?
-  (complement not-any?))
+  (comp boolean some))
 
