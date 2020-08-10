@@ -4,6 +4,7 @@
     [clojure.core :as clj]
     [clojure.walk :refer [postwalk prewalk]]
     [com.rpl.specter :as sp]
+    [io.jesi.backpack.fn :refer [call]]
     [io.jesi.backpack.specter :refer [path-walker]])
   (:import
     #?(:clj (java.util Map))))
