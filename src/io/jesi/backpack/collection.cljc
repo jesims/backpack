@@ -348,3 +348,12 @@
   "Selects all values from a map using specified keys. Missing keys return nil"
   [m ks]
   (map (partial get m) ks))
+
+(defn collify
+  "Puts value `v` in a vector if it is not a collection. Returns `nil` if no value"
+  ([] nil)
+  ([v]
+   (condp call v
+     nil? nil
+     coll? v
+     [v])))
