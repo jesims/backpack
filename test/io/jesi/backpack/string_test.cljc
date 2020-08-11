@@ -259,9 +259,10 @@
 
     (testing "returns"
 
-      (testing "empty vector when no string"
-        (is= [] (bp/split-at-first "" ""))
-        (is= [] (bp/split-at-first "" nil)))
+      (testing "nil when empty value"
+        (is (nil? (bp/split-at-first "" "")))
+        (is (nil? (bp/split-at-first "" nil)))
+        (is (nil? (bp/split-at-first nil nil))))
 
       (testing "string as first arg when given"
         (let [quote "I am intoxicated by animals."

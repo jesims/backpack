@@ -136,11 +136,11 @@
           (->proper-case)))
 
 (defn split-at-first
-  "Splits s at the first occurrence of value"
+  "Splits s at the first occurrence of value, returns nil when empty argument s"
   [value s]
   (let [value (str value)]
     (cond
-      (empty? s) []
+      (empty? s) nil
       (empty? value) [s]
       :else (if-let [idx (str/index-of s value)]
                 (let [val-length (count value)
