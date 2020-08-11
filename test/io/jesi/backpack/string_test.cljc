@@ -267,7 +267,7 @@
         (let [quote "I am intoxicated by animals."
               expected-no-split-found [quote]]
 
-          (testing "blank string to split on"
+          (testing "empty string to split on"
             (is= expected-no-split-found (bp/split-at-first "" quote)))
 
           (testing "non-existent idx"
@@ -287,15 +287,21 @@
           (testing "multiple values"
             (assert-delimiter "--"))
 
-          (testing "blank string"
+          (testing "blank"
             (let [quote "I've been bitten by a python. It wasn't a very big one..."
                   expected-split-at-first-space ["I've" "been bitten by a python. It wasn't a very big one..."]]
-              (is= expected-split-at-first-space
-                   (bp/split-at-first " " quote))
-              (is= expected-split-at-first-space
-                   (bp/split-at-first \space quote))
-              (is= [quote]
-                   (bp/split-at-first "  " quote)))))))))
+
+              (testing "string"
+                (is= expected-split-at-first-space
+                     (bp/split-at-first " " quote)))
+
+              (testing "char"
+                (is= expected-split-at-first-space
+                     (bp/split-at-first \space quote)))
+
+              (testing "multiple whitespace"
+                (is= [quote]
+                     (bp/split-at-first "  " quote))))))))))
 
 (deftest ->proper-case-test
 
