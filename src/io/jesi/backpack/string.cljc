@@ -143,8 +143,8 @@
       (empty? s) nil
       (empty? value) [s]
       :else (if-let [idx (str/index-of s value)]
-                (let [val-length (count value)
-                      before-split (subs s 0 idx)
-                      after-split (subs s (+ idx val-length))]
-                  [before-split after-split])
-                [s]))))
+              (let [val-length (count value)
+                    before-split (subs s 0 idx)
+                    after-split (subs s (+ idx val-length))]
+                [before-split after-split])
+              [s]))))

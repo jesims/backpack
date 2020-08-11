@@ -282,8 +282,13 @@
                                    (is= expected-first (first result))
                                    (is= expected-second (second result))))]
 
-          (testing "a single value"
-            (assert-delimiter ","))
+          (testing "a single value that is"
+
+            (testing "not the delimiter"
+              (assert-delimiter ","))
+
+            (testing "the delimiter"
+              (is= [""] (bp/split-at-first "," ","))))
 
           (testing "multiple values"
             (assert-delimiter "--"))
