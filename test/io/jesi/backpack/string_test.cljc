@@ -285,7 +285,17 @@
             (assert-delimiter ","))
 
           (testing "multiple values"
-            (assert-delimiter "--")))))))
+            (assert-delimiter "--"))
+
+          (testing "blank string"
+            (let [quote "I've been bitten by a python. It wasn't a very big one..."
+                  expected-split-at-first-space ["I've" "been bitten by a python. It wasn't a very big one..."]]
+              (is= expected-split-at-first-space
+                   (bp/split-at-first " " quote))
+              (is= expected-split-at-first-space
+                   (bp/split-at-first \space quote))
+              (is= [quote]
+                   (bp/split-at-first "  " quote)))))))))
 
 (deftest ->proper-case-test
 
