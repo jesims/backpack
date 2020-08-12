@@ -136,7 +136,7 @@
           (->proper-case)))
 
 (defn split-at-first
-  "Splits s at the first occurrence of value, returns nil when empty argument s"
+  "Splits s at the first occurrence of value, returns nil when s is empty"
   [value s]
   (let [value (str value)]
     (cond
