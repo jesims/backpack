@@ -1,5 +1,5 @@
 (ns io.jesi.backpack
-  (:refer-clojure :exclude [assoc-in clj->js conj! js->clj mod sorted? subs])
+  (:refer-clojure :exclude [any? assoc-in clj->js conj! js->clj mod sorted? subs])
   (:require
     #?(:clj  [io.jesi.backpack.clojure]
        :cljs [io.jesi.backpack.clojurescript])

@@ -1,4 +1,5 @@
 (ns io.jesi.backpack.fn
+  (:refer-clojure :exclude [any?])
   #?(:cljs
      (:require [cljs.core :refer [IDeref]])
      :clj
@@ -102,3 +103,14 @@
        and returns true if ANY individual predicates return true, else return false."}
   or-fn
   (partial apply-predicates (comp boolean some)))
+
+(defn ->comparator
+  "Returns a comparator where values returning from a value function are compared against"
+  [val-fn]
+  (fn [x y]
+    (compare (val-fn x) (val-fn y))))
+
+(def ^{:arglists '([pred coll])
+       :doc      "Returns true if any item in coll returns true for pred, otherwise false"}
+  any?
+  (comp boolean some))

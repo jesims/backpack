@@ -1,3 +1,15 @@
+# 6.0.0
+
+Added:
+
+* `io.jesi.backpack.string/split-at-first`
+* `io.jesi.backpack.fn/any?`
+* `io.jesi.backpack.fn/->comparator`
+
+Changed:
+
+* Moved `io.jesi.backpack.miscellaneous/collify` to `io.jesi.backpack.collection/collify`
+
 # 5.3.0
 
 Added:

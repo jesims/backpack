@@ -3,7 +3,6 @@
   (:require
     #?(:cljs [goog.Uri :as uri])
     [clojure.pprint :as pprint]
-    [io.jesi.backpack.fn :refer [call]]
     [io.jesi.backpack.macros :refer [catch->nil]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
@@ -29,15 +28,6 @@
 
 (defn ->uuid-or-not [id]
   (or (->uuid id) id))
-
-(defn collify
-  "Puts value `v` in a vector if it is not a collection. Returns `nil` if no value"
-  ([] nil)
-  ([v]
-   (condp call v
-     nil? nil
-     coll? v
-     [v])))
 
 (defn pprint-str [object]
   (pprint/write object

@@ -180,3 +180,24 @@
       (testing "that short circuits if any return true"
         (let [actual (bp/or-fn odd? even? #(throw (ex-info "I am thrown" {})))]
           (is (true? (actual 1))))))))
+
+(deftest ->comparator-test
+
+  (testing "->comparator"
+
+    (testing "returns comparator"
+      (let [order-comparator (bp/->comparator :order)]
+        (is= -1 (order-comparator {:order 1} {:order 2}))
+        (is= 1 (order-comparator {:order 2} {:order 1}))
+        (is= 0 (order-comparator {:order 1} {:order 1}))))))
+
+(deftest any?-test
+
+    (testing "is a function"
+      (is (fn? bp/any?)))
+
+    (testing "true if any item in collection returns true for pred"
+      (is (true? (bp/any? odd? [2 2 1]))))
+
+    (testing "false if any item in collection returns false for pred"
+      (is (false? (bp/any? odd? [2 2 2])))))

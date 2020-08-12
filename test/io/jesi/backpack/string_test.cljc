@@ -253,6 +253,63 @@
           (is= "Repti"
                (bp/subs s nil 5)))))))
 
+(deftest split-at-first-test
+
+  (testing "split-at-first"
+
+    (testing "returns"
+
+      (testing "nil when empty value"
+        (is (nil? (bp/split-at-first "" "")))
+        (is (nil? (bp/split-at-first "" nil)))
+        (is (nil? (bp/split-at-first nil nil))))
+
+      (testing "string as first arg when given"
+        (let [quote "I am intoxicated by animals."
+              expected-no-split-found [quote]]
+
+          (testing "empty string to split on"
+            (is= expected-no-split-found (bp/split-at-first "" quote)))
+
+          (testing "non-existent delimiter"
+            (is= expected-no-split-found (bp/split-at-first "--" quote)))))
+
+      (testing "a vector of strings split before and after the first occurrence of"
+        (let [assert-delimiter (fn [delimiter]
+                                 (let [expected-first "I don't run a car"
+                                       expected-second (str "have never run a car. I could say that this is because I have this extremely tender environmentalist conscience" delimiter " but the fact is I hate driving.")
+                                       result (bp/split-at-first delimiter (str expected-first delimiter expected-second))]
+                                   (is= expected-first (first result))
+                                   (is= expected-second (second result))))]
+
+          (testing "a single value that is"
+            (let [delimiter ","]
+
+              (testing "not the delimiter"
+                (assert-delimiter delimiter))
+
+              (testing "the delimiter"
+                (is= ["" ""] (bp/split-at-first delimiter delimiter)))))
+
+          (testing "multiple values"
+            (assert-delimiter "--"))
+
+          (testing "blank"
+            (let [quote "I've been bitten by a python. It wasn't a very big one..."
+                  expected-split-at-first-space ["I've" "been bitten by a python. It wasn't a very big one..."]]
+
+              (testing "string"
+                (is= expected-split-at-first-space
+                     (bp/split-at-first " " quote)))
+
+              (testing "char"
+                (is= expected-split-at-first-space
+                     (bp/split-at-first \space quote)))
+
+              (testing "multiple whitespace"
+                (is= [quote]
+                     (bp/split-at-first "  " quote))))))))))
+
 (deftest ->proper-case-test
 
   (testing "->proper-case"
