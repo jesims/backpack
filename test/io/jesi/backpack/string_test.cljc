@@ -271,7 +271,7 @@
           (testing "empty string to split on"
             (is= expected-no-split-found (bp/split-at-first "" quote)))
 
-          (testing "non-existent idx"
+          (testing "non-existent delimiter"
             (is= expected-no-split-found (bp/split-at-first "--" quote)))))
 
       (testing "a vector of strings split before and after the first occurrence of"
