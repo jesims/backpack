@@ -124,7 +124,7 @@
 
 (def suffix (create-affix str/ends-with? identity))
 
-(def ^{:doc "Like clojure.string/blank? but returns false when not a string"}
+(def ^{:doc "Similar to clojure.string/blank? but returns false given a non-string"}
   blank?
   (and-fn string? str/blank?))
 
