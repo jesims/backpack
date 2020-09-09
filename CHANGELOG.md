@@ -1,3 +1,9 @@
+# 6.1.0
+
+Added:
+
+* `io.jesi.backpack.string/blank?`
+
 # 6.0.0
 
 Added:
