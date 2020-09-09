@@ -345,9 +345,9 @@
 
 (deftest not-blank?
 
-  (testing "Checks to see if string contains only whitespace characters"
+  (testing "Checks to see if a string contains any characters that are not whitespace"
     (is (false? (bp/not-blank? "")))
     (is (false? (bp/not-blank? " ")))
     (is (false? (bp/not-blank? "\n\t\r")))
     (is (false? (bp/not-blank? {})))
-    (is (true? (bp/not-blank? "   I could say that this is because I have this extremely tender environmentalist conscience")))))
+    (is (true? (bp/not-blank? "   But even so, there are still places barely touched by humanity.")))))
