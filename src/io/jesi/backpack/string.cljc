@@ -124,6 +124,10 @@
 
 (def suffix (create-affix str/ends-with? identity))
 
+(def ^{:doc "Similar to clojure.string/blank? but returns false if given a non-string"}
+  blank?
+  (and-fn string? str/blank?))
+
 (def not-blank? (and-fn string? (complement str/blank?)))
 
 (defn ->proper-case [s]

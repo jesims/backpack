@@ -333,3 +333,21 @@
       (is= "" (bp/kebab->proper-case ""))
       (is= "A Meercat Can Live For 12 14 Years In Captivity"
            (bp/kebab->proper-case "a-meercat-can-live-for-12-14-years-in-captivity")))))
+
+(deftest blank?
+
+  (testing "Checks to see if string contains only whitespace characters"
+    (is (true? (bp/blank? "")))
+    (is (true? (bp/blank? " ")))
+    (is (true? (bp/blank? "\n\t\r")))
+    (is (false? (bp/blank? {})))
+    (is (false? (bp/blank? "I could say that this is because I have this extremely tender environmentalist conscience")))))
+
+(deftest not-blank?
+
+  (testing "Checks to see if a string contains any characters that are not whitespace"
+    (is (false? (bp/not-blank? "")))
+    (is (false? (bp/not-blank? " ")))
+    (is (false? (bp/not-blank? "\n\t\r")))
+    (is (false? (bp/not-blank? {})))
+    (is (true? (bp/not-blank? "   But even so, there are still places barely touched by humanity.")))))
