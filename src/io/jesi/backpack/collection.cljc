@@ -358,3 +358,10 @@
      nil? nil
      coll? v
      [v])))
+
+(defn empty->nil
+  "Returns `nil` if argument returns `true` for `(clojure.core/empty?)`"
+  [x]
+  (if (empty? x)
+    nil
+    x))
