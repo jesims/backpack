@@ -1,4 +1,5 @@
 {
+  "name" : "backpack",
   "dry": {
     "extends": "@io.jesi/parent/package-dry.json",
     "dependencies": {
