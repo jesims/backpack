@@ -47,7 +47,7 @@
                                :cljs (goog.Uri. s)))
     :else nil))
 
-(defn- xor
+(defn xor
   "Returns `true` only if one argument is `true`"
   ([] nil)
   ([x] x)
