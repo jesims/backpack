@@ -1,3 +1,10 @@
+# 6.2.0
+
+Added:
+
+* `io.jesi.backpack.miscellaneous/xor`
+* `io.jesi.backpack.collection/empty->nil`
+
 # 6.1.0
 
 Added:
