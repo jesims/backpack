@@ -82,3 +82,15 @@
   (testing "Returns nil if the URI is invalid"
     (is (nil? (bp/->uri 123)))
     (is (nil? (bp/->uri true)))))
+
+(deftest xor-test
+
+  (testing "xor"
+    (is (nil? (bp/xor)))
+    (is (true? (bp/xor true)))
+    (is (false? (bp/xor false)))
+    (is (true? (bp/xor false true)))
+    (is (true? (bp/xor true false)))
+    (is (true? (bp/xor true false false)))
+    (is (true? (bp/xor false false false true)))
+    (is (false? (bp/xor true false true)))))

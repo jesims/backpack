@@ -1,3 +1,10 @@
+# 6.2.0
+
+Added:
+
+* `io.jesi.backpack.miscellaneous/xor`
+* `io.jesi.backpack.collection/empty->nil`
+
 # 6.1.0
 
 Added:
@@ -116,7 +123,7 @@ Added:
 * `io.jesi.backpack.collection/sorted-map-by-order`
 * `io.jesi.backpack.atom/toggle!`
 
-Changed: 
+Changed:
 
 * `io.jesi.backpack.macros/import-vars` to exclude vars with `:import/exclude` meta
 * `io.jesi.backpack.test.util/wait-for`

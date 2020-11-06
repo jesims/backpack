@@ -46,3 +46,13 @@
     (string? s) (catch->nil #?(:clj  (URI. s)
                                :cljs (goog.Uri. s)))
     :else nil))
+
+(defn xor
+  "Returns `true` only if one argument is `true`"
+  ([] nil)
+  ([x] x)
+  ([x y]
+   (and (or x y)
+        (not (and x y))))
+  ([x y & more]
+   (xor (xor x y) (apply xor more))))

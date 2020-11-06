@@ -830,3 +830,15 @@
     (testing "returns nil for nil"
       (is (nil? (bp/collify)))
       (is (nil? (bp/collify nil))))))
+
+(deftest empty->nil-test
+  (testing "converts empty arguments to nil"
+    (let [assert-every (fn [pred cases]
+                         (is (every? (comp pred bp/empty->nil) cases)))]
+      (assert-every nil? ["" [] () '() {} #{} nil])))
+
+  (testing "passes through non-empty arguments"
+    (let [val "Everything in Africa bites, but the safari bug is worst of all."
+          assert-passthrough (fn [cases]
+                               (is (every? #(= % (bp/empty->nil %)) cases)))]
+      (assert-passthrough [val [val] '(val) {:val val} #{val}]))))
