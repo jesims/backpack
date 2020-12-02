@@ -139,6 +139,10 @@
           (str/replace \- \space)
           (->proper-case)))
 
+(defn kebab-case->Proper-Kebab-Case [kebab-case-str]
+  (-> (kebab->proper-case kebab-case-str)
+      (str/replace " " "-")))
+
 (defn split-at-first
   "Splits s at the first occurrence of value, returns nil when s is empty"
   [value s]
