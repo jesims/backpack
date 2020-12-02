@@ -1,3 +1,9 @@
+# 6.3.0
+
+Added:
+
+* `io.jesi.backpack.string/kebab-case->Proper-Kebab-Case`
+
 # 6.2.0
 
 Added:
