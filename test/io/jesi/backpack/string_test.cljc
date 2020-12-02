@@ -354,6 +354,13 @@
 
 (deftest kebab-case->Proper-Kebab-Case-test
 
+  (testing "returns nil for non-string values"
+      (is (nil? (bp/kebab-case->Proper-Kebab-Case :life-in-the-undergrowth)))
+      (is (nil? (bp/kebab-case->Proper-Kebab-Case #{:life-in-the-undergrowth}))))
+
+  (testing "returns empty string for when given empty string"
+    (is= "" (bp/kebab-case->Proper-Kebab-Case "")))
+
   (testing "capitalises the first letter in each word in a kebab case string"
     (is= "Life-In-The-Undergrowth" (bp/kebab-case->Proper-Kebab-Case "life-in-the-undergrowth")))
 
