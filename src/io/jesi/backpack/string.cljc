@@ -142,7 +142,7 @@
 (defn kebab-case->Proper-Kebab-Case [kebab-case-str]
   (when (string? kebab-case-str)
     (-> (kebab->proper-case kebab-case-str)
-        (str/replace " " "-"))))
+        (str/replace \space \-))))
 
 (defn split-at-first
   "Splits s at the first occurrence of value, returns nil when s is empty"
