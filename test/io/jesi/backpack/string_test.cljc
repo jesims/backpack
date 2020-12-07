@@ -351,3 +351,18 @@
     (is (false? (bp/not-blank? "\n\t\r")))
     (is (false? (bp/not-blank? {})))
     (is (true? (bp/not-blank? "   But even so, there are still places barely touched by humanity.")))))
+
+(deftest kebab-case->Proper-Kebab-Case-test
+
+  (testing "returns nil for non-string values"
+      (is (nil? (bp/kebab-case->Proper-Kebab-Case :life-in-the-undergrowth)))
+      (is (nil? (bp/kebab-case->Proper-Kebab-Case #{:life-in-the-undergrowth}))))
+
+  (testing "returns empty string when given empty string"
+    (is= "" (bp/kebab-case->Proper-Kebab-Case "")))
+
+  (testing "capitalises the first letter in each word in a kebab cased string"
+    (is= "Life-In-The-Undergrowth" (bp/kebab-case->Proper-Kebab-Case "life-in-the-undergrowth")))
+
+  (testing "returns a capitalized string if no hyphens"
+    (is= "Dynasties" (bp/kebab-case->Proper-Kebab-Case "dynasties"))))
