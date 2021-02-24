@@ -7,27 +7,27 @@
             :url          "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo
             :comments     "same as Clojure"}
-  :plugins [[lein-parent "0.3.7"]]
-  :parent-project {:coords  [io.jesi/parent "3.9.0"]
+  :plugins [[lein-parent "0.3.8"]]
+  :parent-project {:coords  [io.jesi/parent "4.5.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
-  :managed-dependencies [[io.jesi/backpack "5.2.0"]]
+  :managed-dependencies [[io.jesi/backpack "6.3.0"]]
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
                  [com.taoensso/encore "2.117.0"]
 
                  ;CLJ
                  [org.clojure/clojure :scope "provided"]
-                 [cheshire "5.9.0"]
-                 [org.clojure/core.cache "0.8.2"]           ;TODO move to separate cache project
-                 [com.cognitect/transit-clj "0.8.319"]      ;TODO move to separate http project
+                 [cheshire/cheshire "5.10.0"]
+                 [org.clojure/core.cache "1.0.207"]           ;TODO move to separate cache project
+                 [com.cognitect/transit-clj "1.0.324"]      ;TODO move to separate http project
 
                  ;CLJS
                  [org.clojure/clojurescript :scope "provided"]
                  [org.clojars.mmb90/cljs-cache "0.1.4"]     ;TODO move to separate cache project
-                 [com.cognitect/transit-cljs "0.8.256"]     ;TODO move to separate http project
+                 [com.cognitect/transit-cljs "0.8.264"]     ;TODO move to separate http project
                  [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
   :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs]
-                                               [org.clojure/tools.namespace "0.3.1"]
+                                               [org.clojure/tools.namespace "1.1.0"]
                                                [thheller/shadow-cljs]]}]}
   :clean-targets ^{:protect false} [".shadow-cljs" ".cljs_node_repl" "out" :target-path]
   :codox {:metadata   {:doc/format :markdown}
