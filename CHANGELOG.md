@@ -1,3 +1,15 @@
+# 6.3.1
+
+Updated:
+
+* `bindle` to latest `master`
+* `lein-parent` to `0.3.8`
+* `io.jesi/parent` to `4.5.0`
+* `cheshire/cheshire` to `5.10.0`
+* `org.clojure/core.cache` to `1.0.207`
+* `com.cognitect/transit-clj` to `1.0.324`
+* `com.cognitect/transit-cljs` to `0.8.264`
+
 # 6.3.0
 
 Added:
