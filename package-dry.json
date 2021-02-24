@@ -1,9 +1,14 @@
 {
-  "name" : "backpack",
+  "name": "backpack",
   "dry": {
     "extends": "@io.jesi/parent/package-dry.json",
     "dependencies": {
       "@io.jesi/parent": "0.2.0"
+    },
+    "devDependencies": {
+      "karma": "managed",
+      "karma-chrome-launcher": "managed",
+      "karma-cljs-test": "managed"
     }
   }
 }
