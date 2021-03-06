@@ -19,12 +19,10 @@
   io.jesi.backpack.common
   io.jesi.backpack.exceptions
   io.jesi.backpack.fn
-  io.jesi.backpack.json
   io.jesi.backpack.miscellaneous
   io.jesi.backpack.number
   io.jesi.backpack.specter
-  io.jesi.backpack.string
-  io.jesi.backpack.transit)
+  io.jesi.backpack.string)
 
 #?(:clj  (import-vars
            io.jesi.backpack.clojure

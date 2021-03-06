@@ -21,8 +21,6 @@
   boolean. See https://clojure.org/guides/reader_conditionals for platform keywords."
   (atom (hash-map cljs? :cljs)))
 
-(def ^:deprecated runtimes platforms)
-
 (defn- platform [env]
   (if (keyword? env)
     env

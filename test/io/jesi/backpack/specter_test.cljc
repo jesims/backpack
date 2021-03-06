@@ -1,9 +1,8 @@
 (ns io.jesi.backpack.specter-test
-  (:refer-clojure :exclude [=])
   (:require
     [com.rpl.specter :as sp]
     [io.jesi.backpack :as bp]
-    [io.jesi.customs.strict :refer [= deftest is is= testing]]))
+    [io.jesi.customs.strict :refer [deftest is is= testing]]))
 
 (deftest map-walker-test
   (let [select-one #(sp/select-one bp/map-walker %)]

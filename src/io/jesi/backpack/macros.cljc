@@ -21,34 +21,34 @@
 ```"
   [& imports]
   #?(:clj `(do
-             ~@(apply concat
-                 (for [import imports
-                       :let [vars (->> (if (symbol? import)
-                                         (do
-                                           (require import)
-                                           (vals (ns-publics import)))
-                                         (let [ns (first import)]
-                                           (map
-                                             (fn [name]
-                                               (require ns)
-                                               (let [sym (symbol (str ns) (str name))
-                                                     var (resolve sym)]
-                                                 (when (nil? var)
-                                                   (throw (ex-info (str "Could not resolve var " sym) {:symbol sym
-                                                                                                       :ns     *ns*
-                                                                                                       :env    &env})))
-                                                 var))
-                                             (rest import))))
-                                       (remove (comp :import/exclude meta)))]]
-                   (apply concat
-                     (for [var vars
-                           :let [sym (symbol var)
-                                 name (-> sym name symbol)
-                                 {:keys [doc]
-                                  :or   {doc ""}
-                                  :as   sym-meta} (meta var)]]
-                       `[(def ~name ~doc ~sym)
-                         (alter-meta! #'~name (partial merge (meta #'~sym)))])))))))
+             ~@(doall (apply concat
+                        (for [import imports
+                              :let [vars (->> (if (symbol? import)
+                                                (do
+                                                  (require import)
+                                                  (vals (ns-publics import)))
+                                                (let [ns (first import)]
+                                                  (map
+                                                    (fn [name]
+                                                      (require ns)
+                                                      (let [sym (symbol (str ns) (str name))
+                                                            var (resolve sym)]
+                                                        (when (nil? var)
+                                                          (throw (ex-info (str "Could not resolve var " sym) {:symbol sym
+                                                                                                              :ns     *ns*
+                                                                                                              :env    &env})))
+                                                        var))
+                                                    (rest import))))
+                                              (remove (comp :import/exclude meta)))]]
+                          (apply concat
+                            (for [var vars
+                                  :let [sym (symbol var)
+                                        name (-> sym name symbol)
+                                        {:keys [doc]
+                                         :or   {doc ""}
+                                         :as   sym-meta} (meta var)]]
+                              `[(def ~name ~doc ~sym)
+                                (alter-meta! #'~name (partial merge (meta #'~sym)))]))))))))
 
 (defmacro catch-> [handle & body]
   `(try
@@ -75,37 +75,6 @@
           "True if the provided `sym` is a macro"
           [sym]
           (:macro (meta (find-var sym)))))
-
-(defmacro fn1
-  {:deprecated true
-   :no-doc     true}
-  [& exprs]
-  `(fn [_#] ~@exprs))
-
-(defmacro fn2
-  {:deprecated true
-   :no-doc     true}
-  [& exprs]
-  `(fn [_# _#] ~@exprs))
-
-(defmacro fn3
-  {:deprecated true
-   :no-doc     true}
-  [& exprs]
-  `(fn [_# _# _#] ~@exprs))
-
-(defmacro when-let
-  {:deprecated true
-   :doc        "An enhanced version of `clojure.core/when-let`.
-    Evaluates the body only when **all** bindings are truthy.
-
-    Use http://ptaoussanis.github.io/encore/taoensso.encore.html#var-when-lets instead
-    "}
-  ([bindings & body]
-   (if (seq bindings)
-     `(clojure.core/when-let [~(first bindings) ~(second bindings)]
-        (when-let ~(drop 2 bindings) ~@body))
-     `(do ~@body))))
 
 (defmacro defkw
   "Defines a symbol as the name of the given keyword in the current namespace"

@@ -17,15 +17,11 @@
 
                  ;CLJ
                  [org.clojure/clojure :scope "provided"]
-                 [cheshire/cheshire "5.10.0"]
-                 [org.clojure/core.cache "1.0.207"]           ;TODO move to separate cache project
-                 [com.cognitect/transit-clj "1.0.324"]      ;TODO move to separate http project
+                 [org.clojure/core.cache "1.0.207"]         ;TODO move to separate cache project
 
                  ;CLJS
                  [org.clojure/clojurescript :scope "provided"]
-                 [org.clojars.mmb90/cljs-cache "0.1.4"]     ;TODO move to separate cache project
-                 [com.cognitect/transit-cljs "0.8.264"]     ;TODO move to separate http project
-                 [com.lucasbradstreet/cljs-uuid-utils "1.0.2"]]
+                 [org.clojars.mmb90/cljs-cache "0.1.4"]]    ;TODO move to separate cache project
   :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs]
                                                [org.clojure/tools.namespace "1.1.0"]
                                                [thheller/shadow-cljs]]}]}

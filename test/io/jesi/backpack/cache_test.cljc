@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack.cache :as cache]
-    [io.jesi.backpack.macros :refer [shorthand]]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.macros :refer [async-go]]
     [io.jesi.customs.strict :refer [= deftest is is= testing]])

@@ -2,7 +2,6 @@
   (:refer-clojure :exclude [assoc-in])
   (:require
     #?(:cljs [goog.Uri :as uri])
-    [clojure.pprint :as pprint]
     [io.jesi.backpack.macros :refer [catch->nil]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
@@ -28,17 +27,6 @@
 
 (defn ->uuid-or-not [id]
   (or (->uuid id) id))
-
-(defn pprint-str [object]
-  (pprint/write object
-    :pretty true
-    :stream nil))
-
-(defn pprint-str-code [object]
-  (pprint/write object
-    :pretty true
-    :stream nil
-    :dispatch pprint/code-dispatch))
 
 (defn ->uri [s]
   (cond
