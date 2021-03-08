@@ -1,7 +1,7 @@
 (ns io.jesi.backpack.common-test
   (:require
     [io.jesi.backpack :as bp]
-    [io.jesi.customs.strict :refer [are deftest is is= testing]])
+    [io.jesi.customs.strict :refer [are deftest is testing]])
   #?(:clj
      (:import
        (clojure.lang Named))))

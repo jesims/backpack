@@ -5,6 +5,7 @@ Updated:
 * `import-vars` to be non-lazy, giving the ClojureScript compiler a better chance at DCE
 
 Added
+
 * NPM Dependencies:
   * `source-map-support` as version `0.5.19`
   * `ws` as version `7.4.4`
