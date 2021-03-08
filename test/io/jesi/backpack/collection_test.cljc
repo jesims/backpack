@@ -1,6 +1,7 @@
 (ns io.jesi.backpack.collection-test
   (:refer-clojure :exclude [=])
   (:require
+    #?(:cljs [cljs.pprint])
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.collection :refer [create-index index-comparator]]
     [io.jesi.backpack.random :as rnd]

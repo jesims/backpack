@@ -1,3 +1,36 @@
+# 7.0.0
+
+Updated:
+
+* `import-vars` to be non-lazy, giving the ClojureScript compiler a better chance at DCE
+
+Added
+
+* NPM Dependencies:
+  * `source-map-support` as version `0.5.19`
+  * `ws` as version `7.4.4`
+
+Breaking:
+
+* To prevent the `cljs.pprint` from being included in advanced ClojureScript compilation, the following are Clojure only
+  * `pprint-str`
+  * `pprint-str-code`
+* Removed namespaces:
+  * `io.jesi.backpack.env/runtimes`
+  * `io.jesi.backpack.macros/fn1`
+  * `io.jesi.backpack.macros/fn2`
+  * `io.jesi.backpack.macros/fn3`
+  * `io.jesi.backpack.macros/when-let`
+  * `io.jesi.backpack/clj->json`
+  * `io.jesi.backpack/clj->transit`
+  * `io.jesi.backpack/json->clj`
+  * `io.jesi.backpack/transit->clj`
+* Removed dependencies:
+  * `cheshire/cheshire`
+  * `com.cognitect/transit-clj`
+  * `com.cognitect/transit-cljs`
+  * `com.lucasbradstreet/cljs-uuid-utils`
+
 # 6.3.1
 
 Updated:

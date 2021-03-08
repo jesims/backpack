@@ -6,7 +6,6 @@
        [clojure.string :as str])
      :cljs
      (:require
-       [cljs-uuid-utils.core :as UUID]
        [clojure.set :as set]
        [clojure.string :as str]
        [goog.string :refer [format]]
@@ -18,7 +17,7 @@
   "Generates a random UUID"
   []
   #?(:clj  (UUID/randomUUID)
-     :cljs (UUID/make-random-uuid)))
+     :cljs (random-uuid)))
 
 (defn uuid-str
   "Generates a random UUID string"

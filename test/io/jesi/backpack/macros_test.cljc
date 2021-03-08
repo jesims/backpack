@@ -1,11 +1,10 @@
 (ns io.jesi.backpack.macros-test
-  (:refer-clojure :exclude [= when-let])
   (:require
     [clojure.string :as string]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts fn1 reify-ifn shorthand try* when-debug when-let]]
+    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts reify-ifn shorthand try* when-debug]]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [= deftest is is= testing use-fixtures]]
+    [io.jesi.customs.strict :refer [deftest is is= testing use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])
   #?(:clj (:import
             (clojure.lang ArityException)
@@ -29,50 +28,6 @@
 
   (testing "returns nil if the body throws an exception"
     (is (nil? (catch->nil (throw-ex))))))
-
-(deftest fn1-test
-
-  (testing "fn1 returns a function"
-    (is (fn? (fn1))))
-
-  (testing "fn1 returns an arity 1 function"
-    (is (true? ((fn1 true) false)))))
-
-(deftest when-let-test
-
-  (testing "Acts as standard when-let"
-    (when-let [x true]
-      (is (true? x))))
-
-  (testing "Allows binding multiple forms"
-    (when-let [x "Almost half the pigs"
-               y "in the world are kept"
-               z "by farmers in China."]
-      (is= "Almost half the pigs" x)
-      (is= "in the world are kept" y)
-      (is= "by farmers in China." z)))
-
-  (testing "doesn't evaluate when false values"
-    (when-let [x true
-               y false
-               z true]
-      (is false "should not be called")))
-
-  (testing "Won't evaluate block if any assign fails"
-    (when-let [x true
-               y nil
-               z true]
-      (is false "should not be called"))
-
-    (when-let [x true
-               y nil
-               z nil]
-      (is false "should not be called"))
-
-    (when-let [x nil
-               y nil
-               z nil]
-      (is false "should not be called"))))
 
 (deftest defkw-test
 

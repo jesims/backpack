@@ -8,7 +8,9 @@
     "devDependencies": {
       "karma": "managed",
       "karma-chrome-launcher": "managed",
-      "karma-cljs-test": "managed"
+      "karma-cljs-test": "managed",
+      "source-map-support": "^0.5.19",
+      "ws": "^7.4.4"
     }
   }
 }

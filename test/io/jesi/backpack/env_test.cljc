@@ -1,8 +1,7 @@
 (ns io.jesi.backpack.env-test
-  (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack.env :as env]
-    [io.jesi.customs.strict :refer [= deftest is is= testing]]))
+    [io.jesi.customs.strict :refer [deftest is= testing]]))
 
 (deftest transform-test
 

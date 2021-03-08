@@ -76,37 +76,6 @@
           [sym]
           (:macro (meta (find-var sym)))))
 
-(defmacro fn1
-  {:deprecated true
-   :no-doc     true}
-  [& exprs]
-  `(fn [_#] ~@exprs))
-
-(defmacro fn2
-  {:deprecated true
-   :no-doc     true}
-  [& exprs]
-  `(fn [_# _#] ~@exprs))
-
-(defmacro fn3
-  {:deprecated true
-   :no-doc     true}
-  [& exprs]
-  `(fn [_# _# _#] ~@exprs))
-
-(defmacro when-let
-  {:deprecated true
-   :doc        "An enhanced version of `clojure.core/when-let`.
-    Evaluates the body only when **all** bindings are truthy.
-
-    Use http://ptaoussanis.github.io/encore/taoensso.encore.html#var-when-lets instead
-    "}
-  ([bindings & body]
-   (if (seq bindings)
-     `(clojure.core/when-let [~(first bindings) ~(second bindings)]
-        (when-let ~(drop 2 bindings) ~@body))
-     `(do ~@body))))
-
 (defmacro defkw
   "Defines a symbol as the name of the given keyword in the current namespace"
   [kw]

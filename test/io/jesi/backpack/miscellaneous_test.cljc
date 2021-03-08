@@ -1,9 +1,8 @@
 (ns io.jesi.backpack.miscellaneous-test
-  (:refer-clojure :exclude [=])
   (:require
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [= are deftest is is= testing]])
+    [io.jesi.customs.strict :refer [are deftest is is= testing]])
   #?(:clj
      (:import
        (clojure.lang Named)
