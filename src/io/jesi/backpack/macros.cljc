@@ -130,11 +130,9 @@
   ([map sym & more]
    `(assoc ~map ~@(->> (cons sym more)
                        ;;TODO make point-free
-                       ;;(map (juxt (comp keyword name) identity))
-                       ;;(apply concat)
                        (reduce
                          (fn [s sym]
-                           (cons (keyword (name sym)) (cons sym s)))
+                           (list* (keyword (name sym)) sym s))
                          '())))))
 
 (defmacro condf
