@@ -1,7 +1,7 @@
 (ns io.jesi.backpack.miscellaneous
   (:refer-clojure :exclude [assoc-in])
   (:require
-    #?(:cljs [goog.Uri :as uri])
+    #?(:cljs [goog.Uri])
     [io.jesi.backpack.macros :refer [catch->nil]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj

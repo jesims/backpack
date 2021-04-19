@@ -5,7 +5,7 @@
         :cljs [[com.rpl.specter :as sp]
                [io.jesi.backpack.env :as env]])
     [clojure.core.async :as core-async :refer [<!]]
-    [clojure.string :as string]
+    [clojure.string :as str]
     [io.jesi.backpack.async :as async]
     [io.jesi.customs.macros :refer [async-go]]
     [io.jesi.customs.strict :refer [= deftest is is= testing thrown?]]
@@ -158,13 +158,13 @@
       (testing "returns a channel with the result of passing input through f"
         (let [quote "Lemurs can tell a 1% alcohol solution from a 5% alcohol solution and prefer the solution that contains more alcohol"
               input-chan (async/go quote)
-              actual (async/go-call string/capitalize input-chan)]
+              actual (async/go-call str/capitalize input-chan)]
           (is (true? (async/open? actual)))
-          (is (= (string/capitalize quote)
+          (is (= (str/capitalize quote)
                  (async/<? actual)))
           (is (true? (async/closed? actual)))))
 
       (testing "returns exceptions if any thrown"
         (is (instance?
               #?(:clj Exception :cljs js/Error)
-              (<! (async/go-call string/capitalize (async/go-try (ex))))))))))
+              (<! (async/go-call str/capitalize (async/go-try (ex))))))))))

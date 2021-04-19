@@ -1,8 +1,9 @@
 (ns io.jesi.backpack.macros-test
   (:require
-    [clojure.string :as string]
+    [clojure.string :as str]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts reify-ifn shorthand try* when-debug]]
+    [io.jesi.backpack.macros :refer #?(:clj  :all
+                                       :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug])]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [deftest is is= testing use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])
@@ -24,7 +25,7 @@
 (deftest catch->nil-test
 
   #?(:clj (testing "is a macro"
-            (is (bp/macro? `catch->nil))))
+            (is (macro? `catch->nil))))
 
   (testing "returns nil if the body throws an exception"
     (is (nil? (catch->nil (throw-ex))))))
@@ -69,7 +70,7 @@
 (deftest shorthand-test
 
   #?(:clj (testing "is a macro"
-            (is (:macro (meta #'shorthand)))))
+            (is (macro? `shorthand))))
 
   (testing "creates a map with the keywords from the symbol names"
     (let [a 1
@@ -77,15 +78,42 @@
           c {:cheese false}]
       (is= {:a 1} (shorthand a))
       (is= {:b 2} (shorthand b))
-      (is= {:a 1 :b 2} (shorthand a b))
+      (is= {:a 1, :b 2} (shorthand a b))
       (is= {:c {:cheese false}} (shorthand c))
-      (is= {:c {:cheese false} :a 1 :b 2} (shorthand c a b))
-      (is= {:a 1 :shorthand-test-variable "long name is long"} (shorthand a shorthand-test-variable)))))
+      (is= {:c {:cheese false}, :a 1, :b 2} (shorthand c a b))
+      (is= {:a 1, :shorthand-test-variable "long name is long"} (shorthand a shorthand-test-variable)))))
+
+(deftest shorthand-str-test
+
+  #?(:clj (testing "is a macro"
+            (is (macro? `shorthand-str))))
+
+  (testing "creates a map with string keys"
+    (let [a 1
+          b 2]
+      (is= {"a" 1} (shorthand-str a))
+      (is= {"a" 1, "b" 2}
+           (shorthand-str a b)))))
+
+(deftest shorthand-assoc-test
+
+  #?(:clj (testing "is a macro"
+            (is (macro? `shorthand-assoc))))
+
+  (testing "assocs with the keywords from the symbol names"
+    (let [a 1
+          b 2]
+      (is= {:a 1}
+           (shorthand-assoc {} a)
+           (shorthand-assoc {} a a))
+      (is= {:a 1, :b 2}
+           (shorthand-assoc {:a 1} b)
+           (shorthand-assoc {} a b)))))
 
 (deftest condf-test
 
   #?(:clj (testing "is a macro"
-            (is (:macro (meta #'condf)))))
+            (is (macro? `condf))))
 
   (testing "takes functions as condp predicates"
     (let [f #(condf %
@@ -99,7 +127,7 @@
 (deftest defconsts-test
 
   #?(:clj (testing "is a macro"
-            (is (true? (bp/macro? `defconsts)))))
+            (is (macro? `defconsts))))
 
   (testing "expands so a series of defs"
     (is-macro= '(do
@@ -120,7 +148,7 @@
 
   (testing "allows function composition"
     (ns-unmap 'io.jesi.backpack.macros-test '-all)
-    (defconsts (comp string/upper-case bp/->snake_case)
+    (defconsts (comp str/upper-case bp/->snake_case)
       'a-rhinoceros-horn-is-made-of-hair)
     (let [val "A_RHINOCEROS_HORN_IS_MADE_OF_HAIR"]
       (is= val a-rhinoceros-horn-is-made-of-hair)
@@ -131,7 +159,7 @@
   (testing "when-debug"
 
     #?(:clj (testing "is a macro"
-              (bp/macro? `when-debug)))
+              (macro? `when-debug)))
 
     (testing "expands"
       #?(:clj  (is= '(prn "hello")
@@ -153,7 +181,7 @@
   (testing "catch->identity"
 
     #?(:clj (testing "is a macro"
-              (bp/macro? `catch->identity)))
+              (macro? `catch->identity)))
 
     (testing "returns caught exception"
       (is= 1 (catch->identity 1))
@@ -165,7 +193,7 @@
   (testing "def-"
 
     #?(:clj (testing "is a macro"
-              (bp/macro? `def-)))
+              (macro? `def-)))
 
     (testing "defs a private var"
       (let [val (rnd/string)

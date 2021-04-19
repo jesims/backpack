@@ -1,6 +1,6 @@
 (ns io.jesi.backpack.random-test
   (:require
-    [clojure.string :as string]
+    [clojure.string :as str]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [deftest is is= testing]]))
@@ -43,10 +43,10 @@
 
 (deftest extended-chars-test
   (testing "Can be converted to upper/lower still equal"
-    (is= (string/lower-case (string/upper-case extended-chars))
-         (string/lower-case extended-chars))
-    (is= (string/upper-case (string/lower-case extended-chars))
-         (string/upper-case extended-chars))))
+    (is= (str/lower-case (str/upper-case extended-chars))
+         (str/lower-case extended-chars))
+    (is= (str/upper-case (str/lower-case extended-chars))
+         (str/upper-case extended-chars))))
 
 (deftest wkt-linestring-test
   (testing "Contains no scientific notation"

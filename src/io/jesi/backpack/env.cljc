@@ -89,7 +89,7 @@
        (= "quote" (name fn))))
 
 (defn- convert [converter quoted-form]
-  ;FIXME throws StackOverflowError for deeply nested forms e.g. jesi-web tests
+  ;TODO throws StackOverflowError for deeply nested forms e.g. jesi-web tests
   (sp/transform [list-walker (sp/if-path quoted? (sp/nthpath 1) sp/FIRST) symbol? namespaced?] converter quoted-form))
 
 (defn transform*

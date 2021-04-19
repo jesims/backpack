@@ -108,14 +108,32 @@
               [form]))]
     (cons 'try (mapcat transform body))))
 
+(defn shorthand* [keyfn symbols]
+  (->> symbols
+       (map (fn [sym]
+              [(keyfn sym) sym]))
+       (into {})))
+
 (defmacro shorthand
   "Returns a map with the keywords from the symbol names"
   [& symbols]
-  (into (array-map)
-    (map
-      (fn [sym]
-        [(keyword (name sym)) sym])
-      symbols)))
+  (shorthand* (comp keyword name) symbols))
+
+(defmacro shorthand-str
+  "String `shorthand`. Returns a map with string keys from the symbol names"
+  [& symbols]
+  (shorthand* name symbols))
+
+(defmacro shorthand-assoc
+  ([map sym]
+   `(assoc ~map ~(keyword (name sym)) ~sym))
+  ([map sym & more]
+   `(assoc ~map ~@(->> (cons sym more)
+                       ;;TODO make point-free
+                       (reduce
+                         (fn [s sym]
+                           (list* (keyword (name sym)) sym s))
+                         '())))))
 
 (defmacro condf
   "Takes a value, and a set of binary predicate clauses.
