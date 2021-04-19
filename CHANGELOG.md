@@ -1,3 +1,10 @@
+# 7.1.0
+
+Added:
+
+* `io.jesi.backpack.macros/shorthand-assoc`
+* `io.jesi.backpack.macros/shorthand-str`
+
 # 7.0.0
 
 Updated:
@@ -92,7 +99,8 @@ Changed:
 
 Fix:
 
-* `io.jesi.backpack.macros/reify-ifn` to no longer invokes protocol implementation with a seq of args. Throws exception if invalid arity during runtime
+* `io.jesi.backpack.macros/reify-ifn` to no longer invokes protocol implementation with a seq of args. Throws exception
+  if invalid arity during runtime
 
 # 5.2.2
 
