@@ -1,9 +1,9 @@
 (ns io.jesi.backpack.macros-test
   (:require
-    [clojure.string :as string]
+    [clojure.string :as str]
     [io.jesi.backpack :as bp]
-    [io.jesi.customs.spy :as spy]
-    [io.jesi.backpack.macros :refer [catch->identity catch->nil condf def- defconsts reify-ifn shorthand try* when-debug shorthand-assoc macro? shorthand-str]]
+    [io.jesi.backpack.macros :refer #?(:clj  :all
+                                       :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug])]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [deftest is is= testing use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])
@@ -148,7 +148,7 @@
 
   (testing "allows function composition"
     (ns-unmap 'io.jesi.backpack.macros-test '-all)
-    (defconsts (comp string/upper-case bp/->snake_case)
+    (defconsts (comp str/upper-case bp/->snake_case)
       'a-rhinoceros-horn-is-made-of-hair)
     (let [val "A_RHINOCEROS_HORN_IS_MADE_OF_HAIR"]
       (is= val a-rhinoceros-horn-is-made-of-hair)
