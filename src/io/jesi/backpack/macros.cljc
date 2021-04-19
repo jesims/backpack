@@ -108,7 +108,6 @@
               [form]))]
     (cons 'try (mapcat transform body))))
 
-;FIXME rename
 (defn shorthand* [keyfn symbols]
   (->> symbols
        (map (fn [sym]
