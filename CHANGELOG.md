@@ -1,4 +1,8 @@
-# 7.l.1
+# 8.0.0
+
+Changed:
+
+* `io.jesi.backpack.macros/defconsts` generated `-all` to be a vector (instead of a set)
 
 Fixed:
 
