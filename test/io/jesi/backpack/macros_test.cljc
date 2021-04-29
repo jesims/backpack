@@ -2,7 +2,6 @@
   (:require
     [clojure.string :as str]
     [io.jesi.backpack :as bp]
-    [clojure.pprint]                                        ;FIXME remove
     [io.jesi.backpack.macros :refer #?(:clj  :all
                                        :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug])]
     [io.jesi.backpack.random :as rnd]
