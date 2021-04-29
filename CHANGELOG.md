@@ -1,3 +1,9 @@
+# 7.l.1
+
+Fixed:
+
+* `io.jesi.backpack.macros/defconsts` not preserving metadata
+
 # 7.1.0
 
 Added:

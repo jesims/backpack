@@ -5,7 +5,7 @@
     #?(:cljs [cljs.core :refer [IFn]])
     [clojure.core]
     [io.jesi.backpack.env :as env]
-    [io.jesi.backpack.fn :refer [noop]])
+    [io.jesi.backpack.fn :refer [noop if-fn and-fn p=]])
   #?(:clj
      (:import
        (clojure.lang IFn))))
@@ -22,33 +22,32 @@
   [& imports]
   #?(:clj `(do
              ~@(apply concat
-                 (for [import imports
-                       :let [vars (->> (if (symbol? import)
-                                         (do
-                                           (require import)
-                                           (vals (ns-publics import)))
-                                         (let [ns (first import)]
-                                           (map
-                                             (fn [name]
-                                               (require ns)
-                                               (let [sym (symbol (str ns) (str name))
-                                                     var (resolve sym)]
-                                                 (when (nil? var)
-                                                   (throw (ex-info (str "Could not resolve var " sym) {:symbol sym
-                                                                                                       :ns     *ns*
-                                                                                                       :env    &env})))
-                                                 var))
-                                             (rest import))))
-                                       (remove (comp :import/exclude meta)))]]
-                   (apply concat
-                     (for [var vars
-                           :let [sym (symbol var)
-                                 name (-> sym name symbol)
-                                 {:keys [doc]
-                                  :or   {doc ""}
-                                  :as   sym-meta} (meta var)]]
-                       `[(def ~name ~doc ~sym)
-                         (alter-meta! #'~name (partial merge (meta #'~sym)))])))))))
+                 (for [import imports]
+                   (let [vars (->> (if (symbol? import)
+                                     (do
+                                       (require import)
+                                       (vals (ns-publics import)))
+                                     (let [ns (first import)]
+                                       (map
+                                         (fn [name]
+                                           (require ns)
+                                           (let [sym (symbol (str ns) (str name))
+                                                 var (resolve sym)]
+                                             (when (nil? var)
+                                               (throw (ex-info (str "Could not resolve var " sym) {:symbol sym
+                                                                                                   :ns     *ns*
+                                                                                                   :env    &env})))
+                                             var))
+                                         (rest import))))
+                                   (remove (comp :import/exclude meta)))]
+                     (apply concat
+                       (for [var vars]
+                         (let [sym (symbol var)
+                               name (-> sym name symbol)
+                               {:keys [doc]
+                                :or   {doc ""}} (meta var)]
+                           `[(def ~name ~doc ~sym)
+                             (alter-meta! #'~name (partial merge (meta #'~sym)))])))))))))
 
 (defmacro catch-> [handle & body]
   `(try
@@ -150,14 +149,28 @@ A single default expression can follow the clauses, and its value will be return
      ~@clauses))
 
 (defmacro defconsts
-  "Defines a collection of string constant values as individual symbols transforming their values using body-fn."
+  "Defines a collection of constant values as individual symbols transforming their values using body-fn.
+  ```clojure
+  (def defconsts str/upper-case
+    'hello
+    ^String world)
+  hello ;=> \"HELLO\"
+  ```"
   [body-fn & symbols]
-  (let [names (map second symbols)]
+  (let [symbols (->> symbols
+                     (map (if-fn (and-fn seqable?
+                                         (comp (p= "quote") str first))
+                            second
+                            identity)))]
     `(do
-       ~@(for [name names
-               :let [body (str name)]]
-           `(def ~name (~body-fn ~body)))
-       (def ~'-all (hash-set ~@names)))))
+       ~@(for [sym symbols]
+           ;TODO adjust meta to have the correct :line and :column by looking at &form
+           (let [m (meta sym)
+                 body-sym `(quote ~sym)]
+             `(def ~sym (~body-fn ~(if m
+                                     `(with-meta ~body-sym ~m)
+                                     body-sym)))))
+       (def ~'-all ~(vec symbols)))))
 
 (defmacro when-not= [test body]
   `(when-not (= ~test ~body)
@@ -220,3 +233,9 @@ A single default expression can follow the clauses, and its value will be return
    `(def ~(private symbol) ~init))
   ([symbol doc-string init]
    `(def ~(private symbol) ~doc-string ~init)))
+
+(defmacro cond=
+  "Short for `condp ="
+  [expr & clauses]
+  `(condp = ~expr
+     ~@clauses))
