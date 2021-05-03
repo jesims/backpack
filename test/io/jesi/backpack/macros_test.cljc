@@ -3,7 +3,7 @@
     [clojure.string :as str]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.macros :refer #?(:clj  :all
-                                       :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug])]
+                                       :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug cond=])]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [deftest is is= testing use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])
@@ -124,8 +124,9 @@
       (is= "string" (f "hi"))
       (is (nil? (f 1))))))
 
-(defn- remove-all []
-  (ns-unmap 'io.jesi.backpack.macros-test '-all))
+(defn- unmap-all []
+  (ns-unmap 'io.jesi.backpack.macros-test '-all)
+  (ns-unmap 'io.jesi.backpack.macros-test '-all-vec))
 
 (deftest defconsts-test
 
@@ -133,30 +134,31 @@
             (is (macro? `defconsts))))
 
   ;TODO fix failing test. fails even though the content is the same (the diff is empty)
-  (comment (testing "expands so a series of defs"
-             (is-macro= '(do
-                           (def hello (str (with-meta 'hello {:tag Symbol})))
-                           (def world (str 'world))
-                           (def -all [hello world]))
-                        (macroexpand-1 '(io.jesi.backpack.macros/defconsts str
-                                          ^Symbol hello
-                                          'world)))))
+  (comment #?(:clj (testing "expands so a series of defs"   ;clj test because cljs has extra metadata that's hard to test
+                     (is-macro= '(do
+                                   (def hello (clojure.core/str (clojure.core/with-meta 'hello {:tag Symbol})))
+                                   (def world (clojure.core/str 'world))
+                                   (def -all #{world hello})
+                                   (def -all-vec [hello world]))
+                                (macroexpand-1 '(io.jesi.backpack.macros/defconsts str
+                                                  ^Symbol hello
+                                                  'world))))))
 
   (testing "transforms the symbol values with the given function"
-    (remove-all)
+    (unmap-all)
     (defconsts bp/->snake_case
       'a-snail-can-sleep-for-three-years
       'slugsHaveFourNoses)
-    (is= ["a_snail_can_sleep_for_three_years" "slugs_have_four_noses"]
-         [a-snail-can-sleep-for-three-years slugsHaveFourNoses]
+    (is= #{"a_snail_can_sleep_for_three_years" "slugs_have_four_noses"}
+         #{a-snail-can-sleep-for-three-years slugsHaveFourNoses}
          -all))
 
   (testing "allows function composition"
-    (remove-all)
+    (unmap-all)
     (defconsts (comp str/upper-case bp/->snake_case)
       'a-rhinoceros-horn-is-made-of-hair)
-    (is= ["A_RHINOCEROS_HORN_IS_MADE_OF_HAIR"]
-         [a-rhinoceros-horn-is-made-of-hair]
+    (is= #{"A_RHINOCEROS_HORN_IS_MADE_OF_HAIR"}
+         #{a-rhinoceros-horn-is-made-of-hair}
          -all))
 
   (testing "preserves metadata"
@@ -165,13 +167,12 @@
       'dolphins-call-eachother-by-name
       ^String ^{:doc "Turritopsis dohrnii can revert to it's childhood form and so never die"} immortal-jellyfish
       ^:deprecated dodo)
-
-    (let [line 165                                          ;the line number of the defconsts above
+    (let [line 166                                          ;the line number of the defconsts above
           m {:ns     (#?(:clj find-ns :cljs do)
                        'io.jesi.backpack.macros-test)
              :file   (:file (meta #'defconsts-test))
              :name   'dolphins-call-eachother-by-name
-             :line   165
+             :line   line
              :column 5
              #?@(:cljs [:end-line (inc line)
                         :end-column 39
@@ -179,26 +180,59 @@
                         :doc nil
                         :test nil])}]
       (is= m
-           (meta (var dolphins-call-eachother-by-name)))
+           (meta #'dolphins-call-eachother-by-name))
       (is= (assoc m
              :name 'immortal-jellyfish
              :tag #?(:clj String :cljs 'String)
              :doc "Turritopsis dohrnii can revert to it's childhood form and so never die"
              #?@(:cljs [:end-line (+ 2 line)
                         :end-column 114]))
-           (meta (var immortal-jellyfish)))
+           (meta #'immortal-jellyfish))
       (is= (assoc m
              :name 'dodo
              :deprecated true
              #?@(:cljs [:end-line (+ 3 line)
                         :end-column 24]))
-           (meta (var dodo)))))
+           (meta #'dodo))))
+
+  (testing "if possible, metadata is on the value"
+    (defconsts identity
+      ^{:doc "THAT'S A LOT OF ANTS"} one-million-ants-for-very-person)
+    (is (symbol? one-million-ants-for-very-person))         ;value is a symbol, supports metadata
+    (letfn [(doc [o]
+              (:doc (meta o)))]
+      (is= "THAT'S A LOT OF ANTS"
+           (doc one-million-ants-for-very-person)           ;meta on the value
+           (doc #'one-million-ants-for-very-person)))       ;meta on the var
+    (defconsts str
+      ^:hum-in-the-key-of-f fly)
+    (is (string? fly))                                      ;value is a string, metadata is not supported
+    (letfn [(hums? [o]
+              (:hum-in-the-key-of-f (meta o)))]
+      (is (nil? (hums? fly)))                               ;no meta
+      (is (true? (hums? #'fly)))))                          ;meta on the var
 
   (testing "metadata can be used in body-fn"
-    (remove-all)
+    (unmap-all)
     (defconsts (comp :value meta)
       ^{:value "bat"} only-flying-mammal)
-    (is= ["bat"]
+    (is= #{"bat"}
+         -all))
+
+  (testing "creates -all-vec vector"
+    (unmap-all)
+    (defconsts str
+      'elephants-have-a-special-alarm-sound-for-humans
+      'honeybees-can-flap-their-wings-200-time-per-second
+      'small-animals-with-a-faster-metabolism-perceive-faster-so-see-the-world-in-slow-motion)
+    (let [v -all-vec]                                       ;for some reason, can't use -all-vec inside an `is` (becomes an Unbound var) for clj
+      (is= [elephants-have-a-special-alarm-sound-for-humans
+            honeybees-can-flap-their-wings-200-time-per-second
+            small-animals-with-a-faster-metabolism-perceive-faster-so-see-the-world-in-slow-motion]
+           #?(:clj v :cljs -all-vec)))
+    (is= #{honeybees-can-flap-their-wings-200-time-per-second
+           small-animals-with-a-faster-metabolism-perceive-faster-so-see-the-world-in-slow-motion
+           elephants-have-a-special-alarm-sound-for-humans}
          -all)))
 
 (deftest when-debug-test
@@ -319,3 +353,27 @@
                 expected (apply + args)
                 actual (apply impl args)]
             (is= expected actual)))))))
+
+(deftest cond=-test
+
+  #?(:clj (testing "is a macro"
+            (is (macro? `cond=))))
+
+  (testing "expands to a condp ="
+    (let [a :a]
+      (is-macro= '(clojure.core/condp clojure.core/= a
+                    :a 1
+                    2)
+                 (macroexpand-1 '(io.jesi.backpack.macros/cond= a
+                                   :a 1
+                                   2)))))
+
+  (testing "same as condp ="
+    (let [a :a]
+      (is= 1 (cond= a
+               :a 1
+               2)))
+    (let [a nil]
+      (is= 2 (cond= a
+               :a 1
+               2)))))

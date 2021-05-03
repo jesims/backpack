@@ -5,7 +5,7 @@
     #?(:cljs [cljs.core :refer [IFn]])
     [clojure.core]
     [io.jesi.backpack.env :as env]
-    [io.jesi.backpack.fn :refer [noop if-fn and-fn p=]])
+    [io.jesi.backpack.fn :refer [and-fn if-fn noop p=]])
   #?(:clj
      (:import
        (clojure.lang IFn))))
@@ -165,12 +165,21 @@ A single default expression can follow the clauses, and its value will be return
     `(do
        ~@(for [sym symbols]
            ;TODO adjust meta to have the correct :line and :column by looking at &form
+           ;TODO add ^:const metadata?
            (let [m (meta sym)
                  body-sym `(quote ~sym)]
+             ;;FIXME should body-fn evaluate the value now so that they are literals?
+             ;; eval at compile time instead of runtime (when the ns is loaded)?
+             ;; so (def sym "sym") instead of (def sym (str 'sym))
+             ;; would allow usage of ^:const for CLJS
+             ;;`(def ~sym ~(body-fn (if m
+             ;;                       (with-meta body-sym m)
+             ;;                       body-sym)))
              `(def ~sym (~body-fn ~(if m
                                      `(with-meta ~body-sym ~m)
                                      body-sym)))))
-       (def ~'-all ~(vec symbols)))))
+       (def ~'-all ~(set symbols))
+       (def ~'-all-vec ~(vec symbols)))))
 
 (defmacro when-not= [test body]
   `(when-not (= ~test ~body)
