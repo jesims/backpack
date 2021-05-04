@@ -12,6 +12,7 @@ Changed:
 Fixed:
 
 * `io.jesi.backpack.macros/defconsts` not preserving metadata for vars
+* `io.jesi.backpack.string/kebab-case->Proper-Kebab-Case` only handling strings
 
 # 7.1.0
 

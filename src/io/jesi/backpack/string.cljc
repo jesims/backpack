@@ -2,7 +2,10 @@
   (:refer-clojure :exclude [subs])
   (:require
     [clojure.string :as str]
-    [io.jesi.backpack.fn :refer [and-fn if-fn or-fn]]))
+    [io.jesi.backpack.fn :refer [and-fn or-fn]]
+    [io.jesi.backpack.macros :refer [condf]])
+  #?(:clj (:import
+            (clojure.lang Keyword IPersistentCollection))))
 
 (defn- normalize-str-idx [length i]
   (if (neg? i)
@@ -71,17 +74,41 @@
   [s]
   (= s "true"))
 
-(defn- kw->str [k]
-  (if-let [ns (namespace k)]
-    (str ns \/ (name k))
-    (name k)))
+(defn kw->str [^Keyword k]
+  (str #?(:clj  (.-sym k)
+          :cljs (.-fqn k))))
 
-(def ^:private ->str (if-fn keyword? kw->str str))
+(comment                                                    ;TODO make ->str extensible once `import-vars` and cljs global hierarchy, works for cljs
+  (defmulti ->str
+    "Extensible way to convert a single value to a string. Collection types should return `nil`"
+    type)
+
+  (defmethod ->str Keyword [^Keyword k]
+    (kw->str k))
+
+  (defmethod ->str IPersistentCollection [_]
+    nil)
+
+  (defmethod ->str :default [o]
+    (some-> o
+            (str))))
+
+;; TODO fix cljs hierarchy, then use clj (defmulti) code above
+;; according to the global hierarchy, PersistentHashSet is not a ICollection
+;; (isa?  PersistentHashSet ICollection) ;=> false
+;; using `derive` to add the collection types, throws a compiler error
+(defn ->str
+  "Convert a single value to a string. Collection types return `nil`"
+  [o]
+  (condf o
+    nil? nil
+    keyword? (kw->str o)
+    coll? nil
+    (str o)))
 
 (defn ->camelCase [s]
-  (when s
-    (let [s (->str s)
-          [head & rest] (remove empty? (str/split s #"-|(?=[A-Z])"))
+  (when-let [s (some-> s (->str))]
+    (let [[head & rest] (remove empty? (str/split s #"-|(?=[A-Z])"))
           camel (cons (str/lower-case head) (map str/capitalize rest))
           ;TODO improve adding in - prefix and suffix
           camel (if (= \- (get s 0))
@@ -93,18 +120,18 @@
       (str/join camel))))
 
 (defn ->kebab-case [s]
-  (some-> s
-          ->str
-          (str/replace #"([A-Z]{2,})([a-z])" "$1 $2")
-          (str/replace #"([a-z])([A-Z])" "$1 $2")
-          (str/replace #"([0-9])([A-Z])" "$1 $2")
-          (str/replace \_ \-)
-          (str/replace #"\s" "-")
-          str/lower-case))
+  (when-let [s (some-> s (->str))]
+    (-> s
+        (str/replace #"([A-Z]{2,})([a-z])" "$1 $2")
+        (str/replace #"([a-z])([A-Z])" "$1 $2")
+        (str/replace #"([0-9])([A-Z])" "$1 $2")
+        (str/replace \_ \-)
+        (str/replace #"\s" "-")
+        (str/lower-case))))
 
 (defn ->snake_case [s]
   (some-> s
-          ->kebab-case
+          (->kebab-case)
           (str/replace \- \_)))
 
 (def ->kebab-case-key (comp keyword ->kebab-case))
@@ -132,17 +159,19 @@
 
 (defn ->proper-case [s]
   (some-> s
+          (->str)
           (str/replace #"\b." str/upper-case)))
 
-(defn kebab->proper-case [s]
-  (some-> s
+(defn kebab->proper-case [kebab-case]
+  (some-> kebab-case
+          (->str)
           (str/replace \- \space)
           (->proper-case)))
 
-(defn kebab-case->Proper-Kebab-Case [kebab-case-str]
-  (when (string? kebab-case-str)
-    (-> (kebab->proper-case kebab-case-str)
-        (str/replace \space \-))))
+(defn kebab-case->Proper-Kebab-Case [kebab-case]
+  (some-> kebab-case
+          (kebab->proper-case)
+          (str/replace \space \-)))
 
 (defn split-at-first
   "Splits s at the first occurrence of value, returns nil when s is empty"
