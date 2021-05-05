@@ -1,8 +1,8 @@
 (ns io.jesi.backpack.clojurescript
-  #?(:cljs (:refer-clojure :exclude [clj->js js->clj]))
+  #?(:cljs (:refer-clojure :exclude [clj->js js->clj type]))
   (:require
-    #?(:cljs [goog.object :as gobj])
-    #?(:cljs [io.jesi.backpack.collection :refer [transform-keys]])
+    #?@(:cljs [[goog.object :as gobj]
+               [io.jesi.backpack.collection :refer [transform-keys]]])
     [io.jesi.backpack.string :refer [->camelCase ->kebab-case-key]]))
 
 #?(:cljs

@@ -1,3 +1,19 @@
+# 7.2.0
+
+Added:
+
+* `io.jesi.backpack.macros/defconsts` will create `-all-vec` var that has the values in order
+* `io.jesi.backpack.macros/cond=`
+
+Changed:
+
+* `io.jesi.backpack.macros/defconsts` will put symbol metadata on the value (if possible)
+
+Fixed:
+
+* `io.jesi.backpack.macros/defconsts` not preserving metadata for vars
+* `io.jesi.backpack.string/kebab-case->Proper-Kebab-Case` only handling strings
+
 # 7.1.0
 
 Added:

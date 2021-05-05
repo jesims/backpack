@@ -2,7 +2,11 @@
   (:require
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [deftest is is= testing]]))
+    [io.jesi.backpack.string]
+    [io.jesi.customs.spy :as spy]                           ;FIXME remove
+    [io.jesi.customs.strict :refer [are deftest is is= testing]])
+  #?(:clj (:import
+            (clojure.lang MultiFn))))
 
 (deftest uuid-str?-test
 
@@ -44,11 +48,13 @@
 (deftest ->camelCase-test
   (is= "v2"
        (bp/->camelCase :v2)
-       (bp/->camelCase "v2"))
+       (bp/->camelCase "v2")
+       (bp/->camelCase 'v2))
 
   (is= "baseUrl"
        (bp/->camelCase :base-url)
-       (bp/->camelCase "base-url"))
+       (bp/->camelCase "base-url")
+       (bp/->camelCase 'base-url))
 
   (is= "_actions"
        (bp/->camelCase :_actions)
@@ -130,7 +136,12 @@
   (is= :turtles.can.breathe.through/their-anus
        (bp/->kebab-case-key :turtles.can.breathe.through/their-anus)
        (bp/->kebab-case-key "turtles.can.breathe.through/their-anus")
-       (bp/->kebab-case-key "turtles.can.breathe.through/theirAnus")))
+       (bp/->kebab-case-key "turtles.can.breathe.through/theirAnus"))
+
+  (testing "retains namespace"
+    (let [ns "turtles.can.breathe.through"]
+      (is= ns
+           (namespace (bp/->kebab-case-key (str ns "/their-anus")))))))
 
 (deftest ->snake_case-test
   (is= "v2"
@@ -311,17 +322,15 @@
 
 (deftest ->proper-case-test
 
-  (testing "->proper-case"
-
-    (testing "converts words into proper case"
-      (is (nil? (bp/->proper-case nil)))
-      (is= "" (bp/->proper-case ""))
-      (is= "Whales Are Warm-Blooded Creatures That Nurse Their Young"
-           (bp/->proper-case "Whales are warm-blooded creatures that nurse their young"))
-      (is= "Blue-Whales-Are-The-Largest-Animals-To-Have-Ever-Existed"
-           (bp/->proper-case "blue-whales-are-the-largest-animals-to-have-ever-existed"))
-      (is= "The Heart Of A Blue Whale Is As Big As A Small Car"
-           (bp/->proper-case "The heart of a Blue Whale is as big as a small car")))))
+  (testing "converts words into proper case"
+    (is (nil? (bp/->proper-case nil)))
+    (is= "" (bp/->proper-case ""))
+    (is= "Whales Are Warm-Blooded Creatures That Nurse Their Young"
+         (bp/->proper-case "Whales are warm-blooded creatures that nurse their young"))
+    (is= "Blue-Whales-Are-The-Largest-Animals-To-Have-Ever-Existed"
+         (bp/->proper-case "blue-whales-are-the-largest-animals-to-have-ever-existed"))
+    (is= "The Heart Of A Blue Whale Is As Big As A Small Car"
+         (bp/->proper-case "The heart of a Blue Whale is as big as a small car"))))
 
 (deftest kebab->proper-case-test
 
@@ -353,15 +362,69 @@
 
 (deftest kebab-case->Proper-Kebab-Case-test
 
-  (testing "returns nil for non-string values"
-      (is (nil? (bp/kebab-case->Proper-Kebab-Case :life-in-the-undergrowth)))
-      (is (nil? (bp/kebab-case->Proper-Kebab-Case #{:life-in-the-undergrowth}))))
+  (testing "returns nil for collection values"
+    (are [x] (is (nil? (bp/kebab-case->Proper-Kebab-Case x)) (str "type: " (type x) " is not nil"))
+      #{:life-in-the-undergrowth}
+      '(:life-in-the-undergrowth)
+      [:life-in-the-undergrowth]))
 
   (testing "returns empty string when given empty string"
     (is= "" (bp/kebab-case->Proper-Kebab-Case "")))
 
   (testing "capitalises the first letter in each word in a kebab cased string"
-    (is= "Life-In-The-Undergrowth" (bp/kebab-case->Proper-Kebab-Case "life-in-the-undergrowth")))
+    (is= "Life-In-The-Undergrowth"
+         (bp/kebab-case->Proper-Kebab-Case "life-in-the-undergrowth")
+         (bp/kebab-case->Proper-Kebab-Case :life-in-the-undergrowth)))
 
   (testing "returns a capitalized string if no hyphens"
     (is= "Dynasties" (bp/kebab-case->Proper-Kebab-Case "dynasties"))))
+
+(deftest ->str-test
+  ;FIXME testing strings
+
+  (spy/enabled
+    (testing "is a function"
+      ;FIXME bp/->str is not found for cljs
+      #?(:cljs (spy/pprint
+                 bp/->str
+                 (type bp/->str)
+                 (ns-publics 'io.jesi.backpack.string)))
+      (when (is (some? bp/->str))
+        #?(:clj  (is (instance? MultiFn bp/->str))
+           :cljs (is (fn? bp/->str))))))
+
+  (testing "has docstring"
+    (let [docstring (fn [var]
+                      (:doc (meta var)))
+          expected (docstring #'io.jesi.backpack.string/->str)]
+      (when (is (bp/not-blank? expected))
+        (is= expected
+             (docstring #'bp/->str)))))
+
+  (testing "returns nil for nil"
+    (is (nil? (io.jesi.backpack.string/->str nil))))
+
+  (testing "returns nil for collection types"
+    (are [coll] (is (nil? (io.jesi.backpack.string/->str coll))
+                  (str "type: " (type coll) " is not nil"))
+      {}
+      {:a 1}
+      []
+      [1]
+      #{}
+      #{1}
+      '()
+      '(1)))
+
+  (testing "returns keyword fully qualified name"
+    (is= "io.jesi.backpack.string-test/test"
+         (io.jesi.backpack.string/->str ::test)))
+
+  (testing "string value for other types"
+    (let [test (fn
+                 ([v]
+                  (is (identical? v (io.jesi.backpack.string/->str v))))
+                 ([expected v]
+                  (is= expected (io.jesi.backpack.string/->str v))))]
+      (test "a")
+      (test "a" 'a))))
