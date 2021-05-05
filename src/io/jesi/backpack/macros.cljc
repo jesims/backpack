@@ -42,12 +42,14 @@
                                    (remove (comp :import/exclude meta)))]
                      (apply concat
                        (for [var vars]
-                         (let [sym (symbol var)
-                               name (-> sym name symbol)
+                         (let [name (->> var
+                                         (symbol)
+                                         (name)
+                                         (symbol))
                                {:keys [doc]
                                 :or   {doc ""}} (meta var)]
-                           `[(def ~name ~doc ~sym)
-                             (alter-meta! #'~name (partial merge (meta #'~sym)))])))))))))
+                           `[(def ~name ~doc @~var)
+                             (alter-meta! #'~name (partial merge (meta ~var)))])))))))))
 
 (defmacro catch-> [handle & body]
   `(try

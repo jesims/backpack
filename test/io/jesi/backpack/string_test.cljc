@@ -2,7 +2,11 @@
   (:require
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [deftest is is= testing are]]))
+    [io.jesi.backpack.string]
+    [io.jesi.customs.spy :as spy]                           ;FIXME remove
+    [io.jesi.customs.strict :refer [are deftest is is= testing]])
+  #?(:clj (:import
+            (clojure.lang MultiFn))))
 
 (deftest uuid-str?-test
 
@@ -375,36 +379,52 @@
   (testing "returns a capitalized string if no hyphens"
     (is= "Dynasties" (bp/kebab-case->Proper-Kebab-Case "dynasties"))))
 
-(deftest ^:focus ->str-test
+(deftest ->str-test
   ;FIXME testing strings
 
-  (testing "is a function"
-    ;FIXME bp/->str is not found for clj
-    (when (is (fn? @#'bp/->str))
+  (spy/enabled
+    (testing "is a function"
+      ;FIXME bp/->str is not found for cljs
+      #?(:cljs (spy/pprint
+                 bp/->str
+                 (type bp/->str)
+                 (ns-publics 'io.jesi.backpack.string)))
+      (when (is (some? bp/->str))
+        #?(:clj  (is (instance? MultiFn bp/->str))
+           :cljs (is (fn? bp/->str))))))
 
-      (testing "returns nil for nil"
-        (is (nil? (bp/->str nil))))
+  (testing "has docstring"
+    (let [docstring (fn [var]
+                      (:doc (meta var)))
+          expected (docstring #'io.jesi.backpack.string/->str)]
+      (when (is (bp/not-blank? expected))
+        (is= expected
+             (docstring #'bp/->str)))))
 
-      (testing "returns nil for collection types"
-        (are [coll] (is (nil? (bp/->str coll)))
-          {}
-          {:a 1}
-          []
-          [1]
-          #{}
-          #{1}
-          '()
-          '(1)))
+  (testing "returns nil for nil"
+    (is (nil? (io.jesi.backpack.string/->str nil))))
 
-      (testing "returns keyword fully qualified name"
-        (is= "io.jesi.backpack.string-test/test"
-             (bp/->str ::test)))
+  (testing "returns nil for collection types"
+    (are [coll] (is (nil? (io.jesi.backpack.string/->str coll))
+                  (str "type: " (type coll) " is not nil"))
+      {}
+      {:a 1}
+      []
+      [1]
+      #{}
+      #{1}
+      '()
+      '(1)))
 
-      (testing "string value for other types"
-        (let [test (fn
-                     ([v]
-                      (is (identical? v (bp/->str v))))
-                     ([expected v]
-                      (is= expected (bp/->str v))))]
-          (test "a")
-          (test "a" 'a))))))
+  (testing "returns keyword fully qualified name"
+    (is= "io.jesi.backpack.string-test/test"
+         (io.jesi.backpack.string/->str ::test)))
+
+  (testing "string value for other types"
+    (let [test (fn
+                 ([v]
+                  (is (identical? v (io.jesi.backpack.string/->str v))))
+                 ([expected v]
+                  (is= expected (io.jesi.backpack.string/->str v))))]
+      (test "a")
+      (test "a" 'a))))

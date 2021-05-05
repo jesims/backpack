@@ -1,11 +1,11 @@
 (ns io.jesi.backpack.string
-  (:refer-clojure :exclude [subs])
+  (:refer-clojure :exclude [#?(:cljs type) subs])
   (:require
     [clojure.string :as str]
     [io.jesi.backpack.fn :refer [and-fn or-fn]]
     [io.jesi.backpack.macros :refer [condf]])
   #?(:clj (:import
-            (clojure.lang Keyword IPersistentCollection))))
+            (clojure.lang IPersistentCollection Keyword))))
 
 (defn- normalize-str-idx [length i]
   (if (neg? i)
@@ -78,33 +78,53 @@
   (str #?(:clj  (.-sym k)
           :cljs (.-fqn k))))
 
-(comment                                                    ;TODO make ->str extensible once `import-vars` and cljs global hierarchy, works for cljs
-  (defmulti ->str
-    "Extensible way to convert a single value to a string. Collection types should return `nil`"
-    type)
+#?(:cljs
+   ;TODO move to own ns
+   (do
+     (comment
+       (defonce ^:private types (atom []))
 
-  (defmethod ->str Keyword [^Keyword k]
-    (kw->str k))
+       (defn reg-type [pred fq-sym]
+         (atom/conj! types [pred fq-sym]))
 
-  (defmethod ->str IPersistentCollection [_]
-    nil)
+       (defn unreg-type [pred fq-sym]))
 
-  (defmethod ->str :default [o]
-    (some-> o
-            (str))))
+     (defn type [o]
+       ;TODO check the type atom
+       (condp #(%1 %2) o
+         string? 'js/String
+         number? 'js/Number
+         keyword? `Keyword
+         coll? `ICollection
+         seq? `ISeq
+         nil))))
+
+(defmulti ->str
+  "Extensible way to convert a single value to a string. Collection types should return `nil`"
+  type)
+
+(defmethod ->str #?(:clj Keyword :cljs `Keyword) [^Keyword k]
+  (kw->str k))
+
+(defmethod ->str #?(:clj IPersistentCollection :cljs `ICollection) [_]
+  nil)
+
+(defmethod ->str :default [o]
+  (some-> o
+          (str)))
 
 ;; TODO fix cljs hierarchy, then use clj (defmulti) code above
 ;; according to the global hierarchy, PersistentHashSet is not a ICollection
 ;; (isa?  PersistentHashSet ICollection) ;=> false
 ;; using `derive` to add the collection types, throws a compiler error
-(defn ->str
-  "Convert a single value to a string. Collection types return `nil`"
-  [o]
-  (condf o
-    nil? nil
-    keyword? (kw->str o)
-    coll? nil
-    (str o)))
+(comment (defn ->str
+           "Convert a single value to a string. Collection types return `nil`"
+           [o]
+           (condf o
+             nil? nil
+             keyword? (kw->str o)
+             coll? nil
+             (str o))))
 
 (defn ->camelCase [s]
   (when-let [s (some-> s (->str))]
