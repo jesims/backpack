@@ -1,10 +1,10 @@
 (ns io.jesi.backpack.miscellaneous-test
   (:require
+    [clojure.string :as str]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.spy :as spy]
-    [io.jesi.customs.strict :refer [are deftest is is= testing]]
-    [clojure.string :as str])
+    [io.jesi.customs.strict :refer [are deftest is is= testing]])
   #?(:clj
      (:import
        (clojure.lang Named)
