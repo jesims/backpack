@@ -3,9 +3,13 @@
   (:require
     [clojure.core.async :as async]
     [clojure.core.async.impl.protocols :as proto]
+    [io.jesi.backpack.close :refer [close]]
     [io.jesi.backpack.env :as env]
     [io.jesi.backpack.exceptions :as ex]
-    [io.jesi.backpack.macros :refer [catch->identity]]))
+    [io.jesi.backpack.macros :refer [catch->identity]]
+    #?(:cljs [clojure.core.async.impl.channels :as chan]))
+  #?(:clj (:import
+            (clojure.core.async.impl.protocols Channel))))
 
 (defn closed?
   "returns true if the channel is nil or closed"
@@ -127,3 +131,13 @@
   `(go-try
      (when ~f
        (~f (<? ~chan)))))
+
+(defmethod close proto/Channel [o]
+  (async/close! o))
+
+
+#?(:clj  (defmethod close Channel [o]
+           (async/close! o))
+
+   :cljs (defmethod close chan/ManyToManyChannel [o]
+           (async/close! o)))

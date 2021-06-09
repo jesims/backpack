@@ -3,6 +3,7 @@
   (:require
     #?(:clj  [io.jesi.backpack.clojure]
        :cljs [io.jesi.backpack.clojurescript])
+    [io.jesi.backpack.close]
     [io.jesi.backpack.collection]
     [io.jesi.backpack.exceptions]
     [io.jesi.backpack.fn]
@@ -13,6 +14,7 @@
     [io.jesi.backpack.string]))
 
 (import-vars
+  io.jesi.backpack.close
   io.jesi.backpack.collection
   io.jesi.backpack.common
   io.jesi.backpack.exceptions

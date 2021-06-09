@@ -1,9 +1,11 @@
 (ns io.jesi.backpack.macros
-  (:refer-clojure :exclude [when-let])
+  (:refer-clojure :exclude [when-let with-open])
   #?(:cljs (:require-macros [io.jesi.backpack.macros]))
   (:require
     #?(:cljs [cljs.core :refer [IFn]])
     [clojure.core]
+    [io.jesi.backpack.atom :as atom]
+    [io.jesi.backpack.close :refer [close]]
     [io.jesi.backpack.env :as env]
     [io.jesi.backpack.fn :refer [noop]])
   #?(:clj
@@ -220,3 +222,64 @@ A single default expression can follow the clauses, and its value will be return
    `(def ~(private symbol) ~init))
   ([symbol doc-string init]
    `(def ~(private symbol) ~doc-string ~init)))
+
+(defmacro with-open
+  "bindings => [sym init ...]
+
+  Evaluates body in a try expression with symbols bound to the values
+  of the inits, and a finally clause that calls (bp/close sym) on each
+  sym in reverse order."
+  [bindings & body]
+  {:pre [(vector? bindings)
+         (even? (count bindings))]}
+  (cond
+    (zero? (count bindings))
+    `(do ~@body)
+
+    (symbol? (bindings 0))
+    `(let ~(subvec bindings 0 2)
+       (try
+         (with-open ~(subvec bindings 2)
+           ~@body)
+         (finally
+           (close ~(bindings 0)))))
+
+    :else
+    (throw (IllegalArgumentException. "with-open only allows Symbols in bindings"))))
+
+(defmacro with-open-> [x & forms]
+  `(with-open [v# ~x]
+     (-> v#
+         ~@forms)))
+
+(defmacro assoc-nx
+  "Lazily assocs each kv iff its key doesn't already exist.
+   Macro version of taoensso.encore/assoc-nx"
+  ([m k v]
+   `(let [m# ~m
+          k# ~k]
+      (if (contains? m# k#)
+        m#
+        (assoc m#
+          k# ~v))))
+  ([m k v & kvs]
+   {:pre [(even? (count kvs))]}
+   (let [kvs (vec (list* k v kvs))]
+     `(assoc-nx ~m ~kvs)))
+  ([m kvs]
+   {:pre [(even? (count kvs))]}
+   `(-> ~m
+        ~@(for [[k v] (partition 2 kvs)]
+            `(assoc-nx ~k ~v)))))
+
+(defmacro atom-assoc!
+  "Lazily `atom/assoc!` the `body` if key `k` does not already exist in the atom.
+  Returns the `assoc`ed (`body`) value"
+  [a k body]
+  ;;TODO make this 100% thread-safe
+  ;;currently body could be evaluated concurrently between the @ and the swap!
+  ;;create own Atom implementation that does lock
+  `(let [a# @~a]
+     (if (contains? a# ~k)
+       (~k a#)
+       (~k (atom/assoc! ~a ~k ~body)))))

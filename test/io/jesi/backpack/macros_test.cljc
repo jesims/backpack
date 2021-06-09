@@ -1,14 +1,16 @@
 (ns io.jesi.backpack.macros-test
+  (:refer-clojure :exclude [with-open identical?])
   (:require
     [clojure.string :as str]
     [io.jesi.backpack :as bp]
+    [io.jesi.backpack.closey :refer [->Closey closed?]]
     [io.jesi.backpack.macros :refer #?(:clj  :all
-                                       :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug])]
+                                       :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug assoc-nx])]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [deftest is is= testing use-fixtures]]
+    [io.jesi.customs.strict :refer [deftest is is= testing use-fixtures thrown?]]
     [io.jesi.customs.util :refer [is-macro=]])
   #?(:clj (:import
-            (clojure.lang ArityException)
+            (clojure.lang ArityException ExceptionInfo)
             (java.lang ArithmeticException SecurityException))))
 
 (defn- set-debug [v]
@@ -272,3 +274,100 @@
                 expected (apply + args)
                 actual (apply impl args)]
             (is= expected actual)))))))
+
+(deftest with-open-test
+
+  (testing "closes the resource"
+    (let [ran (volatile! false)
+          o (->Closey)]
+      (with-open [o o]
+        (when (is (false? (closed? o)))
+          (vreset! ran true)))
+      (is (true? (closed? o))))
+
+    (testing "on exception"
+      (let [o (->Closey)]
+        (is (thrown? ExceptionInfo (with-open [o o]
+                                     (when (is (false? (closed? o)))
+                                       (throw (ex-info "Don't panic" {}))))))
+        (is (true? (closed? o)))))))
+
+;FIXME complete
+(deftest with-open->-test)
+
+
+(defn- identical?
+  ([x y] (clojure.core/identical? x y))
+  ([x y & more]
+   (->> (list* x y more)
+        (partition 2 1)
+        (every? (fn [[x y]]                                 ;TODO point-free
+                  (clojure.core/identical? x y))))))
+
+(deftest assoc-nx-test
+  (let [m1 {:a 1}
+        m2 (assoc m1
+             :b 2)
+        m3 (assoc m2
+             :c 3)]
+
+    #?(:clj (testing "is a macro"
+              (is (macro? `assoc-nx))))
+
+    (testing "expands"
+      ;Fails even though the content is the same (yeah that again)
+      (comment (is-macro= '(let [m# {:a 1}
+                                 k# :b]
+                             (if (contains? m# k#)
+                               m#
+                               (assoc m#
+                                 k# 2)))
+                          (macroexpand-1 '(io.jesi.backpack.macros/assoc-nx {:a 1}
+                                            :b 2))))
+      ;don't ask me why this one works but others do not
+      (is-macro= '(io.jesi.backpack.macros/assoc-nx {:a 1} [:b 2 :c 3])
+                 (macroexpand-1 '(io.jesi.backpack.macros/assoc-nx {:a 1}
+                                   :b 2
+                                   :c 3)))
+      ;Fails even though the content is the same (yeah that again)
+      (comment (is-macro= '(-> {:a 1}
+                               (io.jesi.backpack.macros/assoc-nx :b 2)
+                               (io.jesi.backpack.macros/assoc-nx :c 3))
+                          (macroexpand-1 '(io.jesi.backpack.macros/assoc-nx {:a 1} [:b 2 :c 3])))))
+
+    (testing "assoc the values"
+      (is= m2
+           (assoc-nx m1 :b 2)
+           (assoc-nx m1 [:b 2])
+           (assoc-nx {} :a 1 :b 2)
+           (assoc-nx {} [:a 1 :b 2]))
+      (is= m3
+           (assoc-nx m2 :c 3)
+           (assoc-nx m1 :b 2 :c 3)
+           (assoc-nx {} :a 1 :b 2 :c 3)
+           (assoc-nx {} [:a 1 :b 2 :c 3]))
+
+      (testing "if the key does not exist"
+        (is (identical? m1
+                        (assoc-nx m1 :a 2)
+                        (assoc-nx m1 [:a 2])))
+        (is (identical? m2
+                        (assoc-nx m2 :a 3 :b 4)
+                        (assoc-nx m2 [:a 3 :b 4]))))
+
+      (testing "lazily"
+        (is (identical? m1
+                        (assoc-nx m1
+                          :a (throw (ex-info "Unexpected" {})))
+                        (assoc-nx m1
+                          [:a (throw (ex-info "Unexpected" {}))])))
+        (is (identical? m2
+                        (assoc-nx m2
+                          :a (throw (ex-info "Unexpected a" {}))
+                          :b (throw (ex-info "Unexpected b" {})))
+                        (assoc-nx m2
+                          [:a (throw (ex-info "Unexpected a" {}))
+                           :b (throw (ex-info "Unexpected b" {}))])))))))
+
+;FIXME complete
+(deftest atom-assoc!-test)
