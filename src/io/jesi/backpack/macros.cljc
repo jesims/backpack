@@ -272,14 +272,15 @@ A single default expression can follow the clauses, and its value will be return
         ~@(for [[k v] (partition 2 kvs)]
             `(assoc-nx ~k ~v)))))
 
-(defmacro atom-assoc!
-  "Lazily `atom/assoc!` the `body` if key `k` does not already exist in the atom.
-  Returns the `assoc`ed (`body`) value"
-  [a k body]
+(defmacro assoc-nx!
+  "Lazily `atom/assoc!` if the key does not already exist.
+  Returns the value in the atom"
+  [a k v]
   ;;TODO make this 100% thread-safe
-  ;;currently body could be evaluated concurrently between the @ and the swap!
+  ;;currently body could be evaluated concurrently between the @ and the swap! (atom/assoc!)
   ;;create own Atom implementation that does lock
   `(let [a# @~a]
-     (if (contains? a# ~k)
-       (~k a#)
-       (~k (atom/assoc! ~a ~k ~body)))))
+     (-> (if (contains? a# ~k)
+           a#
+           (atom/assoc! ~a ~k ~v))
+         (get ~k))))

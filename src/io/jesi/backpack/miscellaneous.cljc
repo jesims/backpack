@@ -1,13 +1,15 @@
 (ns io.jesi.backpack.miscellaneous
   (:refer-clojure :exclude [assoc-in])
   (:require
-    #?(:cljs [goog.Uri])
+    #?@(:cljs [[goog.Uri]
+               [clojure.string :as str]])
     [io.jesi.backpack.macros :refer [catch->nil]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
      (:import
        (java.net URI)
-       (java.util UUID))))
+       (java.util UUID)
+       (java.util.regex Pattern))))
 
 (defmulti ->uuid
   "Coerces a value into a UUID if possible, otherwise returns nil"
@@ -44,3 +46,11 @@
         (not (and x y))))
   ([x y & more]
    (xor (xor x y) (apply xor more))))
+
+(defn re-quote
+  "Quotes the regex string"
+  [s]
+  ;TODO return re-pattern instead?
+  #?(:clj  (Pattern/quote s)
+     ;see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
+     :cljs (str/replace s #"[.*+?^${}()|[\\]\\\\]" "\\$1")))

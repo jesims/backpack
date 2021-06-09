@@ -2,7 +2,9 @@
   (:require
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [are deftest is is= testing]])
+    [io.jesi.customs.spy :as spy]
+    [io.jesi.customs.strict :refer [are deftest is is= testing]]
+    [clojure.string :as str])
   #?(:clj
      (:import
        (clojure.lang Named)
@@ -93,3 +95,17 @@
     (is (true? (bp/xor true false false)))
     (is (true? (bp/xor false false false true)))
     (is (false? (bp/xor true false true)))))
+
+(deftest re-quote-test
+
+  (spy/enabled
+    (testing "quotes the regex string"
+      (let [s ".*+?^${}()|[]\\"]
+        #?(:clj  (is= (str "\\Q" s "\\E")
+                      (bp/re-quote s))
+           ;FIXME check the string, there should be a \\ before each character
+           :cljs (is= (->> s
+                           (interleave (constantly \\))
+                           (str/join)
+                           spy/ppeek)
+                      (bp/re-quote s)))))))

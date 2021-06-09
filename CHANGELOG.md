@@ -6,9 +6,10 @@ Added:
   * `with-open`
   * `with-open->`
   * `assoc-nx`
-  * `lazy-assoc!`
+  * `assoc-nx!`
 * `io.jesi.backpack.close/close` multimethod
 * `io.jesi.backpack.collection/distinct-vals?`
+* `io.jesi.backpack.miscellaneous/re-quote`
 
 # 7.1.0
 

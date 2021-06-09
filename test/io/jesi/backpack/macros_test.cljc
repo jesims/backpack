@@ -7,11 +7,12 @@
     [io.jesi.backpack.macros :refer #?(:clj  :all
                                        :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug assoc-nx])]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [deftest is is= testing thrown? use-fixtures]]
+    [io.jesi.customs.strict :refer [deftest is is= testing thrown-with-msg? use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])
   #?(:clj (:import
             (clojure.lang ArityException ExceptionInfo)
-            (java.lang ArithmeticException SecurityException))))
+            (java.lang ArithmeticException SecurityException)
+            (java.util.regex Pattern))))
 
 (defn- set-debug [v]
   #?(:cljs (set! js/goog.DEBUG v)))
@@ -286,15 +287,31 @@
       (is (true? (closed? o))))
 
     (testing "on exception"
-      (let [o (->Closey)]
-        (is (thrown? ExceptionInfo (with-open [o o]
-                                     (when (is (false? (closed? o)))
-                                       (throw (ex-info "Don't panic" {}))))))
+      (let [o (->Closey)
+            msg "Don't panic"]
+        (is (thrown-with-msg? ExceptionInfo (re-pattern (bp/re-quote msg))
+              (with-open [o o]
+                (when (is (false? (closed? o)))
+                  (throw (ex-info msg {}))))))
         (is (true? (closed? o)))))))
 
-;FIXME complete
-(deftest with-open->-test)
+(deftest with-open->-test
 
+  (testing "closes the resource"
+    (let [o (->Closey)]
+      (is= "false"
+           (with-open-> o
+                        (closed?)
+                        (str)))
+      (is (true? (closed? o))))
+
+    (testing "on exception"
+      (let [o (->Closey)
+            msg "Polar bears have black skin and see-through fur."]
+        (is (thrown-with-msg? ExceptionInfo (re-pattern (bp/re-quote msg))
+              (with-open-> o
+                           ((constantly (throw (ex-info msg {})))))))
+        (is (true? (closed? o)))))))
 
 (defn- identical?
   ([x y] (clojure.core/identical? x y))
@@ -369,5 +386,32 @@
                           [:a (throw (ex-info "Unexpected a" {}))
                            :b (throw (ex-info "Unexpected b" {}))])))))))
 
-;FIXME complete
-(deftest atom-assoc!-test)
+(deftest assoc-nx!-test
+
+  (testing "assocs the value in the atom"
+    (let [a (atom nil)
+          k "Male koalas have two penises"
+          v "Female koalas have two vaginas"]
+      (assoc-nx! a k v)
+      (is= {k v} @a))
+
+    (testing "returning the value"
+      (let [a (atom nil)
+            k :squirrel
+            v "Animals with smaller bodies and faster metabolism such as chipmunks and squirrels see in slow motion."]
+        (is= v (assoc-nx! a k v))))
+
+    (testing "if it does not exist"
+      (let [k :night-vision
+            v "Reindeer eyeballs turn blue in winter to help them see at lower light levels."
+            m {k v}
+            a (atom m)]
+        (is= v (assoc-nx! a k (rnd/string)))
+        (is= m @a)))
+
+    (testing "lazily"
+      (let [k :sea-lion-drummer
+            v "A sea lion is the first nonhuman mammal with a proven ability to keep a beat."
+            m {k v}
+            a (atom m)]
+        (is= v (assoc-nx! a k (throw (ex-info "Sea lions have external ear flaps, seals do not" {:earflaps? true}))))))))

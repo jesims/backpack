@@ -12,13 +12,17 @@
 (def-test-type ::and-worked false)
 (def-test-type :LOTS_OF_YELLING true)
 
+(defn- class-name [o]
+  (-> o (class) (.getName)))
+
 (deftest defkw-type-test
 
   (testing "Registers keyword as type"
-    ;TODO fails in test refresh (but not the first time it runs)
-    (is (instance? TestType tested))
-    (is (instance? TestType and-worked))
-    (is (instance? TestType lots-of-yelling)))
+    (is= "io.jesi.backpack.clojure_test.TestType"
+         (class-name (->TestType nil nil))
+         (class-name tested)
+         (class-name and-worked)
+         (class-name lots-of-yelling)))
 
   (testing "Applies the arguments to the type constructor"
     (is= ::tested (.val tested))

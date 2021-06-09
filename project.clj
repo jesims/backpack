@@ -10,9 +10,17 @@
   :plugins [[lein-parent "0.3.8"]]
   :parent-project {:coords  [io.jesi/parent "4.11.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
-  :managed-dependencies [[io.jesi/backpack "7.1.0"]]
+  :managed-dependencies [;[io.jesi/backpack "6.3.0"]
+                         [io.jesi/backpack "7.1.0"]]
+                         ;FIXME once CLJS is working, update in parent
+                         ;[thheller/shadow-cljs "2.14.4"]
+                         ;[org.clojure/clojurescript "1.10.866"]
+                         ;[com.google.javascript/closure-compiler-unshaded "v20210505"]
+                         ;[org.clojure/google-closure-library "0.0-20201211-3e6c510d"]
+                         ;[org.clojure/google-closure-library-third-party "0.0-20201211-3e6c510d"]]
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
+                 ;[com.taoensso/encore "2.117.0"]
                  [com.taoensso/encore "3.19.0"]
 
                  ;CLJ
