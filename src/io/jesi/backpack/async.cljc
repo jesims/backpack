@@ -1,13 +1,13 @@
 (ns io.jesi.backpack.async
   #?(:cljs (:require-macros [io.jesi.backpack.async :refer [go go-try when-open]]))
   (:require
+    #?(:cljs [clojure.core.async.impl.channels :as chan])
     [clojure.core.async :as async]
     [clojure.core.async.impl.protocols :as proto]
     [io.jesi.backpack.close :refer [close]]
     [io.jesi.backpack.env :as env]
     [io.jesi.backpack.exceptions :as ex]
-    [io.jesi.backpack.macros :refer [catch->identity]]
-    #?(:cljs [clojure.core.async.impl.channels :as chan]))
+    [io.jesi.backpack.macros :refer [catch->identity]])
   #?(:clj (:import
             (clojure.core.async.impl.protocols Channel))))
 

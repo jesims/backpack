@@ -3,7 +3,7 @@
     #?(:clj [io.jesi.backpack.clojure])
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.async :as async]
-    [io.jesi.backpack.closey :refer [->Closey closed? #?(:clj ->AutoCloseable)]]
+    [io.jesi.backpack.closey :refer [->Closey #?(:clj ->AutoCloseable) closed?]]
     [io.jesi.customs.strict :refer [deftest is testing]]))
 
 (deftest close-test

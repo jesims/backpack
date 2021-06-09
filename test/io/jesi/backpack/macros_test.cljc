@@ -1,5 +1,5 @@
 (ns io.jesi.backpack.macros-test
-  (:refer-clojure :exclude [with-open identical?])
+  (:refer-clojure :exclude [identical? with-open])
   (:require
     [clojure.string :as str]
     [io.jesi.backpack :as bp]
@@ -7,7 +7,7 @@
     [io.jesi.backpack.macros :refer #?(:clj  :all
                                        :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug assoc-nx])]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [deftest is is= testing use-fixtures thrown?]]
+    [io.jesi.customs.strict :refer [deftest is is= testing thrown? use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])
   #?(:clj (:import
             (clojure.lang ArityException ExceptionInfo)

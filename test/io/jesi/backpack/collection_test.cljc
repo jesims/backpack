@@ -2,11 +2,11 @@
   (:refer-clojure :exclude [=])
   (:require
     #?(:cljs [cljs.pprint])
+    [clojure.set :as set]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.collection :refer [create-index index-comparator]]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [= deftest is is= testing are]]
-    [clojure.set :as set]))
+    [io.jesi.customs.strict :refer [= are deftest is is= testing]]))
 
 (deftest safe-empty?-test
 
