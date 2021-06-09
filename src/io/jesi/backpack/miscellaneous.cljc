@@ -50,7 +50,6 @@
 (defn re-quote
   "Quotes the regex string"
   [s]
-  ;TODO return re-pattern instead?
   #?(:clj  (Pattern/quote s)
      ;see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
      :cljs (str/replace s #"[.*+?^${}()|[\\]\\\\]" "\\$1")))
