@@ -10,7 +10,8 @@
   :plugins [[lein-parent "0.3.8"]]
   :parent-project {:coords  [io.jesi/parent "4.14.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
-  :managed-dependencies [[io.jesi/backpack "7.1.0"]]
+  :managed-dependencies [[io.jesi/backpack "7.1.0"]
+                         [com.google.guava/guava "30.1.1-jre"]] ;not sure why we have to add this, it's defined in parent
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
                  [com.taoensso/encore "3.19.0"]
