@@ -1,3 +1,16 @@
+# 7.2.0
+
+Added:
+
+* `io.jesi.backpack.macros/`:
+  * `with-open`
+  * `with-open->`
+  * `assoc-nx`
+  * `assoc-nx!`
+* `io.jesi.backpack.closer/close` multimethod
+* `io.jesi.backpack.collection/distinct-vals?`
+* `io.jesi.backpack.miscellaneous/re-quote`
+
 # 7.1.0
 
 Added:

@@ -1,5 +1,6 @@
 (ns io.jesi.backpack.miscellaneous-test
   (:require
+    #?(:cljs [clojure.string :as str])
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [are deftest is is= testing]])
@@ -68,14 +69,13 @@
           expected #?(:clj (new URI uri)
                       :cljs (goog.Uri. uri))]
       (is (uri? expected))
-      #?(:clj  (do
-                 (is= expected (bp/->uri expected))
+      #?@(:clj  [(is= expected (bp/->uri expected))
                  (is= expected (bp/->uri uri))
-                 (is (identical? expected (bp/->uri expected))))
-         :cljs (is= uri
-                    (-> uri bp/->uri str)
-                    (-> expected str)
-                    (-> expected bp/->uri str)))
+                 (is (identical? expected (bp/->uri expected)))]
+          :cljs [(is= uri
+                      (-> uri bp/->uri str)
+                      (-> expected str)
+                      (-> expected bp/->uri str))])
       (is (uri? (bp/->uri "asdf")))))
 
   (testing "Returns nil if the URI is invalid"
@@ -93,3 +93,13 @@
     (is (true? (bp/xor true false false)))
     (is (true? (bp/xor false false false true)))
     (is (false? (bp/xor true false true)))))
+
+(deftest re-quote-test
+
+  (testing "quotes the regex string"
+    (let [s ".*+?^${}()|[]\\"]
+      (is= #?(:clj  (str "\\Q" s "\\E")
+              :cljs (->> s
+                         (interleave (repeat \\))
+                         (str/join)))
+           (bp/re-quote s)))))

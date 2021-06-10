@@ -2,10 +2,11 @@
   (:refer-clojure :exclude [=])
   (:require
     #?(:cljs [cljs.pprint])
+    [clojure.set :as set]
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.collection :refer [create-index index-comparator]]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [= deftest is is= testing]]))
+    [io.jesi.customs.strict :refer [= are deftest is is= testing]]))
 
 (deftest safe-empty?-test
 
@@ -843,3 +844,43 @@
           assert-passthrough (fn [cases]
                                (is (every? #(= % (bp/empty->nil %)) cases)))]
       (assert-passthrough [val [val] '(val) {:val val} #{val}]))))
+
+(deftest distinct-vals?-test
+
+  (testing "returns true if all values are unique"
+    (are [m] (is (true? (bp/distinct-vals? m)))
+      nil
+      {}
+      {:a 1}
+      {:a 1 :b 2}))
+
+  (testing "returns false if all values are unique"
+    (are [m] (is (false? (bp/distinct-vals? m)))
+      {:a nil :b nil}
+      {:a 1, :b 1}
+      {:a 1, :b 1, :c 2}
+      {:a 1, :b 1, :c 1, :d 2}))
+
+  (testing "with map-invert"
+    (are [m] (and (is (bp/distinct-vals? m))
+                  (is= m
+                       (-> m
+                           (set/map-invert)
+                           (set/map-invert))))
+      {}
+      {:a 1}
+      {:a 1, :b 2})))
+
+(comment (deftest distinct-vals?-performance-test
+           (let [n 1e6
+                 m (zipmap (range n) (range n))
+                 counting-sets (fn [m]
+                                 (= (count m)
+                                    (count (set (vals m)))))
+                 apply-distinct (fn [m]
+                                  (apply distinct? (vals m)))]
+             (is= true
+                  (bp/distinct-vals? m)
+                  (time (counting-sets m))                  ;730.48639 ms
+                  (time (apply-distinct m)))                ;1533.051747 ms
+             (is false "Show output"))))

@@ -1,8 +1,11 @@
 (ns io.jesi.backpack.clojure
   (:require
     [clojure.pprint :as pprint]
+    [io.jesi.backpack.closer :refer [close]]
     [io.jesi.backpack.collection :refer [transform-keys]]
-    [io.jesi.backpack.string :refer [->kebab-case ->kebab-case-key]]))
+    [io.jesi.backpack.string :refer [->kebab-case ->kebab-case-key]])
+  (:import
+    (java.lang AutoCloseable)))
 
 (defn defkw-type [type kw & args]
   (intern *ns*
@@ -27,3 +30,6 @@
     :pretty true
     :stream nil
     :dispatch pprint/code-dispatch))
+
+(defmethod close AutoCloseable [o]
+  (-> ^AutoCloseable o (.close)))

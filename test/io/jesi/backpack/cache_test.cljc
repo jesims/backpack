@@ -59,10 +59,9 @@
               (reset! captor nil)
               (let [timeout (+ 100 ttl)
                     f #(assert-invoked)]
-                #?(:cljs (js/setTimeout #(do (f) (done)) timeout)
-                   :clj  (do
-                           (Thread/sleep timeout)
-                           (f)))))))))
+                #?@(:cljs [(js/setTimeout #(do (f) (done)) timeout)]
+                    :clj  [(Thread/sleep timeout)
+                           (f)])))))))
 
     (testing "can be applied and invoked to"
       (let [cached-sum (cache/->Simple (cache/create-default) +)]

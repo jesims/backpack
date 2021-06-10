@@ -1,14 +1,29 @@
 (ns io.jesi.backpack.macros-test
+  (:refer-clojure :exclude [identical? with-open])
   (:require
     [clojure.string :as str]
     [io.jesi.backpack :as bp]
+    [io.jesi.backpack.closey :refer [->Closey closed?]]
     [io.jesi.backpack.macros :refer #?(:clj  :all
-                                       :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug])]
+                                       :cljs [assoc-nx
+                                              assoc-nx!
+                                              catch->identity
+                                              catch->nil
+                                              condf
+                                              def-
+                                              defconsts
+                                              reify-ifn
+                                              shorthand
+                                              shorthand-assoc
+                                              shorthand-str
+                                              when-debug
+                                              with-open
+                                              with-open->])]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.strict :refer [deftest is is= testing use-fixtures]]
+    [io.jesi.customs.strict :refer [deftest is is= testing thrown-with-msg? use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])
   #?(:clj (:import
-            (clojure.lang ArityException)
+            (clojure.lang ArityException ExceptionInfo)
             (java.lang ArithmeticException SecurityException))))
 
 (defn- set-debug [v]
@@ -199,13 +214,10 @@
       (let [val (rnd/string)
             v (def- test-var val)]
         (is= test-var val)
-        #?(:clj
-           (do
-             (is (var? v))
-             (is (:private (meta v)))
-             (is= val @v))
-           :cljs
-           (is= val v))))))
+        #?@(:clj  [(is (var? v))
+                   (is (:private (meta v)))
+                   (is= val @v)]
+            :cljs [(is= val v)])))))
 
 ;Note: Protocols do not support var args
 (defprotocol MultiArity
@@ -272,3 +284,157 @@
                 expected (apply + args)
                 actual (apply impl args)]
             (is= expected actual)))))))
+
+(deftest with-open-test
+
+  (testing "closes the resource"
+    (let [ran (volatile! false)
+          o (->Closey)]
+      (with-open [o o]
+        (when (is (false? (closed? o)))
+          (vreset! ran true)))
+      (is (true? (closed? o))))
+
+    (testing "on exception"
+      (let [o (->Closey)
+            ;FIXME get quote
+            msg "Don't panic"]
+        (is (thrown-with-msg? ExceptionInfo (re-pattern (bp/re-quote msg))
+              (with-open [o o]
+                (when (is (false? (closed? o)))
+                  (throw (ex-info msg {}))))))
+        (is (true? (closed? o)))))))
+
+(deftest with-open->-test
+
+  #?(:clj (testing "is a macro"
+            (is (macro? `with-open->))))
+
+  ;Fails even though the content is the same (yeah that again)
+  (comment (testing "expands"
+             (is-macro= '(io.jesi.backpack.macros/with-open [v# (->Closey)]
+                           (-> v#
+                               (closed?)
+                               (str)))
+                        (macroexpand-1 '(io.jesi.backpack.macros/with-open-> (->Closey)
+                                                                             (closed?)
+                                                                             (str))))))
+
+  (testing "closes the resource"
+    (let [o (->Closey)]
+      (is= "false"
+           (with-open-> o
+                        (closed?)
+                        (str)))
+      (is (true? (closed? o))))
+
+    (testing "on exception"
+      (let [o (->Closey)
+            msg "Polar bears have black skin and see-through fur."]
+        (is (thrown-with-msg? ExceptionInfo (re-pattern (bp/re-quote msg))
+              (with-open-> o
+                           ((constantly (throw (ex-info msg {})))))))
+        (is (true? (closed? o)))))))
+
+(defn- identical?
+  ([x y] (clojure.core/identical? x y))
+  ([x y & more]
+   (->> (list* x y more)
+        (partition 2 1)
+        (every? (fn [[x y]]                                 ;TODO point-free
+                  (clojure.core/identical? x y))))))
+
+(deftest assoc-nx-test
+  (let [m1 {:a 1}
+        m2 (assoc m1
+             :b 2)
+        m3 (assoc m2
+             :c 3)]
+
+    #?(:clj (testing "is a macro"
+              (is (macro? `assoc-nx))))
+
+    (testing "expands"
+      ;Fails even though the content is the same (yeah that again)
+      (comment (is-macro= '(let [m# {:a 1}
+                                 k# :b]
+                             (if (contains? m# k#)
+                               m#
+                               (assoc m#
+                                 k# 2)))
+                          (macroexpand-1 '(io.jesi.backpack.macros/assoc-nx {:a 1}
+                                            :b 2))))
+      ;don't ask me why this one works but others do not
+      (is-macro= '(io.jesi.backpack.macros/assoc-nx {:a 1} [:b 2 :c 3])
+                 (macroexpand-1 '(io.jesi.backpack.macros/assoc-nx {:a 1}
+                                   :b 2
+                                   :c 3)))
+      ;Fails even though the content is the same (yeah that again)
+      (comment (is-macro= '(-> {:a 1}
+                               (io.jesi.backpack.macros/assoc-nx :b 2)
+                               (io.jesi.backpack.macros/assoc-nx :c 3))
+                          (macroexpand-1 '(io.jesi.backpack.macros/assoc-nx {:a 1} [:b 2 :c 3])))))
+
+    (testing "assoc the values"
+      (is= m2
+           (assoc-nx m1 :b 2)
+           (assoc-nx m1 [:b 2])
+           (assoc-nx {} :a 1 :b 2)
+           (assoc-nx {} [:a 1 :b 2]))
+      (is= m3
+           (assoc-nx m2 :c 3)
+           (assoc-nx m1 :b 2 :c 3)
+           (assoc-nx {} :a 1 :b 2 :c 3)
+           (assoc-nx {} [:a 1 :b 2 :c 3]))
+
+      (testing "if the key does not exist"
+        (is (identical? m1
+                        (assoc-nx m1 :a 2)
+                        (assoc-nx m1 [:a 2])))
+        (is (identical? m2
+                        (assoc-nx m2 :a 3 :b 4)
+                        (assoc-nx m2 [:a 3 :b 4]))))
+
+      (testing "lazily"
+        (is (identical? m1
+                        (assoc-nx m1
+                          :a (throw (ex-info "Unexpected" {})))
+                        (assoc-nx m1
+                          [:a (throw (ex-info "Unexpected" {}))])))
+        (is (identical? m2
+                        (assoc-nx m2
+                          :a (throw (ex-info "Unexpected a" {}))
+                          :b (throw (ex-info "Unexpected b" {})))
+                        (assoc-nx m2
+                          [:a (throw (ex-info "Unexpected a" {}))
+                           :b (throw (ex-info "Unexpected b" {}))])))))))
+
+(deftest assoc-nx!-test
+
+  (testing "assocs the value in the atom"
+    (let [a (atom nil)
+          k "Male koalas have two penises"
+          v "Female koalas have two vaginas"]
+      (assoc-nx! a k v)
+      (is= {k v} @a))
+
+    (testing "returning the value"
+      (let [a (atom nil)
+            k :squirrel
+            v "Animals with smaller bodies and faster metabolism such as chipmunks and squirrels see in slow motion."]
+        (is= v (assoc-nx! a k v))))
+
+    (testing "if it does not exist"
+      (let [k :night-vision
+            v "Reindeer eyeballs turn blue in winter to help them see at lower light levels."
+            m {k v}
+            a (atom m)]
+        (is= v (assoc-nx! a k (rnd/string)))
+        (is= m @a)))
+
+    (testing "lazily"
+      (let [k :sea-lion-drummer
+            v "A sea lion is the first nonhuman mammal with a proven ability to keep a beat."
+            m {k v}
+            a (atom m)]
+        (is= v (assoc-nx! a k (throw (ex-info "Sea lions have external ear flaps, seals do not" {:earflaps? true}))))))))

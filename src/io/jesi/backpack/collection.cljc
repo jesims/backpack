@@ -365,3 +365,9 @@
   (if (empty? x)
     nil
     x))
+
+(defn distinct-vals?
+  "Returns true if all the map values are unique "
+  [m]
+  (= (count m)
+     (count (set (vals m)))))
