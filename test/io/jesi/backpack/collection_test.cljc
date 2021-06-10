@@ -870,3 +870,17 @@
       {}
       {:a 1}
       {:a 1, :b 2})))
+
+(comment (deftest distinct-vals?-performance-test
+           (let [n 1e6
+                 m (zipmap (range n) (range n))
+                 counting-sets (fn [m]
+                                 (= (count m)
+                                    (count (set (vals m)))))
+                 apply-distinct (fn [m]
+                                  (apply distinct? (vals m)))]
+             (is= true
+                  (bp/distinct-vals? m)
+                  (time (counting-sets m))                  ;730.48639 ms
+                  (time (apply-distinct m)))                ;1533.051747 ms
+             (is false "Show output"))))

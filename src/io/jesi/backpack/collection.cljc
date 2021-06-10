@@ -369,6 +369,5 @@
 (defn distinct-vals?
   "Returns true if all the map values are unique "
   [m]
-  ;TODO this the most efficient way?
   (= (count m)
      (count (set (vals m)))))
