@@ -7,7 +7,7 @@ Added:
   * `with-open->`
   * `assoc-nx`
   * `assoc-nx!`
-* `io.jesi.backpack.close/close` multimethod
+* `io.jesi.backpack.closer/close` multimethod
 * `io.jesi.backpack.collection/distinct-vals?`
 * `io.jesi.backpack.miscellaneous/re-quote`
 
