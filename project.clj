@@ -13,6 +13,7 @@
   :managed-dependencies [[io.jesi/backpack "7.1.0"]]
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
+                 [com.taoensso/encore "3.19.0"]
 
                  ;CLJ
                  [org.clojure/clojure :scope "provided"]
