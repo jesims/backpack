@@ -253,7 +253,7 @@ A single default expression can follow the clauses, and its value will be return
          ~@forms)))
 
 (defmacro assoc-nx
-  "Lazily assocs each kv iff its key doesn't already exist.
+  "Lazily assocs each kv if its key doesn't already exist.
    Macro version of taoensso.encore/assoc-nx"
   ([m k v]
    `(let [m# ~m
