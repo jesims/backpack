@@ -4,7 +4,7 @@
     #?(:cljs [clojure.core.async.impl.channels :as chan])
     [clojure.core.async :as async]
     [clojure.core.async.impl.protocols :as proto]
-    [io.jesi.backpack.close :refer [close]]
+    [io.jesi.backpack.closer :refer [close]]
     [io.jesi.backpack.env :as env]
     [io.jesi.backpack.exceptions :as ex]
     [io.jesi.backpack.macros :refer [catch->identity]])
@@ -134,7 +134,6 @@
 
 (defmethod close proto/Channel [o]
   (async/close! o))
-
 
 #?(:clj  (defmethod close Channel [o]
            (async/close! o))

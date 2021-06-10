@@ -5,14 +5,26 @@
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.closey :refer [->Closey closed?]]
     [io.jesi.backpack.macros :refer #?(:clj  :all
-                                       :cljs [catch->identity catch->nil condf def- defconsts reify-ifn shorthand shorthand-assoc shorthand-str when-debug assoc-nx])]
+                                       :cljs [assoc-nx
+                                              assoc-nx!
+                                              catch->identity
+                                              catch->nil
+                                              condf
+                                              def-
+                                              defconsts
+                                              reify-ifn
+                                              shorthand
+                                              shorthand-assoc
+                                              shorthand-str
+                                              when-debug
+                                              with-open
+                                              with-open->])]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [deftest is is= testing thrown-with-msg? use-fixtures]]
     [io.jesi.customs.util :refer [is-macro=]])
   #?(:clj (:import
             (clojure.lang ArityException ExceptionInfo)
-            (java.lang ArithmeticException SecurityException)
-            (java.util.regex Pattern))))
+            (java.lang ArithmeticException SecurityException))))
 
 (defn- set-debug [v]
   #?(:cljs (set! js/goog.DEBUG v)))
@@ -202,13 +214,10 @@
       (let [val (rnd/string)
             v (def- test-var val)]
         (is= test-var val)
-        #?(:clj
-           (do
-             (is (var? v))
-             (is (:private (meta v)))
-             (is= val @v))
-           :cljs
-           (is= val v))))))
+        #?@(:clj  [(is (var? v))
+                   (is (:private (meta v)))
+                   (is= val @v)]
+            :cljs [(is= val v)])))))
 
 ;Note: Protocols do not support var args
 (defprotocol MultiArity
@@ -288,6 +297,7 @@
 
     (testing "on exception"
       (let [o (->Closey)
+            ;FIXME get quote
             msg "Don't panic"]
         (is (thrown-with-msg? ExceptionInfo (re-pattern (bp/re-quote msg))
               (with-open [o o]
@@ -296,6 +306,19 @@
         (is (true? (closed? o)))))))
 
 (deftest with-open->-test
+
+  #?(:clj (testing "is a macro"
+            (is (macro? `with-open->))))
+
+  ;Fails even though the content is the same (yeah that again)
+  (comment (testing "expands"
+             (is-macro= '(io.jesi.backpack.macros/with-open [v# (->Closey)]
+                           (-> v#
+                               (closed?)
+                               (str)))
+                        (macroexpand-1 '(io.jesi.backpack.macros/with-open-> (->Closey)
+                                                                             (closed?)
+                                                                             (str))))))
 
   (testing "closes the resource"
     (let [o (->Closey)]

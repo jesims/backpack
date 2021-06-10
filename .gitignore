@@ -3,6 +3,7 @@
 .cljs_node_repl
 .idea/azure/
 .idea/codestream.xml
+.idea/dataSources*
 .idea/dictionaries/
 .idea/libraries/
 .idea/workspace.xml

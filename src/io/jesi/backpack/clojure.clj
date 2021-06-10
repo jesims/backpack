@@ -1,7 +1,7 @@
 (ns io.jesi.backpack.clojure
   (:require
     [clojure.pprint :as pprint]
-    [io.jesi.backpack.close :refer [close]]
+    [io.jesi.backpack.closer :refer [close]]
     [io.jesi.backpack.collection :refer [transform-keys]]
     [io.jesi.backpack.string :refer [->kebab-case ->kebab-case-key]])
   (:import

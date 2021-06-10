@@ -5,7 +5,7 @@
     #?(:cljs [cljs.core :refer [IFn]])
     [clojure.core]
     [io.jesi.backpack.atom :as atom]
-    [io.jesi.backpack.close :refer [close]]
+    [io.jesi.backpack.closer :refer [close]]
     [io.jesi.backpack.env :as env]
     [io.jesi.backpack.fn :refer [noop]])
   #?(:clj
@@ -245,7 +245,7 @@ A single default expression can follow the clauses, and its value will be return
            (close ~(bindings 0)))))
 
     :else
-    (throw (IllegalArgumentException. "with-open only allows Symbols in bindings"))))
+    (throw (#?(:clj IllegalArgumentException. :cljs js/Error.) "with-open only allows Symbols in bindings"))))
 
 (defmacro with-open-> [x & forms]
   `(with-open [v# ~x]

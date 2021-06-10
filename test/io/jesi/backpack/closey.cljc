@@ -1,6 +1,8 @@
 (ns io.jesi.backpack.closey
-  #?(:clj (:import
-            (java.lang AutoCloseable))))
+  #?(:cljs (:require
+             [io.jesi.backpack.closer])
+     :clj  (:import
+             (java.lang AutoCloseable))))
 
 (defprotocol IClosey
   (close [this])
@@ -29,3 +31,7 @@
 
      (defn ->AutoCloseable []
        (->_AutoCloseable false))))
+
+#?(:cljs
+   (defmethod io.jesi.backpack.closer/close Closey [c]
+     (close c)))

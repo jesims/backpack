@@ -1,9 +1,8 @@
 (ns io.jesi.backpack.miscellaneous-test
   (:require
-    [clojure.string :as str]
+    #?(:cljs [clojure.string :as str])
     [io.jesi.backpack :as bp]
     [io.jesi.backpack.random :as rnd]
-    [io.jesi.customs.spy :as spy]
     [io.jesi.customs.strict :refer [are deftest is is= testing]])
   #?(:clj
      (:import
@@ -70,14 +69,13 @@
           expected #?(:clj (new URI uri)
                       :cljs (goog.Uri. uri))]
       (is (uri? expected))
-      #?(:clj  (do
-                 (is= expected (bp/->uri expected))
+      #?@(:clj  [(is= expected (bp/->uri expected))
                  (is= expected (bp/->uri uri))
-                 (is (identical? expected (bp/->uri expected))))
-         :cljs (is= uri
-                    (-> uri bp/->uri str)
-                    (-> expected str)
-                    (-> expected bp/->uri str)))
+                 (is (identical? expected (bp/->uri expected)))]
+          :cljs [(is= uri
+                      (-> uri bp/->uri str)
+                      (-> expected str)
+                      (-> expected bp/->uri str))])
       (is (uri? (bp/->uri "asdf")))))
 
   (testing "Returns nil if the URI is invalid"
@@ -98,14 +96,10 @@
 
 (deftest re-quote-test
 
-  (spy/enabled
-    (testing "quotes the regex string"
-      (let [s ".*+?^${}()|[]\\"]
-        #?(:clj  (is= (str "\\Q" s "\\E")
-                      (bp/re-quote s))
-           ;FIXME check the string, there should be a \\ before each character
-           :cljs (is= (->> s
-                           (interleave (constantly \\))
-                           (str/join)
-                           spy/ppeek)
-                      (bp/re-quote s)))))))
+  (testing "quotes the regex string"
+    (let [s ".*+?^${}()|[]\\"]
+      (is= #?(:clj  (str "\\Q" s "\\E")
+              :cljs (->> s
+                         (interleave (repeat \\))
+                         (str/join)))
+           (bp/re-quote s)))))

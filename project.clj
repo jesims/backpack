@@ -8,20 +8,12 @@
             :distribution :repo
             :comments     "same as Clojure"}
   :plugins [[lein-parent "0.3.8"]]
-  :parent-project {:coords  [io.jesi/parent "4.11.0"]
+  :parent-project {:coords  [io.jesi/parent "4.12.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
-  :managed-dependencies [;[io.jesi/backpack "6.3.0"]
-                         [io.jesi/backpack "7.1.0"]]
-                         ;FIXME once CLJS is working, update in parent
-                         ;[thheller/shadow-cljs "2.14.4"]
-                         ;[org.clojure/clojurescript "1.10.866"]
-                         ;[com.google.javascript/closure-compiler-unshaded "v20210505"]
-                         ;[org.clojure/google-closure-library "0.0-20201211-3e6c510d"]
-                         ;[org.clojure/google-closure-library-third-party "0.0-20201211-3e6c510d"]]
+  :managed-dependencies [[io.jesi/backpack "7.1.0"]
+                         [com.google.guava/guava "30.1.1-jre"]] ;FIXME remove when we're using customs 1.3.2
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
-                 ;[com.taoensso/encore "2.117.0"]
-                 [com.taoensso/encore "3.19.0"]
 
                  ;CLJ
                  [org.clojure/clojure :scope "provided"]
@@ -30,7 +22,7 @@
                  ;CLJS
                  [org.clojure/clojurescript :scope "provided"]
                  [org.clojars.mmb90/cljs-cache "0.1.4"]]    ;TODO move to separate cache project
-  :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs]
+  :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs] ;"1.3.2"] ;FIXME update in parent
                                                [org.clojure/tools.namespace "1.1.0"]
                                                [thheller/shadow-cljs]]}]}
   :clean-targets ^{:protect false} [".shadow-cljs" ".cljs_node_repl" "out" :target-path]

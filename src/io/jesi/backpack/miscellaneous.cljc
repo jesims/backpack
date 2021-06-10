@@ -3,7 +3,7 @@
   (:require
     #?@(:cljs [[goog.Uri]
                [clojure.string :as str]])
-    [io.jesi.backpack.macros :refer [catch->nil]]
+    [io.jesi.backpack.macros :refer [#?(:cljs def-) catch->nil]]
     [io.jesi.backpack.string :refer [uuid-str?]])
   #?(:clj
      (:import
@@ -47,9 +47,13 @@
   ([x y & more]
    (xor (xor x y) (apply xor more))))
 
+;see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
+;regex literal does not work here (wants more \\\), but works in lumo...
+;#"([.*+?^${}()|[\]\\])"
+#?(:cljs (def- re-quote-pattern (re-pattern "([.*+?^${}()|[\\]\\\\])")))
+
 (defn re-quote
   "Quotes the regex string"
   [s]
   #?(:clj  (Pattern/quote s)
-     ;see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
-     :cljs (str/replace s #"[.*+?^${}()|[\\]\\\\]" "\\$1")))
+     :cljs (str/replace s re-quote-pattern "\\$1")))
