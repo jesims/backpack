@@ -165,11 +165,14 @@ A single default expression can follow the clauses, and its value will be return
   `(when-not (= ~test ~body)
      ~body))
 
-(defmacro when-debug [body]
+(defmacro when-debug [& body]
   (if (env/cljs? &env)
     `(when ~(vary-meta 'js/goog.DEBUG assoc :tag 'boolean)
-       ~body)
-    body))
+       ~@body)
+    (if (next body)
+      `(do
+         ~@body)
+      (first body))))
 
 (defmacro reify-ifn
   "Defines IFn invoke implementations to call as `(invoke-fn this [args])`.

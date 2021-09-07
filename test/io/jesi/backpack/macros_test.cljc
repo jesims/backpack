@@ -176,12 +176,21 @@
     #?(:clj (testing "is a macro"
               (macro? `when-debug)))
 
-    (testing "expands"
-      #?(:clj  (is= '(prn "hello")
-                    (macroexpand-1 '(io.jesi.backpack.macros/when-debug (prn "hello"))))
+    (let [hello '(prn "hello")]
+      (testing "expands"
+        (is= #?(:clj  hello
+                :cljs (list 'clojure.core/when 'js/goog.DEBUG hello))
+             (macroexpand-1 '(io.jesi.backpack.macros/when-debug (prn "hello")))))
 
-         :cljs (is= '(clojure.core/when js/goog.DEBUG (prn "hello"))
-                    (macroexpand-1 '(io.jesi.backpack.macros/when-debug (prn "hello"))))))
+      (testing "body can be multiple forms"
+        (let [world '(prn "world")]
+          (is= #?(:clj  (list 'do
+                          hello world)
+                  :cljs (list 'clojure.core/when 'js/goog.DEBUG
+                          hello world))
+               (macroexpand-1 '(io.jesi.backpack.macros/when-debug
+                                 (prn "hello")
+                                 (prn "world")))))))
 
     #?(:cljs (testing "executes the body when debug mode is on"
                (do
@@ -189,7 +198,14 @@
                  (when-debug
                    (throw (ex-info "Unexpected exception" {})))
                  (set-debug true)
-                 (is= 1 (when-debug 1)))))))
+                 (is= 1 (when-debug 1)))))
+
+    #?(:cljs (testing "debug is has the boolean tag"
+               (is= 'boolean
+                    (->> (macroexpand-1 '(io.jesi.backpack.macros/when-debug 1))
+                         (second)
+                         (meta)
+                         :tag))))))
 
 (deftest catch->identity-test
 
