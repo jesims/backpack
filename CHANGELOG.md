@@ -1,3 +1,9 @@
+# 7.2.1
+
+Fixed:
+
+* `when-debug` macro now takes multiple args
+
 # 7.2.0
 
 Added:
