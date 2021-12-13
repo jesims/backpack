@@ -4,7 +4,7 @@
     #?(:cljs [cljs.pprint])
     [clojure.set :as set]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.collection :refer [create-index index-comparator filter-by filter-key=]]
+    [io.jesi.backpack.collection :refer [create-index filter-by filter-key= index-comparator]]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [= are deftest is is= testing]]))
 
