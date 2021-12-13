@@ -4,7 +4,7 @@
     #?(:cljs [cljs.pprint])
     [clojure.set :as set]
     [io.jesi.backpack :as bp]
-    [io.jesi.backpack.collection :refer [create-index index-comparator filter-by filter-by=]]
+    [io.jesi.backpack.collection :refer [create-index index-comparator filter-by filter-key=]]
     [io.jesi.backpack.random :as rnd]
     [io.jesi.customs.strict :refer [= are deftest is is= testing]]))
 
@@ -894,26 +894,26 @@
         (is= [one] (filter-by :id (bp/p= 1) coll)))
 
       (testing "can return multiple results"
-        (is= [two three] (filter-by :id (bp/partial-right > 1) coll))
+        (is= [two three] (filter-by :id (partial < 1) coll))
         (is= coll (filter-by :id (constantly true) coll))))
 
-  (deftest filter-by=-test
+  (deftest filter-key=-test
 
     (testing "returns empty seq when filter doesn't match anything"
-      (are [key val] (is= [] (filter-by= key val coll))
+      (are [key val] (is= [] (filter-key= key val coll))
         :i 0
         :id (constantly false)
         :s (bp/p= "woah")))
 
     ; matches clojure.core/filter
     (testing "returns empty seq when coll is nil"
-      (is= () (filter-by :id (constantly true) nil)))
+      (is= () (filter-key= :id 1 nil)))
 
     (testing "can return 1 result"
-      (is= [one] (filter-by= :id 1 coll)))
+      (is= [one] (filter-key= :id 1 coll)))
 
     (testing "can return multiple results"
-      (is= [one two] (filter-by= :b true coll)))))
+      (is= [one two] (filter-key= :b true coll)))))
 
 (comment (deftest distinct-vals?-performance-test
            (let [n 1e6

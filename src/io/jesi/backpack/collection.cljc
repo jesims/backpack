@@ -375,15 +375,15 @@
 (defn filter-by
   "Filters a collection where a key matches a predicate
   e.g.
-  (let [m [{:id 1} {:id 2}]
-    (filter-by m :id (bp/p= 1))) ; returns {:id 1}"
+  (let [coll [{:id 1} {:id 2}]
+    (filter-by :id (bp/p= 1) coll)) ; returns `({:id 1})"
   [key-fn pred coll]
   (filter (comp pred key-fn) coll))
 
-(defn filter-by=
+(defn filter-key=
   "Filters a collection where a key matches a value
   e.g.
-  (let [m [{:id 1} {:id 2}]
-    (filter-by= m :id 1)) ; returns {:id 1}"
+  (let [coll [{:id 1} {:id 2}]
+    (filter-key= :id 1 coll)) ; returns `({:id 1})"
   [key-fn value coll]
   (filter-by key-fn (p= value) coll))
