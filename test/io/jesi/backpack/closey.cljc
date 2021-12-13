@@ -22,12 +22,12 @@
    (do
 
      (deftype _AutoCloseable [^:volatile-mutable closed?]
+       AutoCloseable
        IClosey
        (close [_]
          (set! closed? true))
        (closed? [_]
-         closed?)
-       AutoCloseable)
+         closed?))
 
      (defn ->AutoCloseable []
        (->_AutoCloseable false))))
