@@ -23,9 +23,9 @@
 
      (deftype _AutoCloseable [^:volatile-mutable closed?]
        AutoCloseable
-       IClosey
        (close [_]
          (set! closed? true))
+       IClosey
        (closed? [_]
          closed?))
 
