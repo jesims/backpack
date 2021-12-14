@@ -1,3 +1,12 @@
+# 7.3.0
+
+Added:
+
+* simple filtering for collections of maps
+  * `io.jesi.backpack.collection/`:
+    * `filter-by`
+    * `filter-by=`
+
 # 7.2.1
 
 Fixed:
