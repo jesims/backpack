@@ -5,18 +5,21 @@
              (java.lang AutoCloseable))))
 
 (defprotocol IClosey
-  (close [this])
+  (do-close [this])
   (closed? [this]))
 
 (deftype Closey [^:volatile-mutable closed?]
   IClosey
-  (close [_]
+  (do-close [_]
     (set! closed? true))
   (closed? [_]
     closed?))
 
 (defn ->Closey []
   (Closey. false))
+
+(defmethod io.jesi.backpack.closer/close Closey [c]
+  (do-close c))
 
 #?(:clj
    (do
@@ -26,12 +29,11 @@
        (close [_]
          (set! closed? true))
        IClosey
+       (do-close [_]
+         (set! closed? true))
        (closed? [_]
          closed?))
 
      (defn ->AutoCloseable []
        (->_AutoCloseable false))))
 
-#?(:cljs
-   (defmethod io.jesi.backpack.closer/close Closey [c]
-     (close c)))
