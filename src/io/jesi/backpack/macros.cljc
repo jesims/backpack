@@ -45,11 +45,13 @@
                    (apply concat
                      (for [var vars
                            :let [sym (symbol var)
-                                 name (-> sym name symbol)
+                                 name (-> sym
+                                          (name)
+                                          (symbol))
                                  {:keys [doc]
                                   :or   {doc ""}
                                   :as   sym-meta} (meta var)]]
-                       `[(def ~name ~doc ~sym)
+                       `[(def ~name ~doc @~var)
                          (alter-meta! #'~name (partial merge (meta #'~sym)))])))))))
 
 (defmacro catch-> [handle & body]

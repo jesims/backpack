@@ -3,6 +3,13 @@
 Added:
 
 * `io.jesi.backpack.collection/redact`
+* `io.jesi.backpack.clojure/`:
+   * `add-shutdown-hook-fn`
+   * `add-shutdown-hook`
+
+Fixed:
+
+* `io.jesi.backpack.macros/import-vars` now works with marcos
 
 # 7.3.0
 

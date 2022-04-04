@@ -10,7 +10,7 @@
   :plugins [[lein-parent "0.3.8"]]
   :parent-project {:coords  [io.jesi/parent "4.18.0"]
                    :inherit [:plugins :managed-dependencies :deploy-repositories :dependencies :profiles :test-refresh :aliases :codox]}
-  :managed-dependencies [[io.jesi/backpack "7.2.0"]
+  :managed-dependencies [[io.jesi/backpack "7.3.0"]
                          [com.google.guava/guava "30.1.1-jre"]] ;not sure why we have to add this, it's defined in parent
   :dependencies [[org.clojure/core.async]
                  [com.rpl/specter]
@@ -25,7 +25,8 @@
                  [org.clojars.mmb90/cljs-cache "0.1.4"]]    ;TODO move to separate cache project
   :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs :scope "provided"]
                                                [org.clojure/tools.namespace "1.1.0" :scope "provided"]
-                                               [thheller/shadow-cljs :scope "provided"]]}]}
+                                               [thheller/shadow-cljs :scope "provided"]]
+                                :jvm-opts     ["--add-opens" "java.base/java.lang=ALL-UNNAMED"]}]}
   :clean-targets ^{:protect false} [".shadow-cljs" ".cljs_node_repl" "out" :target-path]
   :codox {:metadata   {:doc/format :markdown}
           :namespaces [io.jesi.backpack
