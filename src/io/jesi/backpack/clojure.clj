@@ -5,8 +5,8 @@
     [io.jesi.backpack.collection :refer [transform-keys]]
     [io.jesi.backpack.string :refer [->kebab-case ->kebab-case-key]])
   (:import
-    (java.lang AutoCloseable)
-    (clojure.lang IFn)))
+    (clojure.lang IFn)
+    (java.lang AutoCloseable)))
 
 (defn defkw-type [type kw & args]
   (intern *ns*

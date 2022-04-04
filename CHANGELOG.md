@@ -4,8 +4,8 @@ Added:
 
 * `io.jesi.backpack.collection/redact`
 * `io.jesi.backpack.clojure/`:
-   * `add-shutdown-hook-fn`
-   * `add-shutdown-hook`
+  * `add-shutdown-hook-fn`
+  * `add-shutdown-hook`
 
 Fixed:
 

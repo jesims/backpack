@@ -7,8 +7,8 @@
     [io.jesi.backpack.fn :refer [call p=]]
     [io.jesi.backpack.specter :refer [path-walker]])
   #?(:clj (:import
-            (java.util Map)
-            (clojure.lang MapEntry))))
+            (clojure.lang MapEntry)
+            (java.util Map))))
 
 (defn distinct-by [key entities]
   (apply distinct? (map key entities)))
