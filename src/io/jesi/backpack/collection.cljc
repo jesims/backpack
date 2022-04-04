@@ -6,8 +6,9 @@
     [com.rpl.specter :as sp]
     [io.jesi.backpack.fn :refer [call p=]]
     [io.jesi.backpack.specter :refer [path-walker]])
-  (:import
-    #?(:clj (java.util Map))))
+  #?(:clj (:import
+            (java.util Map)
+            (clojure.lang MapEntry))))
 
 (defn distinct-by [key entities]
   (apply distinct? (map key entities)))
@@ -387,3 +388,25 @@
     (filter-key= :id 1 coll)) ; returns `({:id 1})"
   [key-fn value coll]
   (filter-by key-fn (p= value) coll))
+
+(defn redact
+  "Deeply replaces value of all the `keys` in `m` with the `redacted-value`"
+  ([keys m] (redact keys m "**REDACTED**"))
+  ([keys m redacted-value]
+   (if (empty? keys)
+     m
+     (let [keys (set keys)]
+       (->> m
+            (postwalk
+              (fn [o]
+                (if-not (map-entry? o)
+                  o
+                  (let [k (key o)]
+                    (if (contains? keys k)
+                      ;TODO use a Secret wrapper that hides the .toString value?
+                      ; https://circleci.com/blog/how-a-simple-logging-problem-turned-into-a-bear-trap-lessons-learned/
+                      (let [->MapEntry (fn [k v]
+                                         #?(:clj  (MapEntry/create k v)
+                                            :cljs (->MapEntry k v nil)))]
+                        (->MapEntry k redacted-value))
+                      o))))))))))

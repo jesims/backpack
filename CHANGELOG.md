@@ -1,3 +1,9 @@
+# 7.4.0
+
+Added:
+
+* `io.jesi.backpack.collection/redact`
+
 # 7.3.0
 
 Added:
