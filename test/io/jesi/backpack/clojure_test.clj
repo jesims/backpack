@@ -48,3 +48,10 @@
       (is= expected-1 (bp/java->clj map-1))
       (is= expected-2 (bp/java->clj map-2))
       (is= expected-2 (bp/java->clj java-map)))))
+
+(deftest add-shutdown-hook-test
+
+  (testing "adds a shutdown hook"
+    (let [^Thread thread (bp/add-shutdown-hook (println "Exiting"))]
+      (is (-> (Runtime/getRuntime)
+              (.removeShutdownHook thread))))))

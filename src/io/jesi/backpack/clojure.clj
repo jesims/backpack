@@ -5,6 +5,7 @@
     [io.jesi.backpack.collection :refer [transform-keys]]
     [io.jesi.backpack.string :refer [->kebab-case ->kebab-case-key]])
   (:import
+    (clojure.lang IFn)
     (java.lang AutoCloseable)))
 
 (defn defkw-type [type kw & args]
@@ -33,3 +34,16 @@
 
 (defmethod close AutoCloseable [o]
   (-> ^AutoCloseable o (.close)))
+
+(defn ^Thread add-shutdown-hook-fn
+  "Adds a shutdown hook using java.lang.Runtime.addShutdownHook. Takes a function `f`, and returns the created Thread"
+  [^IFn f]
+  (let [^Thread thread (Thread. f)]
+    (-> (Runtime/getRuntime)
+        (.addShutdownHook thread))
+    thread))
+
+(defmacro add-shutdown-hook
+  "Adds a shutdown hook using java.lang.Runtime.addShutdownHook. Returns the created Thread"
+  [& body]
+  `(add-shutdown-hook-fn (fn [] ~@body)))

@@ -877,25 +877,25 @@
       coll [one two three]]
   (deftest filter-by-test
 
-      (testing "returns empty seq when filter doesn't match anything"
-        (are [key pred] (is= [] (filter-by key pred coll))
-          :i (bp/partial-right < 1)
-          :i (bp/partial-right < 1)
-          :i (bp/p= 0)
-          :id (bp/p= 5)
-          :id (constantly false)
-          :s (bp/p= "woah")))
+    (testing "returns empty seq when filter doesn't match anything"
+      (are [key pred] (is= [] (filter-by key pred coll))
+        :i (bp/partial-right < 1)
+        :i (bp/partial-right < 1)
+        :i (bp/p= 0)
+        :id (bp/p= 5)
+        :id (constantly false)
+        :s (bp/p= "woah")))
 
-      ; matches clojure.core/filter
-      (testing "returns empty seq when coll is nil"
-        (is= () (filter-by :id (constantly true) nil)))
+    ; matches clojure.core/filter
+    (testing "returns empty seq when coll is nil"
+      (is= () (filter-by :id (constantly true) nil)))
 
-      (testing "can return 1 result"
-        (is= [one] (filter-by :id (bp/p= 1) coll)))
+    (testing "can return 1 result"
+      (is= [one] (filter-by :id (bp/p= 1) coll)))
 
-      (testing "can return multiple results"
-        (is= [two three] (filter-by :id (partial < 1) coll))
-        (is= coll (filter-by :id (constantly true) coll))))
+    (testing "can return multiple results"
+      (is= [two three] (filter-by :id (partial < 1) coll))
+      (is= coll (filter-by :id (constantly true) coll))))
 
   (deftest filter-key=-test
 
@@ -928,3 +928,26 @@
                   (time (counting-sets m))                  ;730.48639 ms
                   (time (apply-distinct m)))                ;1533.051747 ms
              (is false "Show output"))))
+
+(deftest redact-test
+
+  (testing "does nothing if no keys"
+    (let [m {:a 1}]
+      (are [keys] (is (identical? m (bp/redact keys m)))
+        nil
+        [])))
+
+  (testing "redacts values of keys"
+    (let [redacted "**REDACTED**"]
+      (is= {:a redacted}
+           (bp/redact [:a] {:a 123}))
+      (is= {:a redacted
+            :b redacted
+            :c 123}
+           (bp/redact [:a :b] {:a 123, :b 123, :c 123}))
+
+      (testing "in nested structure"
+        (is= {:a {:b redacted}}
+             (bp/redact [:b] {:a {:b 123}}))
+        (is= {:a redacted}
+             (bp/redact [:a] {:a {:b 123}}))))))

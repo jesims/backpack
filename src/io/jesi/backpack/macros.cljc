@@ -45,11 +45,16 @@
                    (apply concat
                      (for [var vars
                            :let [sym (symbol var)
-                                 name (-> sym name symbol)
+                                 name (-> sym
+                                          (name)
+                                          (symbol))
                                  {:keys [doc]
                                   :or   {doc ""}
-                                  :as   sym-meta} (meta var)]]
-                       `[(def ~name ~doc ~sym)
+                                  :as   sym-meta} (meta var)
+                                 val (if (env/cljs? &env)
+                                       sym
+                                       `@~var)]]
+                       `[(def ~name ~doc ~val)
                          (alter-meta! #'~name (partial merge (meta #'~sym)))])))))))
 
 (defmacro catch-> [handle & body]

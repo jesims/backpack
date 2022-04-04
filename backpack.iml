@@ -2,7 +2,7 @@
 <module cursive.leiningen.project.LeiningenProjectsManager.displayName="io.jesi/backpack:7.2.1" cursive.leiningen.project.LeiningenProjectsManager.isLeinModule="true" type="JAVA_MODULE" version="4">
   <component name="BuildSystem">
     <option name="buildSystemId" value="LEININGEN" />
-    <option name="displayName" value="io.jesi/backpack:7.3.0" />
+    <option name="displayName" value="io.jesi/backpack:7.4.0" />
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_15">
     <output url="file://$MODULE_DIR$/target/classes" />
