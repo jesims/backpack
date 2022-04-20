@@ -23,9 +23,10 @@
                  ;CLJS
                  [org.clojure/clojurescript :scope "provided"]
                  [org.clojars.mmb90/cljs-cache "0.1.4"]]    ;TODO move to separate cache project
-  :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs :scope "provided"]
-                                               [org.clojure/tools.namespace "1.1.0" :scope "provided"]
-                                               [thheller/shadow-cljs :scope "provided"]]
+  :profiles {:dev [:parent/dev {:dependencies [[io.jesi/customs]
+                                               [org.clojure/tools.namespace "1.1.0"]
+                                               [thheller/shadow-cljs]
+                                               [binaryage/oops "0.7.2"]]
                                 :jvm-opts     ["--add-opens" "java.base/java.lang=ALL-UNNAMED"]}]}
   :clean-targets ^{:protect false} [".shadow-cljs" ".cljs_node_repl" "out" :target-path]
   :codox {:metadata   {:doc/format :markdown}

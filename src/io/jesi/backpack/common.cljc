@@ -4,6 +4,7 @@
      (:import
        (clojure.lang Named))))
 
+;TODO doesn't work in Clojurescript macros
 (defn named?
   "Returns true if `x` is named (can be passed to `name`)"
   [x]

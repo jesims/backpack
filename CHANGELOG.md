@@ -1,3 +1,9 @@
+# 7.5.0
+
+Added:
+
+* `io.jesi.backpack.compare`
+
 # 7.4.0
 
 Added:
