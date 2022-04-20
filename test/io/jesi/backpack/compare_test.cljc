@@ -1,7 +1,7 @@
 (ns io.jesi.backpack.compare-test
   (:require
-    [io.jesi.customs.strict :refer [is are deftest testing]]
-    [io.jesi.backpack.compare :as comp])
+    [io.jesi.backpack.compare :as comp]
+    [io.jesi.customs.strict :refer [are deftest is testing]])
   #?(:clj (:import
             (java.time Instant)
             (java.time.temporal ChronoUnit))))
