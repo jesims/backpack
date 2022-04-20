@@ -1,4 +1,5 @@
 (ns io.jesi.backpack.compare
+  "Comparison operators based on `compare`"
   #?(:cljs (:require-macros [io.jesi.backpack.compare]))
   (:refer-clojure :exclude [< <= = > >=]))
 
@@ -19,12 +20,37 @@
         (and (~name-sym ~'x ~'y)
              (apply ~name-sym ~'more))))))
 
-(def ^{:arglists '([x y])} < (io.jesi.backpack.compare/->compare <))
+(def ^{:arglists '([]
+                   [x]
+                   [x y]
+                   [x y & more])
+       :doc      "Returns `true` if the `compare`d values are in increasing order (<)"} <
+  (io.jesi.backpack.compare/->compare <))
 
-(def ^{:arglists '([x y])} <= (io.jesi.backpack.compare/->compare <=))
+(def ^{:arglists '([]
+                   [x]
+                   [x y]
+                   [x y & more])
+       :doc      "Returns `true` if the `compare`d values are in non-decreasing order (<=)"} <=
+  (io.jesi.backpack.compare/->compare <=))
 
-(def ^{:arglists '([x y])} = (io.jesi.backpack.compare/->compare =))
+(def ^{:arglists '([]
+                   [x]
+                   [x y]
+                   [x y & more])
+       :doc      "Returns `true` if the `compare`d values are equal (=)"} =
+  (io.jesi.backpack.compare/->compare =))
 
-(def ^{:arglists '([x y])} > (io.jesi.backpack.compare/->compare >))
+(def ^{:arglists '([]
+                   [x]
+                   [x y]
+                   [x y & more])
+       :doc      "Returns `true` if the `compare`d values are in decreasing order (>)"} >
+  (io.jesi.backpack.compare/->compare >))
 
-(def ^{:arglists '([x y])} >= (io.jesi.backpack.compare/->compare >=))
+(def ^{:arglists '([]
+                   [x]
+                   [x y]
+                   [x y & more])
+       :doc      "Returns `true` if the `compare`d values are in non-increasing order (>=)"} >=
+  (io.jesi.backpack.compare/->compare >=))
