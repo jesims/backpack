@@ -2,7 +2,7 @@
 <module cursive.leiningen.project.LeiningenProjectsManager.displayName="io.jesi/backpack:7.2.1" cursive.leiningen.project.LeiningenProjectsManager.isLeinModule="true" type="JAVA_MODULE" version="4">
   <component name="BuildSystem">
     <option name="buildSystemId" value="LEININGEN" />
-    <option name="displayName" value="io.jesi/backpack:7.4.0" />
+    <option name="displayName" value="io.jesi/backpack:7.5.0" />
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_15">
     <output url="file://$MODULE_DIR$/target/classes" />
@@ -25,6 +25,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Leiningen: adzerk/boot-test:1.1.2" level="project" />
     <orderEntry type="library" name="Leiningen: aero:1.1.6" level="project" />
+    <orderEntry type="library" name="Leiningen: binaryage/env-config:0.2.2" level="project" />
+    <orderEntry type="library" name="Leiningen: binaryage/oops:0.7.2" level="project" />
     <orderEntry type="library" name="Leiningen: cider/piggieback:0.5.2" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.5" level="project" />
     <orderEntry type="library" name="Leiningen: com.bhauman/cljs-test-display:0.1.1" level="project" />
@@ -97,7 +99,6 @@
     <orderEntry type="library" name="Leiningen: org.jboss.xnio/xnio-api:3.8.0.Final" level="project" />
     <orderEntry type="library" name="Leiningen: org.jboss.xnio/xnio-nio:3.8.0.Final" level="project" />
     <orderEntry type="library" name="Leiningen: org.msgpack/msgpack:0.6.12" level="project" />
-    <orderEntry type="library" name="Leiningen: org.ow2.asm/asm:5.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.tcrawley/dynapath:1.1.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.wildfly.client/wildfly-client-config:1.0.1.Final" level="project" />
     <orderEntry type="library" name="Leiningen: org.wildfly.common/wildfly-common:1.5.2.Final" level="project" />

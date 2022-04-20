@@ -1,4 +1,5 @@
 *-init.clj
+.bindle/
 .clj-kondo/
 .cljs_node_repl
 .idea/azure/
@@ -9,6 +10,7 @@
 .idea/workspace.xml
 .lein-failures
 .nrepl-port
+.remarkignore
 .remarkrc.js
 .shadow-cljs/
 /out
