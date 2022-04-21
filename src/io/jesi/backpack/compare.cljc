@@ -17,8 +17,10 @@
         ;TODO support custom comparator
         (boolean (~f (compare ~'x ~'y) 0)))
        ([~'x ~'y & ~'more]
-        (and (~name-sym ~'x ~'y)
-             (apply ~name-sym ~'more))))))
+        (->> (list* ~'x ~'y ~'more)
+             (partition 2 1)
+             (every? (fn [[x# y#]]
+                       (~name-sym x# y#))))))))
 
 (def ^{:arglists '([]
                    [x]
