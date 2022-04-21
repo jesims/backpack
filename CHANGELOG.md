@@ -1,3 +1,9 @@
+# 7.5.1
+
+Fixed:
+
+* `io.jesi.backpack.compare` functions not working correctly for more than 2 args
+
 # 7.5.0
 
 Added:

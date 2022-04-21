@@ -31,10 +31,10 @@
                  [(long 0) 1]
                  [0 1 2]
                  [0 1 2 3 4 5]
-                 #?@(:clj  [[BigDecimal/ZERO BigDecimal/ONE]
-                            [BigDecimal/ZERO 1]
-                            [(Instant/now) (-> (Instant/now)
-                                               (.plus 1 ChronoUnit/SECONDS))]])]]
+                 #?@(:clj [[BigDecimal/ZERO BigDecimal/ONE]
+                           [BigDecimal/ZERO 1]
+                           [(Instant/now) (-> (Instant/now)
+                                              (.plus 1 ChronoUnit/SECONDS))]])]]
 
       (testing "same for ascending order"
         (doseq [args colls]
@@ -48,8 +48,14 @@
       (are [args] (compares? args)
         [nil nil]
         [0 0]
+        [1 1 1]
         #?@(:clj [(let [now (Instant/now)]
-                    [now now])])))))
+                    [now now])])))
+
+    (testing "same for unordered"
+      (are [args] (compares? args)
+        [1 2 1]
+        ["A" "B" "A"]))))
 
 (deftest <-test
   (test-op < comp/<))
