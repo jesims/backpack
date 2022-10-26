@@ -2,6 +2,7 @@
   (:refer-clojure :exclude [when-let with-open])
   #?(:cljs (:require-macros [io.jesi.backpack.macros]))
   (:require
+    #?(:clj [com.rpl.specter :as sp])
     #?(:cljs [cljs.core :refer [IFn]])
     [clojure.core]
     [io.jesi.backpack.atom :as atom]
@@ -292,3 +293,37 @@ A single default expression can follow the clauses, and its value will be return
            a#
            (atom/assoc! ~a ~k ~v))
          (get ~k))))
+
+#?(:clj
+   (do
+
+     (defmacro ^:private throw-assert [msg]
+       `(throw (AssertionError. (str "Assert failed: " ~msg))))
+
+     (defn with-let [& body]
+       (throw-assert "with-let must be used in a (setup-let ...) block"))
+
+     (defmacro setup-let
+       "Macro that allows local bindings (`let` block) to be reused. Use `with-let` to specify the binding scope.
+
+       (setup-let [x (rand-int 10)]
+         [(with-let x)
+          (with-let x)]) ;returns two random integers"
+       [bindings & body]
+       {:pre [(even? (count bindings))]}
+       (let [with-let-called? (volatile! false)
+             body (->> body
+                       (sp/transform
+                         (sp/codewalker
+                           (fn [form]
+                             (and (list? form)
+                                  (symbol? (first form))
+                                  ;TODO support cljs
+                                  (= #'with-let (resolve &env (first form)))
+                                  (vreset! with-let-called? true))))
+                         (fn [form]
+                           `(let ~bindings
+                              ~@(rest form)))))]
+         (if-not @with-let-called?
+           (throw-assert "No with-let called inside setup-let")
+           `(do ~@body))))))

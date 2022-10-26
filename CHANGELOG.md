@@ -1,3 +1,10 @@
+# 7.6.0
+
+Added:
+
+* `io.jesi.backpack.macros/setup-let` macro for clj
+  * and `/with-let` placeholder function
+
 # 7.5.1
 
 Fixed:
